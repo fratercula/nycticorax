@@ -2,10 +2,12 @@ import React, { Component } from 'react'
 import { connect } from '../../'
 
 function asyncDispatch() {
-  return (dispatch, getStore) => {
+  return (dispatch, getStore, next) => {
     const { name } = getStore()
+    dispatch({ name: 'tttt' })
     setTimeout(() => {
       dispatch({ name: name + '????' })
+      next(name)
     }, 1000)
   }
 }
@@ -17,6 +19,7 @@ class A extends Component {
 
   onAsync = () => {
     this.props.dispatch(asyncDispatch())
+      .then((name) => console.log(name))
   }
 
   render() {

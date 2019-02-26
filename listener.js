@@ -30,7 +30,9 @@ class Listener {
     const type = typeOf(next)
 
     if (type === '[object Function]') {
-      next(this.dispatch, () => this.store)
+      return new Promise((resolve) => {
+        next(this.dispatch, () => this.store, arg => resolve(arg))
+      })
     } else if (type === '[object Object]') {
       const keys = Object.keys(next)
 
