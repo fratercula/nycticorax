@@ -27,7 +27,7 @@ class Listener {
   dispatch = (key, value) => {
     if (this.strict) {
       if (!(key in this.store)) {
-        throw new Error('store key not exist')
+        throw new Error(`store key: ${key} not exist`)
       }
     }
 
@@ -39,11 +39,15 @@ class Listener {
 
   getStore = (keys) => {
     const values = {}
-    keys.forEach((key) => {
-      if (this.store[key]) {
-        values[key] = this.store[key]
+    for (let i = 0; i < keys.length; i += 1) {
+      const key = keys[i]
+      if (this.strict) {
+        if (!(key in this.store)) {
+          throw new Error(`store key: ${key} no exist`)
+        }
       }
-    })
+      values[key] = this.store[key]
+    }
     return JSON.parse(JSON.stringify(values))
   }
 }
