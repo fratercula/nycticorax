@@ -12,8 +12,9 @@ export const connect = (...keys) => {
     }
 
     componentDidMount() {
-      listener.register(id, (key) => {
-        if (keys.includes(key)) {
+      listener.register(id, (triggerKeys) => {
+        const sames = keys.filter(k => triggerKeys.includes(k))
+        if (sames.length) {
           this.setState({ props: listener.getStore(keys) })
         }
       })

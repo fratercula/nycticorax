@@ -3,7 +3,7 @@ import { connect } from '../../'
 
 class C extends Component {
   onClick = () => {
-    this.props.dispatch('name', 'bkbk')
+    this.props.dispatch({ 'name': 'bkbk' })
   }
 
   render() {

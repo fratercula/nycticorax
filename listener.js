@@ -1,3 +1,5 @@
+import typeOf from './helper/typeof'
+
 class Listener {
   strict = false
 
@@ -8,7 +10,7 @@ class Listener {
   callbacks = {}
 
   setStore = (store) => {
-    if (Object.prototype.toString.call(store) === '[object Object]') {
+    if (typeOf(store) === '[object Object]') {
       this.store = store
       this.strict = true
     } else {
@@ -24,17 +26,33 @@ class Listener {
     delete this.callbacks[id]
   }
 
-  dispatch = (key, value) => {
-    if (this.strict) {
-      if (!(key in this.store)) {
-        throw new Error(`store key: ${key} not exist`)
-      }
-    }
+  dispatch = (next) => {
+    const type = typeOf(next)
 
-    this.store[key] = value
-    Object.keys(this.callbacks).forEach((index) => {
-      this.callbacks[index](key)
-    })
+    if (type === '[object Function]') {
+      next(this.dispatch, () => this.store)
+    } else if (type === '[object Object]') {
+      const keys = Object.keys(next)
+
+      for (let i = 0; i < keys.length; i += 1) {
+        const key = keys[i]
+        if (this.strict) {
+          if (!(key in this.store)) {
+            throw new Error(`store key: ${key} not exist`)
+          }
+          if (typeOf(this.store[key]) !== typeOf(next[key])) {
+            throw new Error(`store key ${key} type mismatch`)
+          }
+        }
+        this.store[key] = next[key]
+      }
+
+      Object.keys(this.callbacks).forEach((index) => {
+        this.callbacks[index](keys)
+      })
+    } else {
+      throw new Error('dispatch arguments type error')
+    }
   }
 
   getStore = (keys) => {
