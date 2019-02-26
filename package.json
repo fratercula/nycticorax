@@ -1,0 +1,23 @@
+{
+  "name": "nycticorax",
+  "version": "0.1.0",
+  "description": "React store",
+  "main": "index.js",
+  "scripts": {
+    "start": "falco -d -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fratercula/nycticorax.git"
+  },
+  "keywords": [],
+  "author": "LoeiFy <LoeiFy@gmail.com>",
+  "license": "MIT",
+  "peerDependencies": {
+    "React": "*"
+  },
+  "bugs": {
+    "url": "https://github.com/fratercula/nycticorax/issues"
+  },
+  "homepage": "https://github.com/fratercula/nycticorax#readme"
+}
