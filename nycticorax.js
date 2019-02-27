@@ -1,4 +1,5 @@
 import typeOf from './helper/typeof'
+import clone from './helper/clone'
 
 class Nycticorax {
   strict = false
@@ -9,7 +10,13 @@ class Nycticorax {
 
   dispatchs = {}
 
-  watch = () => {
+  watchs = []
+
+  watch = (watch) => {
+    if (typeOf(watch) !== 'function') {
+      throw new Error('watch must be function')
+    }
+    this.watchs.push(watch)
   }
 
   createStore = (store) => {
@@ -21,8 +28,8 @@ class Nycticorax {
     }
   }
 
-  register(id, callback) {
-    this.dispatchs[id] = callback
+  register(id, dispatch) {
+    this.dispatchs[id] = dispatch
   }
 
   unregister(id) {
@@ -54,6 +61,10 @@ class Nycticorax {
         this.store[key] = next[key]
       }
 
+      this.watchs.forEach((watch) => {
+        watch(keys, this.store)
+      })
+
       Object.keys(this.dispatchs).forEach((id) => {
         this.dispatchs[id](keys)
       })
@@ -65,7 +76,12 @@ class Nycticorax {
   }
 
   getStore = (keys) => {
+    if (!keys) {
+      return clone(this.store)
+    }
+
     const values = {}
+
     for (let i = 0; i < keys.length; i += 1) {
       const key = keys[i]
       if (this.strict) {
@@ -75,7 +91,8 @@ class Nycticorax {
       }
       values[key] = this.store[key]
     }
-    return JSON.parse(JSON.stringify(values))
+
+    return clone(values)
   }
 }
 

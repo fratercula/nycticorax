@@ -1,7 +1,12 @@
 import React, { Component } from 'react' // eslint-disable-line import/no-unresolved
 import nycticorax from './nycticorax'
 
-export const { dispatch, createStore } = nycticorax
+export const {
+  dispatch,
+  createStore,
+  watch,
+  getStore,
+} = nycticorax
 
 export const connect = (...keys) => {
   const id = nycticorax.index

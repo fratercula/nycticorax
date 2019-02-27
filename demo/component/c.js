@@ -1,9 +1,16 @@
 import React, { Component } from 'react'
-import { connect } from '../../'
+import { connect, watch, getStore } from '../../'
 
 class C extends Component {
   onClick = () => {
     this.props.dispatch({ 'name': 'bkbk' })
+  }
+
+  componentDidMount() {
+    watch((keys) => {
+      console.log(keys)
+      console.log(getStore())
+    })
   }
 
   render() {
