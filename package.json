@@ -4,7 +4,8 @@
   "description": "React store",
   "main": "index.js",
   "scripts": {
-    "start": "falco -d -c -m demo/index.js"
+    "start": "falco -d -c -m demo/index.js",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",

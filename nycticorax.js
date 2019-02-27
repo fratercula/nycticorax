@@ -8,15 +8,11 @@ class Nycticorax {
 
   store = {}
 
-  dispatchs = {}
+  listeners = {}
 
-  watchs = []
-
-  watch = (watch) => {
-    if (typeOf(watch) !== 'function') {
-      throw new Error('watch must be function')
-    }
-    this.watchs.push(watch)
+  getId = () => {
+    this.index += 1
+    return this.index
   }
 
   createStore = (store) => {
@@ -28,12 +24,12 @@ class Nycticorax {
     }
   }
 
-  register(id, dispatch) {
-    this.dispatchs[id] = dispatch
+  register = (id, listener) => {
+    this.listeners[id] = listener
   }
 
-  unregister(id) {
-    delete this.dispatchs[id]
+  unregister = (id) => {
+    delete this.listeners[id]
   }
 
   dispatch = (next) => {
@@ -61,12 +57,8 @@ class Nycticorax {
         this.store[key] = next[key]
       }
 
-      this.watchs.forEach((watch) => {
-        watch(keys, this.store)
-      })
-
-      Object.keys(this.dispatchs).forEach((id) => {
-        this.dispatchs[id](keys)
+      Object.keys(this.listeners).forEach((id) => {
+        this.listeners[id](keys)
       })
 
       return Promise.resolve()

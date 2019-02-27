@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { connect, watch, getStore } from '../../'
+import { connect, getStore, register, getId } from '../../'
 
 class C extends Component {
   onClick = () => {
@@ -7,7 +7,8 @@ class C extends Component {
   }
 
   componentDidMount() {
-    watch((keys) => {
+    const id = getId()
+    register(id, (keys) => {
       console.log(keys)
       console.log(getStore())
     })
