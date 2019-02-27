@@ -25,6 +25,9 @@ class Nycticorax {
   }
 
   register = (id, listener) => {
+    if (typeOf(listener) !== 'function') {
+      throw new Error('listener must be function')
+    }
     this.listeners[id] = listener
   }
 
@@ -85,6 +88,10 @@ class Nycticorax {
     }
 
     return clone(values)
+  }
+
+  resetStore = () => {
+    this.store = {}
   }
 }
 

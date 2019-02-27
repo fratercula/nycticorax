@@ -31,7 +31,9 @@
     },
     "testMatch": [
       "**/test/*.js"
-    ]
+    ],
+    "collectCoverage": true,
+    "coveragePathIgnorePatterns": ["/node_modules/", "/helper/"]
   },
   "homepage": "https://github.com/fratercula/nycticorax#readme",
   "devDependencies": {

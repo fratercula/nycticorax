@@ -8,6 +8,7 @@ export const {
   register,
   unregister,
   getId,
+  resetStore,
 } = nycticorax
 
 export const connect = (...keys) => {
