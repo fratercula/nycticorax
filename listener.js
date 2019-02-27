@@ -33,7 +33,9 @@ class Listener {
       return new Promise((resolve) => {
         next(this.dispatch, () => this.store, resolve)
       })
-    } else if (type === 'object') {
+    }
+
+    if (type === 'object') {
       const keys = Object.keys(next)
 
       for (let i = 0; i < keys.length; i += 1) {
@@ -52,9 +54,9 @@ class Listener {
       Object.keys(this.callbacks).forEach((index) => {
         this.callbacks[index](keys)
       })
-    } else {
-      throw new Error('dispatch arguments type error')
     }
+
+    throw new Error('dispatch arguments type error')
   }
 
   getStore = (keys) => {

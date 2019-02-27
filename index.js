@@ -3,10 +3,12 @@ import listener from './listener'
 
 export const createStore = listener.setStore
 
-export const dispatch = listener.dispatch
+export const { dispatch } = listener
 
 export const connect = (...keys) => {
-  const id = (listener.index += 1)
+  const id = listener.index
+
+  listener.index += 1
 
   return C => class extends Component {
     state = {
