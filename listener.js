@@ -10,7 +10,7 @@ class Listener {
   callbacks = {}
 
   setStore = (store) => {
-    if (typeOf(store) === '[object Object]') {
+    if (typeOf(store) === 'object') {
       this.store = store
       this.strict = true
     } else {
@@ -29,11 +29,11 @@ class Listener {
   dispatch = (next) => {
     const type = typeOf(next)
 
-    if (type === '[object Function]') {
+    if (type === 'function') {
       return new Promise((resolve) => {
-        next(this.dispatch, () => this.store, arg => resolve(arg))
+        next(this.dispatch, () => this.store, resolve)
       })
-    } else if (type === '[object Object]') {
+    } else if (type === 'object') {
       const keys = Object.keys(next)
 
       for (let i = 0; i < keys.length; i += 1) {
@@ -43,7 +43,7 @@ class Listener {
             throw new Error(`store key: ${key} not exist`)
           }
           if (typeOf(this.store[key]) !== typeOf(next[key])) {
-            throw new Error(`store key ${key} type mismatch`)
+            throw new Error(`store type mismatch, key: ${key}`)
           }
         }
         this.store[key] = next[key]

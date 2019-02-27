@@ -3,6 +3,8 @@ import listener from './listener'
 
 export const createStore = listener.setStore
 
+export const dispatch = listener.dispatch
+
 export const connect = (...keys) => {
   const id = (listener.index += 1)
 
