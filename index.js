@@ -1,38 +1,36 @@
-import React, { Component } from 'react'
-import listener from './listener'
+import React, { Component } from 'react' // eslint-disable-line import/no-unresolved
+import nycticorax from './nycticorax'
 
-export const createStore = listener.setStore
-
-export const { dispatch } = listener
+export const { dispatch, createStore } = nycticorax
 
 export const connect = (...keys) => {
-  const id = listener.index
+  const id = nycticorax.index
 
-  listener.index += 1
+  nycticorax.index += 1
 
   return C => class extends Component {
     state = {
-      props: listener.getStore(keys),
+      props: nycticorax.getStore(keys),
     }
 
     componentDidMount() {
-      listener.register(id, (triggerKeys) => {
+      nycticorax.register(id, (triggerKeys) => {
         const sames = keys.filter(k => triggerKeys.includes(k))
         if (sames.length) {
-          this.setState({ props: listener.getStore(keys) })
+          this.setState({ props: nycticorax.getStore(keys) })
         }
       })
     }
 
     componentWillUnmount() {
-      listener.unregister(id)
+      nycticorax.unregister(id)
     }
 
     render() {
       const { props } = this.state
 
       return (
-        <C {...props} dispatch={listener.dispatch} />
+        <C {...props} dispatch={dispatch} />
       )
     }
   }

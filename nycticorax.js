@@ -1,15 +1,18 @@
 import typeOf from './helper/typeof'
 
-class Listener {
+class Nycticorax {
   strict = false
 
   index = 0
 
   store = {}
 
-  callbacks = {}
+  dispatchs = {}
 
-  setStore = (store) => {
+  watch = () => {
+  }
+
+  createStore = (store) => {
     if (typeOf(store) === 'object') {
       this.store = store
       this.strict = true
@@ -19,11 +22,11 @@ class Listener {
   }
 
   register(id, callback) {
-    this.callbacks[id] = callback
+    this.dispatchs[id] = callback
   }
 
   unregister(id) {
-    delete this.callbacks[id]
+    delete this.dispatchs[id]
   }
 
   dispatch = (next) => {
@@ -51,9 +54,11 @@ class Listener {
         this.store[key] = next[key]
       }
 
-      Object.keys(this.callbacks).forEach((index) => {
-        this.callbacks[index](keys)
+      Object.keys(this.dispatchs).forEach((id) => {
+        this.dispatchs[id](keys)
       })
+
+      return Promise.resolve()
     }
 
     throw new Error('dispatch arguments type error')
@@ -74,4 +79,4 @@ class Listener {
   }
 }
 
-export default new Listener()
+export default new Nycticorax()
