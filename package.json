@@ -5,13 +5,18 @@
   "main": "index.js",
   "scripts": {
     "start": "falco -d -c -m demo/index.js",
-    "lint": "eslint ."
+    "test": "npm run test:lint && npm run test:unit",
+    "test:lint": "eslint .",
+    "test:unit": "jest"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fratercula/nycticorax.git"
   },
-  "keywords": [],
+  "keywords": [
+    "store",
+    "react"
+  ],
   "author": "LoeiFy <LoeiFy@gmail.com>",
   "license": "MIT",
   "peerDependencies": {
@@ -20,15 +25,27 @@
   "bugs": {
     "url": "https://github.com/fratercula/nycticorax/issues"
   },
+  "jest": {
+    "transform": {
+      "^.+\\.js$": "babel-jest"
+    },
+    "testMatch": [
+      "**/test/*.js"
+    ]
+  },
   "homepage": "https://github.com/fratercula/nycticorax#readme",
   "devDependencies": {
     "@babel/core": "^7.3.4",
+    "@babel/plugin-proposal-class-properties": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
     "babel-eslint": "^10.0.1",
+    "babel-jest": "^24.1.0",
     "eslint": "^5.14.1",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-babel": "^5.3.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jsx-a11y": "^6.2.1",
-    "eslint-plugin-react": "^7.12.4"
+    "eslint-plugin-react": "^7.12.4",
+    "jest": "^24.1.0"
   }
 }
