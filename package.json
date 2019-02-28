@@ -3,9 +3,15 @@
   "version": "0.1.0",
   "description": "React store",
   "main": "index.js",
+  "files": [
+    "index.js",
+    "nycticorax.js",
+    "helper",
+    "lib"
+  ],
   "scripts": {
     "start": "falco -c -m demo/index.js",
-    "build": "NODE_ENV=prod falco -c",
+    "build": "NODE_ENV=prod falco -c -o lib",
     "test": "npm run test:lint && npm run test:unit",
     "test:lint": "eslint .",
     "test:unit": "jest"
