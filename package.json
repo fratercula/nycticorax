@@ -1,7 +1,7 @@
 {
   "name": "nycticorax",
   "version": "0.1.0",
-  "description": "React store",
+  "description": "State container for JavaScript application, and React",
   "main": "index.js",
   "files": [
     "index.js",
@@ -23,6 +23,7 @@
   },
   "keywords": [
     "store",
+    "state",
     "react"
   ],
   "author": "LoeiFy <LoeiFy@gmail.com>",

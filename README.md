@@ -1,6 +1,10 @@
 # nycticorax
 
-React store
+[![Build Status](https://travis-ci.org/fratercula/nycticorax.svg?branch=master)](https://travis-ci.org/fratercula/nycticorax)
+[![codecov](https://codecov.io/gh/fratercula/nycticorax/branch/master/graph/badge.svg)](https://codecov.io/gh/fratercula/nycticorax)
+
+
+State container for JavaScript application, and React
 
 ## Install
 
@@ -10,9 +14,9 @@ $ npm i nycticorax
 
 ## Usage
 
-very simple use, **not** `Provider`, `reducer`, `action`
+for `React`, it is very simple use, **not** `Provider`, `reducer`, `action`, **only** `connect`
 
-only `connect`
+[DEMO](https://fratercula.github.io/nycticorax/)
 
 ```js
 import React, { Component } from 'react'
@@ -110,7 +114,7 @@ dispatch(asyncDispatch()).then(() => {
 
 ### getId
 
-get unique key for register listener function
+get unique key for registing listener function
 
 ```js
 const id = getId()
@@ -145,7 +149,7 @@ reset()
 
 ### connect
 
-use for React store
+use for `React` only
 
 ```js
 connect('name', 'another')(ReactComponent)
