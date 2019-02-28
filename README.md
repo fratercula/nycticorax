@@ -178,6 +178,25 @@ class A extends Component {
 export default connect('name', 'another')(A)
 ```
 
+## Development
+
+```bash
+# install `falco` global
+$ npm i @fratercula/falco -g
+
+# start
+$ npm start
+
+# build
+$ npm run build
+
+# lint
+$ npm run test:lint
+
+# test
+$ npm run test:unit
+```
+
 ## License
 
 MIT

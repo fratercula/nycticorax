@@ -12,6 +12,7 @@
   "scripts": {
     "start": "falco -c -m demo/index.js",
     "build": "NODE_ENV=prod falco -c -o lib",
+    "docs": "NODE_ENV=docs falco -c -o docs -m demo/index.js",
     "test": "npm run test:lint && npm run test:unit",
     "test:lint": "eslint .",
     "test:unit": "jest"

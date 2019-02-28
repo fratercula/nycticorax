@@ -4,6 +4,7 @@ import { createStore, dispatch } from '../'
 import A from './component/a'
 import B from './component/b'
 import C from './component/c'
+import './index.less'
 
 createStore({
   name: 'nycticorax',
@@ -26,7 +27,7 @@ dispatch(asyncDispatch()).then(() => {
 })
 
 render((
-  <div>
+  <div className="root">
     <A />
     <B />
     <C />
