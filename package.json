@@ -1,8 +1,8 @@
 {
   "name": "nycticorax",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "State container for JavaScript application, and React",
-  "main": "index.js",
+  "main": "lib/index.js",
   "files": [
     "index.js",
     "nycticorax.js",
