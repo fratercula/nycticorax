@@ -10,6 +10,15 @@ describe('nycticorax', () => {
     expect(nycticorax.index).toEqual(2)
   })
 
+  it('get store widthout strict', () => {
+    expect(nycticorax.getStore(['a'])).toEqual({})
+  })
+
+  it('dispatch widthout strict', () => {
+    nycticorax.dispatch({ a: 1 })
+    expect(nycticorax.getStore()).toEqual({ a: 1 })
+  })
+
   it('create store', () => {
     nycticorax.createStore({ a: 1 })
     expect(nycticorax.store).toEqual({ a: 1 })
@@ -18,8 +27,11 @@ describe('nycticorax', () => {
   })
 
   it('reset store', () => {
-    nycticorax.resetStore()
+    nycticorax.reset()
     expect(nycticorax.store).toEqual({})
+    expect(nycticorax.index).toEqual(0)
+    expect(nycticorax.listeners).toEqual({})
+    expect(nycticorax.strict).toBe(false)
   })
 
   it('get store', () => {
@@ -58,8 +70,8 @@ describe('nycticorax', () => {
 
     function asyncA() {
       return (dispatch, getStore, next) => {
+        const { a } = getStore()
         setTimeout(() => {
-          const { a } = getStore()
           dispatch({ a: a + 1 })
           next()
         }, 100)

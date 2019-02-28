@@ -90,8 +90,11 @@ class Nycticorax {
     return clone(values)
   }
 
-  resetStore = () => {
+  reset = () => {
     this.store = {}
+    this.strict = false
+    this.listeners = {}
+    this.index = 0
   }
 }
 
