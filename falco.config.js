@@ -1,3 +1,6 @@
+const { NODE_ENV } = process.env
+const mode = NODE_ENV === 'prod' ? 'production' : 'development'
+
 module.exports = {
   externals: [
     {
@@ -13,4 +16,11 @@ module.exports = {
   ],
   registry: 'https://registry.npm.taobao.org',
   esModule: false,
+  mode,
+  output: mode === 'production'
+    ? {
+      library: 'nycticorax',
+      libraryTarget: 'umd',
+    }
+    : {},
 }
