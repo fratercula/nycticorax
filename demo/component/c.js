@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { connect, getStore, register, getId } from '../../'
+import { connect, getStore, register, getId } from '../../src'
 
 class C extends Component {
   onClick = () => {

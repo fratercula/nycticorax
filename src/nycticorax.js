@@ -10,6 +10,8 @@ class Nycticorax {
 
   listeners = {}
 
+  ignores = []
+
   getId = () => {
     this.index += 1
     return this.index
@@ -19,6 +21,7 @@ class Nycticorax {
     if (typeOf(store) === 'object') {
       this.store = store
       this.strict = true
+      this.ignores = Object.keys(store).filter(key => typeOf(store[key]) === 'undefined')
     } else {
       throw new Error('store must be object')
     }
@@ -51,10 +54,10 @@ class Nycticorax {
         const key = keys[i]
         if (this.strict) {
           if (!(key in this.store)) {
-            throw new Error(`store key: ${key} not exist`)
+            throw new Error(`dispatch key[${key}] not exist`)
           }
-          if (typeOf(this.store[key]) !== typeOf(next[key])) {
-            throw new Error(`store type mismatch, key: ${key}`)
+          if (!this.ignores.includes(key) && typeOf(this.store[key]) !== typeOf(next[key])) {
+            throw new Error(`dispatch key[${key}] type mismatch`)
           }
         }
         this.store[key] = next[key]
@@ -81,7 +84,7 @@ class Nycticorax {
       const key = keys[i]
       if (this.strict) {
         if (!(key in this.store)) {
-          throw new Error(`store key: ${key} no exist`)
+          throw new Error(`store key[${key}] no exist`)
         }
       }
       values[key] = this.store[key]

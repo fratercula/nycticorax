@@ -1,4 +1,4 @@
-import nycticorax from '../nycticorax'
+import nycticorax from '../src/nycticorax'
 
 describe('nycticorax', () => {
   it('get id', () => {
@@ -37,10 +37,10 @@ describe('nycticorax', () => {
   it('get store', () => {
     expect(nycticorax.getStore()).toEqual({})
     expect(nycticorax.getStore([])).toEqual({})
-    nycticorax.createStore({ a: 1 })
+    nycticorax.createStore({ a: 1, another: undefined })
     expect(nycticorax.store).toEqual({ a: 1 })
     expect(nycticorax.getStore(['a'])).toEqual({ a: 1 })
-    expect(() => nycticorax.getStore(['a', 'b'])).toThrowError(new Error('store key: b no exist'))
+    expect(() => nycticorax.getStore(['a', 'b'])).toThrowError(new Error('store key[b] no exist'))
   })
 
   it('register listener', () => {
@@ -63,8 +63,11 @@ describe('nycticorax', () => {
     nycticorax.dispatch({ a: 2 })
     expect(list).toEqual(['a'])
 
-    expect(() => nycticorax.dispatch({ b: 1 })).toThrowError(new Error('store key: b not exist'))
-    expect(() => nycticorax.dispatch({ a: 'a' })).toThrowError(new Error('store type mismatch, key: a'))
+    expect(() => nycticorax.dispatch({ b: 1 })).toThrowError(new Error('dispatch key[b] not exist'))
+    expect(() => nycticorax.dispatch({ a: 'a' })).toThrowError(new Error('dispatch key[a] type mismatch'))
+
+    nycticorax.dispatch({ another: 1 })
+    expect(nycticorax.store.another).toBe(1)
 
     list = []
 

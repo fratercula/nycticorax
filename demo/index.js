@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { createStore, dispatch } from '../'
+import { createStore, dispatch } from '../src'
 import A from './component/a'
 import B from './component/b'
 import C from './component/c'
@@ -9,6 +9,7 @@ import './index.less'
 createStore({
   name: 'nycticorax',
   number: 7,
+  another: undefined,
 })
 
 function asyncDispatch() {
@@ -23,7 +24,7 @@ function asyncDispatch() {
 }
 
 dispatch(asyncDispatch()).then(() => {
-  dispatch({ number: 70 })
+  dispatch({ number: 70, another: '3' })
 })
 
 render((

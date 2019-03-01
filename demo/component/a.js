@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { connect } from '../../'
+import { connect } from '../../src'
 
 function asyncDispatch() {
   return (dispatch, getStore, next) => {

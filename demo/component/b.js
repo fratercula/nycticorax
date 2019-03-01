@@ -1,5 +1,5 @@
 import React from 'react'
-import { connect } from '../../'
+import { connect } from '../../src'
 
 function B({ number }) {
   return (
