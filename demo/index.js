@@ -32,7 +32,7 @@ dispatch(asyncDispatch())
 
 render((
   <div className="root">
-    <A />
+    <A test="test" />
     <B />
     <C />
   </div>

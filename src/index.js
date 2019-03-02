@@ -36,7 +36,7 @@ export const connect = (...keys) => {
       const { props } = this.state
 
       return (
-        <C {...props} dispatch={dispatch} />
+        <C {...this.props} {...props} dispatch={dispatch} />
       )
     }
   }

@@ -13,6 +13,10 @@ function asyncDispatch() {
 }
 
 class A extends Component {
+  componentDidMount() {
+    console.log('A', this.props)
+  }
+
   onClick = () => {
     this.props.dispatch({ 'number': 1 })
   }
