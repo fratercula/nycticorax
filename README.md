@@ -16,7 +16,7 @@ $ npm i nycticorax
 
 for `React`, it is very simple use, **not** `Provider`, `reducer`, `action`, **only** `connect`
 
-[DEMO](https://fratercula.github.io/nycticorax/)
+[DEMO](https://fratercula.github.io/nycticorax/) | [counter](https://jsfiddle.net/am0200/gba9sdLp/) | [counter(strict mode)](https://jsfiddle.net/am0200/0L87d29h/)
 
 ```js
 import React, { Component } from 'react'

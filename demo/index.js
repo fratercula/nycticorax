@@ -10,6 +10,9 @@ createStore({
   name: 'nycticorax',
   number: 7,
   another: undefined,
+  other: null,
+  a: { b: 2, s: 1 },
+  b: [1, 2],
 })
 
 function asyncDispatch() {
@@ -23,9 +26,9 @@ function asyncDispatch() {
   }
 }
 
-dispatch(asyncDispatch()).then(() => {
-  dispatch({ number: 70, another: '3' })
-})
+dispatch(asyncDispatch())
+  .then(() => dispatch({ number: 70, other: '4' }))
+  .then(() => dispatch({ a: { s: 1, b: 2 }, b: [1, 2] }))
 
 render((
   <div className="root">

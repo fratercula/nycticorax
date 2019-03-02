@@ -1,5 +1,7 @@
 import typeOf from './helper/typeof'
 import clone from './helper/clone'
+import compare from './helper/compare'
+import warn from './helper/warn'
 
 class Nycticorax {
   strict = false
@@ -21,15 +23,16 @@ class Nycticorax {
     if (typeOf(store) === 'object') {
       this.store = store
       this.strict = true
-      this.ignores = Object.keys(store).filter(key => typeOf(store[key]) === 'undefined')
+      this.ignores = Object.keys(store)
+        .filter(key => store[key] === undefined || store[key] === null)
     } else {
-      throw new Error('store must be object')
+      throw new Error('Store data must be object')
     }
   }
 
   register = (id, listener) => {
     if (typeOf(listener) !== 'function') {
-      throw new Error('listener must be function')
+      throw new Error('Listener must be function')
     }
     this.listeners[id] = listener
   }
@@ -49,28 +52,38 @@ class Nycticorax {
 
     if (type === 'object') {
       const keys = Object.keys(next)
+      const actives = []
 
       for (let i = 0; i < keys.length; i += 1) {
         const key = keys[i]
         if (this.strict) {
           if (!(key in this.store)) {
-            throw new Error(`dispatch key[${key}] not exist`)
+            throw new Error(`Dispatch key not exist: '${key}'`)
           }
           if (!this.ignores.includes(key) && typeOf(this.store[key]) !== typeOf(next[key])) {
-            throw new Error(`dispatch key[${key}] type mismatch`)
+            throw new Error(`Dispatch key type mismatch: '${key}'`)
           }
         }
-        this.store[key] = next[key]
+        if (!compare(this.store[key], next[key])) {
+          this.store[key] = next[key]
+          actives.push(key)
+        } else {
+          warn(`Dispatch same value: '${key}'`)
+        }
       }
 
-      Object.keys(this.listeners).forEach((id) => {
-        this.listeners[id](keys)
-      })
+      if (actives.length) {
+        Object.keys(this.listeners).forEach((id) => {
+          this.listeners[id](actives)
+        })
+      } else {
+        warn('Dispatch values same width store, listeners will not trigger', next)
+      }
 
       return Promise.resolve()
     }
 
-    throw new Error('dispatch arguments type error')
+    throw new Error('Dispatch type error, must be function or object')
   }
 
   getStore = (keys) => {
@@ -84,7 +97,7 @@ class Nycticorax {
       const key = keys[i]
       if (this.strict) {
         if (!(key in this.store)) {
-          throw new Error(`store key[${key}] no exist`)
+          throw new Error(`Store key no exist: '${key}'`)
         }
       }
       values[key] = this.store[key]
@@ -98,6 +111,7 @@ class Nycticorax {
     this.strict = false
     this.listeners = {}
     this.index = 0
+    this.ignores = []
   }
 }
 

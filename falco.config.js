@@ -5,6 +5,9 @@ module.exports = {
     {
       name: 'react',
       root: 'React',
+      commonjs2: 'react',
+      commonjs: 'react',
+      amd: 'react',
       // urls: 'https://cdn.staticfile.org/react/16.8.2/umd/react.development.js',
       urls: 'https://cdn.staticfile.org/react/16.8.2/umd/react.production.min.js',
     },
