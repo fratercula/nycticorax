@@ -51,7 +51,7 @@ import {
   register,
   unregister,
   getId,
-  resetStore,
+  reset,
   connect,
 } from 'nycticorax'
 ```
