@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.2
+
+- feat: use lodash.isequal
+
 ## 0.2.0 ~ 0.2.1
 
 - fix: umd externals

@@ -1,6 +1,6 @@
 {
   "name": "nycticorax",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "State container for JavaScript application, and React",
   "main": "lib/index.js",
   "files": [
@@ -39,7 +39,10 @@
       "**/test/*.js"
     ],
     "collectCoverage": true,
-    "coveragePathIgnorePatterns": ["/node_modules/", "/helper/(clone|typeof|warn)"]
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/helper/(clone|typeof|warn)"
+    ]
   },
   "homepage": "https://github.com/fratercula/nycticorax#readme",
   "devDependencies": {
@@ -54,6 +57,7 @@
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.12.4",
-    "jest": "^24.1.0"
+    "jest": "^24.1.0",
+    "lodash.isequal": "^4.5.0"
   }
 }

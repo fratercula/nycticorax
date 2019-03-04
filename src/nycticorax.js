@@ -1,6 +1,6 @@
+import eq from 'lodash.isequal' // eslint-disable-line import/no-unresolved
 import typeOf from './helper/typeof'
 import clone from './helper/clone'
-import compare from './helper/compare'
 import warn from './helper/warn'
 
 class Nycticorax {
@@ -64,7 +64,7 @@ class Nycticorax {
             throw new Error(`Dispatch key type mismatch: '${key}'`)
           }
         }
-        if (!compare(this.store[key], next[key])) {
+        if (!eq(this.store[key], next[key])) {
           this.store[key] = next[key]
           actives.push(key)
         } else {
