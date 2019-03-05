@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0
+
+- chore: react dependency
+
 ## 0.2.2
 
 - feat: use lodash.isequal

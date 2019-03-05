@@ -1,4 +1,3 @@
-import React, { Component } from 'react' // eslint-disable-line import/no-unresolved
 import nycticorax from './nycticorax'
 
 export const {
@@ -11,33 +10,40 @@ export const {
   reset,
 } = nycticorax
 
-export const connect = (...keys) => {
-  const id = getId()
+try {
+  // eslint-disable-next-line global-require, import/no-unresolved
+  const React = require('react')
 
-  return C => class extends Component {
-    state = {
-      props: getStore(keys),
-    }
+  exports.connect = (...keys) => {
+    const id = getId()
 
-    componentDidMount() {
-      register(id, (triggerKeys) => {
-        const sames = keys.filter(k => triggerKeys.includes(k))
-        if (sames.length) {
-          this.setState({ props: getStore(keys) })
-        }
-      })
-    }
+    return C => class extends React.Component {
+      state = {
+        props: getStore(keys),
+      }
 
-    componentWillUnmount() {
-      unregister(id)
-    }
+      componentDidMount() {
+        register(id, (triggerKeys) => {
+          const sames = keys.filter(k => triggerKeys.includes(k))
+          if (sames.length) {
+            this.setState({ props: getStore(keys) })
+          }
+        })
+      }
 
-    render() {
-      const { props } = this.state
+      componentWillUnmount() {
+        unregister(id)
+      }
 
-      return (
-        <C {...this.props} {...props} dispatch={dispatch} />
-      )
+      render() {
+        const { props } = this.state
+
+        return (
+          <C {...this.props} {...props} dispatch={dispatch} />
+        )
+      }
     }
   }
+} catch (e) {
+  // ignore
 }
