@@ -45,9 +45,7 @@ class Nycticorax {
     const type = typeOf(next)
 
     if (type === 'function') {
-      return new Promise((resolve) => {
-        next(this.dispatch, () => this.store, resolve)
-      })
+      return next(this.dispatch, () => this.store)
     }
 
     if (type === 'object') {
@@ -80,7 +78,7 @@ class Nycticorax {
         warn('Dispatch values same width store, listeners will not trigger', next)
       }
 
-      return Promise.resolve()
+      return this.store
     }
 
     throw new Error('Dispatch type error, must be function or object')

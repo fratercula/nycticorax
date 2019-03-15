@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1
+
+- refactor: async dispatch
+
 ## 0.3.0
 
 - chore: react dependency

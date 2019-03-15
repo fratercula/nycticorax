@@ -71,17 +71,17 @@ describe('nycticorax', () => {
 
     list = []
 
-    function asyncA() {
-      return (dispatch, getStore, next) => {
+    function asyncA(dispatch, getStore) {
+      return new Promise((resolve) => {
         const { a } = getStore()
         setTimeout(() => {
           dispatch({ a: a + 1 })
-          next()
+          resolve()
         }, 100)
-      }
+      })
     }
 
-    nycticorax.dispatch(asyncA())
+    nycticorax.dispatch(asyncA)
       .then(() => {
         expect(list).toEqual(['a'])
       })

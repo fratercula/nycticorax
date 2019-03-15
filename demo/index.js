@@ -15,20 +15,24 @@ createStore({
   b: [1, 2],
 })
 
-function asyncDispatch() {
-  return (dispatch, getStore, next) => {
+function asyncDispatch(dispatch, getStore) {
+  return new Promise((resolve) => {
     const { name } = getStore()
     dispatch({ name: '----' })
     setTimeout(() => {
       dispatch({ name: '====' })
-      next(name)
+      resolve(name)
     }, 1000)
-  }
+  })
 }
 
-dispatch(asyncDispatch())
-  .then(() => dispatch({ number: 70, other: '4' }))
-  .then(() => dispatch({ a: { s: 1, b: 2 }, b: [1, 2] }))
+dispatch(asyncDispatch)
+  .then((name) => {
+    console.log(name)
+    dispatch({ number: 70, other: '4' })
+    dispatch({ a: { s: 1, b: 2 }, b: [1, 2] })
+  })
+
 
 render((
   <div className="root">
