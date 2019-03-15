@@ -16,7 +16,7 @@ $ npm i nycticorax
 
 for `React`, it is very simple use, **not** `Provider`, `reducer`, `action`, **only** `connect`
 
-[DEMO](https://fratercula.github.io/nycticorax/) | [counter](https://jsfiddle.net/am0200/gba9sdLp/) | [counter(strict mode)](https://jsfiddle.net/am0200/0L87d29h/)
+[demo](https://fratercula.github.io/nycticorax/) | [counter](https://jsfiddle.net/am0200/gba9sdLp/) | [counter(strict mode)](https://jsfiddle.net/am0200/0L87d29h/)
 
 ```js
 import React, { Component } from 'react'
@@ -91,8 +91,8 @@ dispatch({ name: 'lorem' })
 dispatch({ name: 'lorem', another: 'ipsum' })
 
 // async
-function asyncDispatch() {
-  return (dispatch, getStore, next) => {
+function asyncDispatch(dispatch, getStore) {
+  return new Promise((resolve) => {
     // get current store
     const { name } = getStore()
 
@@ -103,11 +103,11 @@ function asyncDispatch() {
       dispatch({ name: 'b' })
 
       // resolve
-      next(name)
+      resolve(name)
     }, 1000)
-  }
+  })
 }
-dispatch(asyncDispatch()).then(() => {
+dispatch(asyncDispatch).then(() => {
   dispatch({ name: 'c' })
 }
 ```

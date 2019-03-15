@@ -75,7 +75,7 @@ class Nycticorax {
           this.listeners[id](actives)
         })
       } else {
-        warn('Dispatch values same width store, listeners will not trigger', next)
+        warn('Dispatch values same width current store, listeners will not be triggered', next)
       }
 
       return this.store
