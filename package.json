@@ -8,8 +8,9 @@
   ],
   "scripts": {
     "start": "falco -c -m demo/index.js",
-    "build": "NODE_ENV=prod falco -c -o lib -m src/index.js",
-    "docs": "NODE_ENV=docs falco -c -o docs -m demo/index.js",
+    "docs": "rm -rf docs && NODE_ENV=docs falco -c -o docs -m demo/index.js",
+    "umd": "NODE_ENV=umd falco -c -o lib -m src/index.js",
+    "build": "npm run docs && npm run umd",
     "test": "npm run test:lint && npm run test:unit",
     "test:lint": "eslint .",
     "test:unit": "jest"
