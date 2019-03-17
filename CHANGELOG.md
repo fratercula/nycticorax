@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.1
+
+- fix: unsubscribe listeners
+
 ## 0.4.0
 
 - feat: subscribe method

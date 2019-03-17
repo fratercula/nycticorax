@@ -30,10 +30,12 @@ class Nycticorax {
     this.listeners.push(listener)
 
     return () => {
-      const index = this.listeners.indexOf(listener)
+      const listeners = this.listeners.slice()
+      const index = listeners.indexOf(listener)
       if (index > -1) {
-        this.listeners.splice(index, 1)
+        listeners.splice(index, 1)
       }
+      this.listeners = listeners
     }
   }
 
