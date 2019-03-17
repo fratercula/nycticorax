@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { connect, getStore, register, getId } from '../../src'
+import { connect, getStore, subscribe } from '../../src'
 
 class C extends Component {
   onClick = () => {
@@ -7,8 +7,7 @@ class C extends Component {
   }
 
   componentDidMount() {
-    const id = getId()
-    register(id, (keys) => {
+    this.unsubscribe = subscribe((keys) => {
       console.log(keys)
       console.log(getStore())
     })
@@ -19,6 +18,7 @@ class C extends Component {
       <div>
         <h2>Component C</h2>
         <button onClick={this.onClick}>set value name bkbk</button>
+        <button onClick={() => this.unsubscribe()}>stop subscribe</button>
       </div>
     )
   }

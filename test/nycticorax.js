@@ -1,15 +1,13 @@
 import nycticorax from '../src/nycticorax'
 
-describe('nycticorax', () => {
-  it('get id', () => {
-    let id = nycticorax.getId()
-    expect(id).toEqual(1)
-    expect(nycticorax.index).toEqual(1)
-    id = nycticorax.getId()
-    expect(id).toEqual(2)
-    expect(nycticorax.index).toEqual(2)
-  })
+function reset() {
+  nycticorax.store = {}
+  nycticorax.ignores = []
+  nycticorax.listeners = []
+  nycticorax.strict = false
+}
 
+describe('nycticorax', () => {
   it('get store widthout strict', () => {
     expect(nycticorax.getStore(['a'])).toEqual({})
   })
@@ -26,48 +24,47 @@ describe('nycticorax', () => {
     expect(() => nycticorax.createStore('')).toThrowError(new Error('Store data must be object'))
   })
 
-  it('reset store', () => {
-    nycticorax.reset()
-    expect(nycticorax.store).toEqual({})
-    expect(nycticorax.index).toEqual(0)
-    expect(nycticorax.listeners).toEqual({})
-    expect(nycticorax.strict).toBe(false)
-  })
-
   it('get store', () => {
+    reset()
     expect(nycticorax.getStore()).toEqual({})
     expect(nycticorax.getStore([])).toEqual({})
     nycticorax.createStore({ a: 1, another: undefined })
     expect(nycticorax.store).toEqual({ a: 1 })
-    expect(nycticorax.getStore(['a'])).toEqual({ a: 1 })
-    expect(() => nycticorax.getStore(['a', 'b'])).toThrowError(new Error('Store key no exist: \'b\''))
+    expect(nycticorax.getStore('a')).toEqual({ a: 1 })
+    expect(() => nycticorax.getStore('a', 'b')).toThrowError(new Error('Store key no exist: \'b\''))
   })
 
-  it('register listener', () => {
+  it('subscribe listener', () => {
+    reset()
     expect(Object.keys(nycticorax.listeners).length).toBe(0)
-    const id = nycticorax.getId()
-    nycticorax.register(id, () => null)
+    const unsubscribe = nycticorax.subscribe(() => null)
     expect(Object.keys(nycticorax.listeners).length).toBe(1)
-    expect(() => nycticorax.register('')).toThrowError(new Error('Listener must be function'))
-    nycticorax.unregister(id)
+    expect(() => nycticorax.subscribe('')).toThrowError(new Error('Listener must be function'))
+    unsubscribe()
     expect(Object.keys(nycticorax.listeners).length).toBe(0)
+    nycticorax.subscribe(() => null)
+    unsubscribe()
+    expect(Object.keys(nycticorax.listeners).length).toBe(1)
   })
 
   it('dispatch', () => {
+    reset()
     let list = []
-    nycticorax.register(nycticorax.getId(), (keys) => {
+    nycticorax.subscribe((keys) => {
       list = keys
     })
-    expect(() => nycticorax.dispatch('')).toThrowError(new Error('Dispatch type error, must be function or object'))
+    expect(() => nycticorax.dispatch(''))
+      .toThrowError(new Error('Dispatch type error, must be function or object'))
 
     nycticorax.dispatch({ a: 2 })
     expect(list).toEqual(['a'])
 
-    expect(() => nycticorax.dispatch({ b: 1 })).toThrowError(new Error('Dispatch key not exist: \'b\''))
-    expect(() => nycticorax.dispatch({ a: 'a' })).toThrowError(new Error('Dispatch key type mismatch: \'a\''))
-
-    nycticorax.dispatch({ another: 1 })
-    expect(nycticorax.store.another).toBe(1)
+    reset()
+    nycticorax.createStore({ a: 2 })
+    expect(() => nycticorax.dispatch({ b: 1 }))
+      .toThrowError(new Error('Dispatch key not exist: \'b\''))
+    expect(() => nycticorax.dispatch({ a: 'a' }))
+      .toThrowError(new Error('Dispatch key type mismatch: \'a\''))
 
     list = []
 
@@ -86,10 +83,10 @@ describe('nycticorax', () => {
         expect(list).toEqual(['a'])
       })
 
-    nycticorax.reset()
+    reset()
     nycticorax.createStore({ a: 1, b: 1 })
     list = []
-    nycticorax.register(nycticorax.getId(), (keys) => {
+    nycticorax.subscribe((keys) => {
       list = keys
     })
     nycticorax.dispatch({ b: 1, a: 1 })

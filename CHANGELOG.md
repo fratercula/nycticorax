@@ -1,7 +1,9 @@
 # Changelog
 
-## 0.3.2
+## 0.4.0
 
+- feat: subscribe method
+- refactor: remove getId, register, unregister, reset methods
 - chore: use fast-deep-equal
 
 ## 0.3.1

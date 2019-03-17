@@ -6,46 +6,42 @@ import warn from './helper/warn'
 class Nycticorax {
   strict = false
 
-  index = 0
-
   store = {}
 
-  listeners = {}
+  listeners = []
 
   ignores = []
 
-  getId = () => {
-    this.index += 1
-    return this.index
-  }
-
   createStore = (store) => {
-    if (typeOf(store) === 'object') {
-      this.store = store
-      this.strict = true
-      this.ignores = Object.keys(store)
-        .filter(key => store[key] === undefined || store[key] === null)
-    } else {
+    if (typeOf(store) !== 'object') {
       throw new Error('Store data must be object')
     }
+
+    this.store = store
+    this.strict = true
+    this.ignores = Object.keys(store)
+      .filter(key => store[key] === undefined || store[key] === null)
   }
 
-  register = (id, listener) => {
+  subscribe = (listener) => {
     if (typeOf(listener) !== 'function') {
       throw new Error('Listener must be function')
     }
-    this.listeners[id] = listener
-  }
+    this.listeners.push(listener)
 
-  unregister = (id) => {
-    delete this.listeners[id]
+    return () => {
+      const index = this.listeners.indexOf(listener)
+      if (index > -1) {
+        this.listeners.splice(index, 1)
+      }
+    }
   }
 
   dispatch = (next) => {
     const type = typeOf(next)
 
     if (type === 'function') {
-      return next(this.dispatch, () => this.store)
+      return next(this.dispatch, this.getStore)
     }
 
     if (type === 'object') {
@@ -66,16 +62,16 @@ class Nycticorax {
           this.store[key] = next[key]
           actives.push(key)
         } else {
-          warn(`Dispatch same value: '${key}'`)
+          warn(`Dispatch key width same value: '${key}'`)
         }
       }
 
       if (actives.length) {
-        Object.keys(this.listeners).forEach((id) => {
-          this.listeners[id](actives)
+        this.listeners.forEach((listener) => {
+          listener(actives)
         })
       } else {
-        warn('Dispatch values same width current store, listeners will not be triggered', next)
+        warn('Dispatch same keys and values, listeners will not be triggered', next)
       }
 
       return this.store
@@ -84,8 +80,8 @@ class Nycticorax {
     throw new Error('Dispatch type error, must be function or object')
   }
 
-  getStore = (keys) => {
-    if (!keys) {
+  getStore = (...keys) => {
+    if (!keys.length) {
       return clone(this.store)
     }
 
@@ -102,14 +98,6 @@ class Nycticorax {
     }
 
     return clone(values)
-  }
-
-  reset = () => {
-    this.store = {}
-    this.strict = false
-    this.listeners = {}
-    this.index = 0
-    this.ignores = []
   }
 }
 

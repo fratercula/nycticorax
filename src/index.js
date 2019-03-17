@@ -4,44 +4,37 @@ export const {
   dispatch,
   createStore,
   getStore,
-  register,
-  unregister,
-  getId,
-  reset,
+  subscribe,
 } = nycticorax
 
 try {
   // eslint-disable-next-line global-require, import/no-unresolved
   const React = require('react')
 
-  exports.connect = (...keys) => {
-    const id = getId()
+  exports.connect = (...keys) => C => class extends React.Component {
+    state = {
+      props: getStore(...keys),
+    }
 
-    return C => class extends React.Component {
-      state = {
-        props: getStore(keys),
-      }
+    componentDidMount() {
+      this.unsubscribe = subscribe((triggerKeys) => {
+        const sames = keys.filter(k => triggerKeys.includes(k))
+        if (sames.length) {
+          this.setState({ props: getStore(...keys) })
+        }
+      })
+    }
 
-      componentDidMount() {
-        register(id, (triggerKeys) => {
-          const sames = keys.filter(k => triggerKeys.includes(k))
-          if (sames.length) {
-            this.setState({ props: getStore(keys) })
-          }
-        })
-      }
+    componentWillUnmount() {
+      this.unsubscribe()
+    }
 
-      componentWillUnmount() {
-        unregister(id)
-      }
+    render() {
+      const { props } = this.state
 
-      render() {
-        const { props } = this.state
-
-        return (
-          <C {...this.props} {...props} dispatch={dispatch} />
-        )
-      }
+      return (
+        <C {...this.props} {...props} dispatch={dispatch} />
+      )
     }
   }
 } catch (e) {
