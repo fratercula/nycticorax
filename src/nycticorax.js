@@ -1,4 +1,4 @@
-import eq from 'lodash.isequal' // eslint-disable-line import/no-unresolved
+import eq from 'fast-deep-equal' // eslint-disable-line import/no-unresolved
 import typeOf from './helper/typeof'
 import clone from './helper/clone'
 import warn from './helper/warn'

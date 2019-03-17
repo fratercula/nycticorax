@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.2
+
+- chore: use fast-deep-equal
+
 ## 0.3.1
 
 - refactor: async dispatch
