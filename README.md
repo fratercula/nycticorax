@@ -48,10 +48,7 @@ import {
   dispatch,
   createStore,
   getStore,
-  register,
-  unregister,
-  getId,
-  reset,
+  subscribe,
   connect,
 } from 'nycticorax'
 ```
@@ -73,10 +70,10 @@ get current store
 const store = getStore() // { name: 'nycticorax' }
 
 // get specific key
-const { name } = getStore(['name']) // nycticorax
+const { name } = getStore('name') // nycticorax
 
 // mutiple
-const { name, another } = getStore(['name', 'another'])
+const { name, another } = getStore('name', 'another')
 ```
 
 ### dispatch
@@ -112,39 +109,15 @@ dispatch(asyncDispatch).then(() => {
 }
 ```
 
-### getId
+### subscribe
 
-get unique key for registing listener function
-
-```js
-const id = getId()
-```
-
-### register
-
-register listener function for watching store change
+subscribe listeners for watching store change
 
 ```js
-const id = getId()
-register(id, (keys) => {
-  console.log(keys)
+const unsubscribe = subscribe((keys) => {
+  console.log(keys) // change keys
 })
-```
-
-### unregister
-
-unregister listener function
-
-```js
-unregister(id)
-```
-
-### reset
-
-reset store, remove all listener
-
-```js
-reset()
+unsubscribe() // unsubscribe
 ```
 
 ### connect
