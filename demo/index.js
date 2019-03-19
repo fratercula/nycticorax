@@ -4,6 +4,7 @@ import { createStore, dispatch } from '../src'
 import A from './component/a'
 import B from './component/b'
 import C from './component/c'
+import X from './ctx'
 import './index.less'
 
 createStore({
@@ -39,5 +40,6 @@ render((
     <A test="test" />
     <B />
     <C />
+    <X />
   </div>
 ), document.querySelector('#root'))

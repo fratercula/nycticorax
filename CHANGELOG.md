@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.0
+
+- feat: instance distinction
+
 ## 0.4.1
 
 - fix: unsubscribe listeners

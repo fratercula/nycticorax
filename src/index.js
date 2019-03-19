@@ -1,42 +1,18 @@
-import nycticorax from './nycticorax'
+import Nycticorax from './nycticorax'
+import getConnect from './connect'
 
 export const {
   dispatch,
   createStore,
   getStore,
   subscribe,
-} = nycticorax
+} = new Nycticorax()
 
-try {
-  // eslint-disable-next-line global-require, import/no-unresolved
-  const React = require('react')
+export const connect = getConnect({ dispatch, getStore, subscribe })
 
-  exports.connect = (...keys) => C => class extends React.Component {
-    state = {
-      props: getStore(...keys),
-    }
-
-    componentDidMount() {
-      this.unsubscribe = subscribe((triggerKeys) => {
-        const sames = keys.filter(k => triggerKeys.includes(k))
-        if (sames.length) {
-          this.setState({ props: getStore(...keys) })
-        }
-      })
-    }
-
-    componentWillUnmount() {
-      this.unsubscribe()
-    }
-
-    render() {
-      const { props } = this.state
-
-      return (
-        <C {...this.props} {...props} dispatch={dispatch} />
-      )
-    }
+export default class extends Nycticorax {
+  constructor() {
+    super()
+    this.connect = getConnect(this)
   }
-} catch (e) {
-  // ignore
 }

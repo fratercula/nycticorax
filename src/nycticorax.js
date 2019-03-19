@@ -3,7 +3,7 @@ import typeOf from './helper/typeof'
 import clone from './helper/clone'
 import warn from './helper/warn'
 
-class Nycticorax {
+export default class {
   strict = false
 
   store = {}
@@ -102,5 +102,3 @@ class Nycticorax {
     return clone(values)
   }
 }
-
-export default new Nycticorax()

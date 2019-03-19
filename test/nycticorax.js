@@ -1,4 +1,6 @@
-import nycticorax from '../src/nycticorax'
+import Nycticorax from '../src/nycticorax'
+
+const nycticorax = new Nycticorax()
 
 function reset() {
   nycticorax.store = {}
