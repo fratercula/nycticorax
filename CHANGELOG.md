@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.1
+
+- feat: async dispatch pass arguments
+
 ## 0.5.0
 
 - feat: instance distinction

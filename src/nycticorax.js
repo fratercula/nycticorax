@@ -39,11 +39,14 @@ export default class {
     }
   }
 
-  dispatch = (next) => {
+  dispatch = (next, ...args) => {
     const type = typeOf(next)
 
     if (type === 'function') {
-      return next(this.dispatch, this.getStore)
+      return next({
+        dispatch: this.dispatch,
+        getStore: this.getStore,
+      }, ...args)
     }
 
     if (type === 'object') {

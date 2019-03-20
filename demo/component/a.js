@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from '../../src'
 
-function asyncDispatch(dispatch, getStore) {
+function asyncDispatch({ dispatch, getStore }, ...args) {
+  console.log(args)
   return new Promise((resolve) => {
     const { name } = getStore()
     dispatch({ name: 'tttt' })
@@ -22,7 +23,7 @@ class A extends Component {
   }
 
   onAsync = () => {
-    this.props.dispatch(asyncDispatch)
+    this.props.dispatch(asyncDispatch, 'a', 'b')
       .then((name) => console.log(name))
   }
 

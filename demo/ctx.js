@@ -8,7 +8,7 @@ createStore({ name: 1 })
 function X({ dispatch, name }) {
   return (
     <div>
-      <h2>Component X, Different context </h2>
+      <h2>Component X, different instance </h2>
       <p>name: {name}</p>
       <button onClick={() => {
         dispatch({ name: 2 })

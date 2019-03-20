@@ -41,7 +41,7 @@ class A extends Component {
 export default connect('name')(A) // connect
 ```
 
-Specified instance
+specified instance
 
 ```js
 import React from 'react'
@@ -68,7 +68,7 @@ export default connect('name')(X)
 
 ## API
 
-You can use `nycticorax` widthout `React`
+You can use `nycticorax` without `React`
 
 ```js
 import {
@@ -115,7 +115,8 @@ dispatch({ name: 'lorem' })
 dispatch({ name: 'lorem', another: 'ipsum' })
 
 // async
-function asyncDispatch(dispatch, getStore) {
+function asyncDispatch({ dispatch, getStore }, ...args) {
+  console.log(args)
   return new Promise((resolve) => {
     // get current store
     const { name } = getStore()
@@ -131,7 +132,7 @@ function asyncDispatch(dispatch, getStore) {
     }, 1000)
   })
 }
-dispatch(asyncDispatch).then(() => {
+dispatch(asyncDispatch, 'a', 'b').then(() => {
   dispatch({ name: 'c' })
 }
 ```

@@ -70,7 +70,7 @@ describe('nycticorax', () => {
 
     list = []
 
-    function asyncA(dispatch, getStore) {
+    function asyncA({ dispatch, getStore }) {
       return new Promise((resolve) => {
         const { a } = getStore()
         setTimeout(() => {

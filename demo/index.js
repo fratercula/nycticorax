@@ -16,7 +16,7 @@ createStore({
   b: [1, 2],
 })
 
-function asyncDispatch(dispatch, getStore) {
+function asyncDispatch({ dispatch, getStore }) {
   return new Promise((resolve) => {
     const { name } = getStore()
     dispatch({ name: '----' })
