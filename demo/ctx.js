@@ -3,16 +3,17 @@ import Nycticorax from '../src'
 
 const { createStore, connect } = new Nycticorax()
 
-createStore({ name: 1 })
+createStore({ name: 'xyz' })
 
 function X({ dispatch, name }) {
   return (
     <div>
       <h2>Component X, different instance </h2>
       <p>name: {name}</p>
-      <button onClick={() => {
-        dispatch({ name: 2 })
-      }}>set name</button>
+      <input
+        placeholder="input text"
+        onInput={e => dispatch({ name: e.target.value })}
+      />
     </div>
   )
 }

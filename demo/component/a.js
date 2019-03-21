@@ -4,10 +4,10 @@ import { connect } from '../../src'
 function asyncDispatch({ dispatch, getStore }, ...args) {
   console.log(args)
   return new Promise((resolve) => {
-    const { name } = getStore()
-    dispatch({ name: 'tttt' })
+    const { name, number } = getStore()
+    dispatch({ name: name + name })
     setTimeout(() => {
-      dispatch({ name: name + '????' })
+      dispatch({ number: number + 1 })
       resolve(name)
     }, 1000)
   })
@@ -16,10 +16,6 @@ function asyncDispatch({ dispatch, getStore }, ...args) {
 class A extends Component {
   componentDidMount() {
     console.log('A', this.props)
-  }
-
-  onClick = () => {
-    this.props.dispatch({ 'number': 1 })
   }
 
   onAsync = () => {
@@ -33,9 +29,14 @@ class A extends Component {
       <div>
         <h2>Component A</h2>
         <p>name: {name}</p>
-        <p>Click to change value: Number</p>
-        <button onClick={this.onClick}>set Number 1</button>
-        <button onClick={this.onAsync}>Async</button>
+        <input
+          type="number"
+          onInput={e => this.props.dispatch({ number: Number(e.target.value) })}
+          placeholder="input number"
+        />
+        <br />
+        <br />
+        <button onClick={this.onAsync}>async dispatch</button>
       </div>
     )
   }

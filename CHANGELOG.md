@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.2
+
+- docs: update demo
+
 ## 0.5.1
 
 - feat: async dispatch pass arguments

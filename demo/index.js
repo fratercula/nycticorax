@@ -19,9 +19,9 @@ createStore({
 function asyncDispatch({ dispatch, getStore }) {
   return new Promise((resolve) => {
     const { name } = getStore()
-    dispatch({ name: '----' })
+    dispatch({ name: 'lorem' })
     setTimeout(() => {
-      dispatch({ name: '====' })
+      dispatch({ name: 'ipsum' })
       resolve(name)
     }, 1000)
   })

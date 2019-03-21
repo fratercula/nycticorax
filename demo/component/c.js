@@ -1,15 +1,14 @@
 import React, { Component } from 'react'
-import { connect, getStore, subscribe } from '../../src'
+import { connect, subscribe } from '../../src'
 
 class C extends Component {
-  onClick = () => {
-    this.props.dispatch({ 'name': 'bkbk' })
+  state = {
+    current: 'dispatch keys:',
   }
 
   componentDidMount() {
     this.unsubscribe = subscribe((keys) => {
-      console.log(keys)
-      console.log(getStore())
+      this.setState({ current: `dispatch keys: ${keys.join(', ')}` })
     })
   }
 
@@ -17,11 +16,11 @@ class C extends Component {
     return (
       <div>
         <h2>Component C</h2>
-        <button onClick={this.onClick}>set value name bkbk</button>
-        <button onClick={() => this.unsubscribe()}>stop subscribe</button>
+        <p>name: {this.props.name}</p>
+        <p className="current">{this.state.current}</p>
       </div>
     )
   }
 }
 
-export default connect()(C)
+export default connect('name')(C)
