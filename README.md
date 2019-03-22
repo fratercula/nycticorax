@@ -135,6 +135,31 @@ dispatch(asyncDispatch, 'a', 'b').then(() => {
 }
 ```
 
+by default, `dispatch` will be merged, and `async`
+
+```js
+// this
+dispatch({ a: 1, b: 2 })
+dispatch({ b: 1 })
+
+// will be merged as
+dispatch({ a: 1, b: 1 })
+
+// async
+createStore({ a: 1 })
+dispatch({ a: 2 })
+console.log(getStore('a')) // { a: 1 }
+setTimeout(() => console.log(getStore('a'))) // { a: 2 }
+```
+
+set `dispatch` to `sync`
+
+```js
+createStore({ a: 1 })
+dispatch({ a: 2 }, 'sync') // add `sync` flag
+console.log(getStore('a')) // { a: 2 }
+```
+
 ### subscribe
 
 subscribe listeners for watching store change
