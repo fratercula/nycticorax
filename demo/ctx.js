@@ -12,7 +12,7 @@ function X({ dispatch, name }) {
       <p>name: {name}</p>
       <input
         placeholder="input text"
-        onInput={e => dispatch({ name: e.target.value })}
+        onInput={e => dispatch({ name: e.target.value, s: 1 })}
       />
     </div>
   )

@@ -10,6 +10,16 @@ function B({ number, dispatch }) {
         onInput={e => dispatch({ name: e.target.value })}
         placeholder="input text"
       />
+      <br />
+      <br />
+      <button
+        onClick={() => {
+          dispatch({ name: 'nyc' }, 'sync')
+          dispatch({ number: 101 }, 'sync')
+        }}
+      >
+        sync dispatch
+      </button>
     </div>
   )
 }

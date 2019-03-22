@@ -12,6 +12,10 @@ export default class {
 
   ignores = []
 
+  timer = null
+
+  emits = {}
+
   createStore = (store) => {
     if (typeOf(store) !== 'object') {
       throw new Error('Store data must be object')
@@ -44,45 +48,65 @@ export default class {
 
     if (type === 'function') {
       return next({
-        dispatch: this.dispatch,
+        dispatch: o => this.dispatch(o, 'sync'),
         getStore: this.getStore,
       }, ...args)
     }
 
     if (type === 'object') {
-      const keys = Object.keys(next)
-      const actives = []
+      this.emits = { ...this.emits, ...next }
 
-      for (let i = 0; i < keys.length; i += 1) {
-        const key = keys[i]
-        if (this.strict) {
-          if (!(key in this.store)) {
-            throw new Error(`Dispatch key not exist: '${key}'`)
-          }
-          if (!this.ignores.includes(key) && typeOf(this.store[key]) !== typeOf(next[key])) {
-            throw new Error(`Dispatch key type mismatch: '${key}'`)
-          }
-        }
-        if (!eq(this.store[key], next[key])) {
-          this.store[key] = next[key]
-          actives.push(key)
-        } else {
-          warn(`Dispatch key width same value: '${key}'`)
-        }
-      }
-
-      if (actives.length) {
-        this.listeners.forEach((listener) => {
-          listener(actives)
-        })
+      if (args[0] === 'sync' || this.sync) {
+        this.emit()
       } else {
-        warn('Dispatch same keys and values, listeners will not be triggered', next)
+        clearTimeout(this.timer)
+        this.timer = setTimeout(this.emit)
       }
 
-      return this.store
+      return undefined
     }
 
     throw new Error('Dispatch type error, must be function or object')
+  }
+
+  emit = () => {
+    const next = this.emits
+    const keys = Object.keys(next)
+    const actives = []
+
+    for (let i = 0; i < keys.length; i += 1) {
+      const key = keys[i]
+
+      if (this.strict) {
+        if (!(key in this.store)) {
+          warn(`Dispatch key not exist: '${key}'`)
+          continue // eslint-disable-line no-continue
+        }
+        if (!this.ignores.includes(key) && typeOf(this.store[key]) !== typeOf(next[key])) {
+          warn(`Dispatch key type mismatch: '${key}'`)
+          continue // eslint-disable-line no-continue
+        }
+      }
+
+      if (eq(this.store[key], next[key])) {
+        warn(`Dispatch key width same value: '${key}'`)
+        continue // eslint-disable-line no-continue
+      }
+
+      this.store[key] = next[key]
+      actives.push(key)
+    }
+
+    if (actives.length) {
+      this.listeners.forEach((listener) => {
+        listener(actives)
+      })
+    } else {
+      warn('Dispatch same keys and values, listeners will not be triggered', next)
+    }
+
+    this.emits = {}
+    this.timer = null
   }
 
   getStore = (...keys) => {
@@ -96,7 +120,8 @@ export default class {
       const key = keys[i]
       if (this.strict) {
         if (!(key in this.store)) {
-          throw new Error(`Store key no exist: '${key}'`)
+          warn(`Store key no exist: '${key}'`)
+          continue // eslint-disable-line no-continue
         }
       }
       values[key] = this.store[key]

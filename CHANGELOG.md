@@ -1,8 +1,11 @@
 # Changelog
 
-## 0.5.2
+## 1.0.0
 
 - docs: update demo
+- refactor: strict mode warning
+- feat: combine dispatch
+- feat: sync dispatch
 
 ## 0.5.1
 

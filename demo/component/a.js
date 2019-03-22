@@ -5,9 +5,9 @@ function asyncDispatch({ dispatch, getStore }, ...args) {
   console.log(args)
   return new Promise((resolve) => {
     const { name, number } = getStore()
-    dispatch({ name: `${name}a` })
     setTimeout(() => {
       dispatch({ number: number + 1 })
+      dispatch({ name: `${name}a` })
       resolve(name)
     }, 1000)
   })

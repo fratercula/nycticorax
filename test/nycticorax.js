@@ -11,29 +11,31 @@ function reset() {
 
 describe('nycticorax', () => {
   it('get store widthout strict', () => {
-    expect(nycticorax.getStore(['a'])).toEqual({})
+    expect(nycticorax.getStore('a')).toEqual({})
   })
 
   it('dispatch widthout strict', () => {
-    nycticorax.dispatch({ a: 1 })
+    nycticorax.dispatch({ a: 1 }, 'sync')
     expect(nycticorax.getStore()).toEqual({ a: 1 })
   })
 
   it('create store', () => {
+    reset()
     nycticorax.createStore({ a: 1 })
     expect(nycticorax.store).toEqual({ a: 1 })
     expect(nycticorax.strict).toBe(true)
+
+    reset()
     expect(() => nycticorax.createStore('')).toThrowError(new Error('Store data must be object'))
   })
 
   it('get store', () => {
     reset()
     expect(nycticorax.getStore()).toEqual({})
-    expect(nycticorax.getStore([])).toEqual({})
     nycticorax.createStore({ a: 1, another: undefined })
     expect(nycticorax.store).toEqual({ a: 1 })
     expect(nycticorax.getStore('a')).toEqual({ a: 1 })
-    expect(() => nycticorax.getStore('a', 'b')).toThrowError(new Error('Store key no exist: \'b\''))
+    expect(nycticorax.getStore('a', 'b')).toEqual({ a: 1 })
   })
 
   it('subscribe listener', () => {
@@ -58,18 +60,20 @@ describe('nycticorax', () => {
     expect(() => nycticorax.dispatch(''))
       .toThrowError(new Error('Dispatch type error, must be function or object'))
 
-    nycticorax.dispatch({ a: 2 })
+    nycticorax.dispatch({ a: 2 }, 'sync')
     expect(list).toEqual(['a'])
 
     reset()
+    list = []
     nycticorax.createStore({ a: 2 })
-    expect(() => nycticorax.dispatch({ b: 1 }))
-      .toThrowError(new Error('Dispatch key not exist: \'b\''))
-    expect(() => nycticorax.dispatch({ a: 'a' }))
-      .toThrowError(new Error('Dispatch key type mismatch: \'a\''))
+    nycticorax.subscribe((keys) => {
+      list = keys
+    })
+    nycticorax.dispatch({ b: 1 }, 'sync')
+    nycticorax.dispatch({ a: 'a' }, 'sync')
+    expect(list).toEqual([])
 
     list = []
-
     function asyncA({ dispatch, getStore }) {
       return new Promise((resolve) => {
         const { a } = getStore()
@@ -91,7 +95,7 @@ describe('nycticorax', () => {
     nycticorax.subscribe((keys) => {
       list = keys
     })
-    nycticorax.dispatch({ b: 1, a: 1 })
+    nycticorax.dispatch({ b: 1, a: 1 }, 'sync')
     expect(list).toEqual([])
   })
 })

@@ -39,7 +39,7 @@
     "testMatch": [
       "**/test/*.js"
     ],
-    "collectCoverage": true,
+    "collectCoverage": false,
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/helper/(clone|typeof|warn)"
