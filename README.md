@@ -135,7 +135,7 @@ dispatch(asyncDispatch, 'a', 'b').then(() => {
 }
 ```
 
-by default, `dispatch` will be merged, and `async`
+by default, `dispatch` will be `merged`
 
 ```js
 // this
@@ -144,12 +144,30 @@ dispatch({ b: 1 })
 
 // will be merged as
 dispatch({ a: 1, b: 1 })
+```
 
+add `dispatch` is `async`, but except `async dispatch`
+
+```js
 // async
 createStore({ a: 1 })
 dispatch({ a: 2 })
 console.log(getStore('a')) // { a: 1 }
 setTimeout(() => console.log(getStore('a'))) // { a: 2 }
+
+function asyncDispatch({ dispatch }) {
+  return new Promise((resolve) => {
+    // update name
+    dispatch({ name: 'a' }) // sync dispatch
+
+    setTimeout(() => {
+      dispatch({ name: 'b' }) // sync dispatch
+
+      // resolve
+      resolve(name)
+    }, 1000)
+  })
+}
 ```
 
 set `dispatch` to `sync`
