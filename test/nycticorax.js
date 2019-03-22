@@ -77,6 +77,7 @@ describe('nycticorax', () => {
     function asyncA({ dispatch, getStore }) {
       return new Promise((resolve) => {
         const { a } = getStore()
+        dispatch({ b: 1 })
         setTimeout(() => {
           dispatch({ a: a + 1 })
           resolve()
@@ -86,6 +87,7 @@ describe('nycticorax', () => {
 
     nycticorax.dispatch(asyncA)
       .then(() => {
+        expect(nycticorax.store).toEqual({ a: 3 })
         expect(list).toEqual(['a'])
       })
 
@@ -97,5 +99,24 @@ describe('nycticorax', () => {
     })
     nycticorax.dispatch({ b: 1, a: 1 }, 'sync')
     expect(list).toEqual([])
+  })
+
+  it('async dispatch', (done) => {
+    reset()
+
+    let times = 0
+
+    nycticorax.createStore({ a: 1, b: 1 })
+    nycticorax.subscribe(() => {
+      times += 1
+    })
+    nycticorax.dispatch({ a: 2 })
+    nycticorax.dispatch({ b: 2 })
+
+    setTimeout(() => {
+      expect(nycticorax.store).toEqual({ a: 2, b: 2 })
+      expect(times).toBe(1)
+      done()
+    })
   })
 })

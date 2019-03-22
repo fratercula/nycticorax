@@ -1,6 +1,6 @@
 {
   "name": "nycticorax",
-  "version": "0.5.2",
+  "version": "1.0.0",
   "description": "State container for JavaScript application, and React",
   "main": "lib/index.js",
   "files": [
@@ -39,7 +39,7 @@
     "testMatch": [
       "**/test/*.js"
     ],
-    "collectCoverage": false,
+    "collectCoverage": true,
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/helper/(clone|typeof|warn)"

@@ -56,7 +56,7 @@ export default class {
     if (type === 'object') {
       this.emits = { ...this.emits, ...next }
 
-      if (args[0] === 'sync' || this.sync) {
+      if (args[0] === 'sync') {
         this.emit()
       } else {
         clearTimeout(this.timer)
