@@ -4,7 +4,7 @@
 [![codecov](https://codecov.io/gh/fratercula/nycticorax/branch/master/graph/badge.svg)](https://codecov.io/gh/fratercula/nycticorax)
 
 
-State container for JavaScript application, and React
+state container for JavaScript application, and React
 
 ## Install
 
@@ -14,7 +14,7 @@ $ npm i nycticorax
 
 ## Usage
 
-for `React`, it is very simple use, **not** `Provider`, `reducer`, `action`, **only** `connect`
+for `React`, it is simple use, **not** `Provider`, `reducer`, `action`, **only** `connect`
 
 [demo](https://fratercula.github.io/nycticorax/) | [counter](https://jsfiddle.net/am0200/gba9sdLp/) | [counter(strict mode)](https://jsfiddle.net/am0200/0L87d29h/)
 
@@ -66,7 +66,7 @@ export default connect('name')(X)
 
 ## API
 
-You can use `nycticorax` without `React`
+you can use `nycticorax` without `React`
 
 ```js
 import {
@@ -94,7 +94,7 @@ get current store
 // get all store value
 const store = getStore() // { name: 'nycticorax' }
 
-// get specific key
+// specified key
 const { name } = getStore('name') // nycticorax
 
 // mutiple
@@ -106,7 +106,7 @@ const { name, another } = getStore('name', 'another')
 update store
 
 ```js
-// update store key name, value is `lorem`
+// update store key `name`, value is `lorem`
 dispatch({ name: 'lorem' })
 
 // multiple key
@@ -146,7 +146,7 @@ dispatch({ b: 1 })
 dispatch({ a: 1, b: 1 })
 ```
 
-add `dispatch` is `async`, but except `async dispatch`
+and `dispatch` is `async`, but except `async dispatch`
 
 ```js
 // async
@@ -155,13 +155,15 @@ dispatch({ a: 2 })
 console.log(getStore('a')) // { a: 1 }
 setTimeout(() => console.log(getStore('a'))) // { a: 2 }
 
-function asyncDispatch({ dispatch }) {
+function asyncDispatch({ dispatch, getStore }) {
   return new Promise((resolve) => {
     // update name
     dispatch({ name: 'a' }) // sync dispatch
+    console.log(getStore('name')) // a
 
     setTimeout(() => {
       dispatch({ name: 'b' }) // sync dispatch
+      console.log(getStore('name')) // b
 
       // resolve
       resolve(name)
@@ -191,7 +193,7 @@ unsubscribe() // unsubscribe
 
 ### connect
 
-use for `React` only
+for `React` only
 
 ```js
 connect('name', 'another')(ReactComponent)
