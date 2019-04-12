@@ -1,13 +1,13 @@
 {
   "name": "nycticorax",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "State container for JavaScript application, and React",
   "main": "lib/index.js",
   "files": [
     "lib"
   ],
   "scripts": {
-    "start": "falco -c -m demo/index.js",
+    "start": "NODE_ENV=development falco -c -m demo/index.js",
     "docs": "rm -rf docs && NODE_ENV=docs falco -c -o docs -m demo/index.js",
     "umd": "NODE_ENV=umd falco -c -o lib -m src/index.js",
     "build": "npm run docs && npm run umd",

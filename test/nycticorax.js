@@ -27,6 +27,7 @@ describe('nycticorax', () => {
 
     reset()
     expect(() => nycticorax.createStore('')).toThrowError(new Error('Store data must be object'))
+    expect(() => nycticorax.createStore({})).toThrowError(new Error('Store data should not be empty'))
   })
 
   it('get store', () => {

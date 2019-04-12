@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1
+
+- feat: disable set initial store empty
+- refactor: dispatch warning
+
 ## 1.0.0
 
 - docs: update demo

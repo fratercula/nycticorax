@@ -28,6 +28,7 @@ module.exports = {
     },
   ],
   registry: 'https://registry.npm.taobao.org',
-  mode: NODE_ENV ? 'production' : 'development',
+  env: NODE_ENV,
+  mode: NODE_ENV === 'development' ? NODE_ENV : 'production',
   output,
 }

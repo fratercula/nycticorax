@@ -1,5 +1,5 @@
 export default function (...message) {
-  if (window.console && window.console.warn) {
+  if (process.env.NODE_ENV === 'development') {
     window.console.warn(...message)
   }
 }

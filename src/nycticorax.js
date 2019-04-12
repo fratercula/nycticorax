@@ -1,3 +1,5 @@
+/* eslint-disable no-continue */
+
 import eq from 'fast-deep-equal' // eslint-disable-line import/no-unresolved
 import typeOf from './helper/typeof'
 import clone from './helper/clone'
@@ -19,6 +21,10 @@ export default class {
   createStore = (store) => {
     if (typeOf(store) !== 'object') {
       throw new Error('Store data must be object')
+    }
+
+    if (!Object.keys(store).length) {
+      throw new Error('Store data should not be empty')
     }
 
     this.store = store
@@ -80,17 +86,17 @@ export default class {
       if (this.strict) {
         if (!(key in this.store)) {
           warn(`Dispatch key not exist: '${key}'`)
-          continue // eslint-disable-line no-continue
+          continue
         }
         if (!this.ignores.includes(key) && typeOf(this.store[key]) !== typeOf(next[key])) {
           warn(`Dispatch key type mismatch: '${key}'`)
-          continue // eslint-disable-line no-continue
+          continue
         }
       }
 
       if (eq(this.store[key], next[key])) {
         warn(`Dispatch key width same value: '${key}'`)
-        continue // eslint-disable-line no-continue
+        continue
       }
 
       this.store[key] = next[key]
@@ -121,7 +127,7 @@ export default class {
       if (this.strict) {
         if (!(key in this.store)) {
           warn(`Store key no exist: '${key}'`)
-          continue // eslint-disable-line no-continue
+          continue
         }
       }
       values[key] = this.store[key]
