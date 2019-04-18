@@ -29,8 +29,7 @@ export default class {
 
     this.store = store
     this.strict = true
-    this.ignores = Object.keys(store)
-      .filter(key => store[key] === undefined || store[key] === null)
+    this.ignores = Object.keys(store).filter(key => store[key] === undefined)
   }
 
   subscribe = (listener) => {

@@ -27,7 +27,9 @@ module.exports = {
       urls: 'https://cdn.staticfile.org/react-dom/16.8.2/umd/react-dom.production.min.js',
     },
   ],
-  registry: 'https://registry.npm.taobao.org',
+  npm: {
+    registry: 'https://registry.npm.taobao.org',
+  },
   env: NODE_ENV,
   mode: NODE_ENV === 'development' ? NODE_ENV : 'production',
   output,

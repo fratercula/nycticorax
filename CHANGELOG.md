@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.2
+
+- feat: only ignore `undefined` key
+
 ## 1.0.1
 
 - feat: disable set initial store empty
