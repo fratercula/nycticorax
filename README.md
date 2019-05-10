@@ -226,6 +226,16 @@ class A extends Component {
 export default connect('name', 'another')(A)
 ```
 
+## UMD use
+
+```js
+// <script src="https://unpkg.com/nycticorax"></script>
+
+const { createStore, dispatch, ... } = window.nycticorax
+const Nycticorax = window.nycticorax.default // use default
+const { createStore, dispatch, ... } = new Nycticorax()
+```
+
 ## Development
 
 ```bash
