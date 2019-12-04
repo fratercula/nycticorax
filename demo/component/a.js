@@ -14,6 +14,10 @@ function asyncDispatch({ dispatch, getStore }, ...args) {
 }
 
 class A extends Component {
+  static s = () => {
+    return 's'
+  }
+
   componentDidMount() {
     console.log('A', this.props)
   }

@@ -33,7 +33,7 @@ export default class {
   }
 
   subscribe = (listener) => {
-    if (typeOf(listener) !== 'function') {
+    if (!typeOf(listener).includes('function')) {
       throw new Error('Listener must be function')
     }
     this.listeners.push(listener)
@@ -51,9 +51,9 @@ export default class {
   dispatch = (next, ...args) => {
     const type = typeOf(next)
 
-    if (type === 'function') {
+    if (type.includes('function')) {
       return next({
-        dispatch: o => this.dispatch(o, 'sync'),
+        dispatch: o => this.dispatch(o, true),
         getStore: this.getStore,
       }, ...args)
     }
@@ -61,7 +61,7 @@ export default class {
     if (type === 'object') {
       this.emits = { ...this.emits, ...next }
 
-      if (args[0] === 'sync') {
+      if (args[0]) {
         this.emit()
       } else {
         clearTimeout(this.timer)

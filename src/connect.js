@@ -1,3 +1,5 @@
+const ignoreStaticMethods = ['name', 'prototype', 'length', 'propTypes', 'defaultProps']
+
 export default ({ getStore, subscribe, dispatch }) => {
   let React
   try {
@@ -7,30 +9,46 @@ export default ({ getStore, subscribe, dispatch }) => {
     return undefined
   }
 
-  return (...keys) => C => class extends React.Component {
-    state = {
-      props: getStore(...keys),
+  return (...keys) => (C) => {
+    class R extends React.Component {
+      state = {
+        props: getStore(...keys),
+      }
+
+      componentDidMount() {
+        this.unsubscribe = subscribe((triggerKeys) => {
+          const sames = keys.filter(k => triggerKeys.includes(k))
+          if (sames.length) {
+            this.setState({ props: getStore(...keys) })
+          }
+        })
+      }
+
+      componentWillUnmount() {
+        this.unsubscribe()
+      }
+
+      render() {
+        const { props } = this.state
+
+        return (
+          <C
+            dispatch={dispatch}
+            {...props}
+            {...this.props}
+          />
+        )
+      }
     }
 
-    componentDidMount() {
-      this.unsubscribe = subscribe((triggerKeys) => {
-        const sames = keys.filter(k => triggerKeys.includes(k))
-        if (sames.length) {
-          this.setState({ props: getStore(...keys) })
+    Object
+      .getOwnPropertyNames(C)
+      .forEach((method) => {
+        if (!ignoreStaticMethods.includes(method)) {
+          R[method] = C[method]
         }
       })
-    }
 
-    componentWillUnmount() {
-      this.unsubscribe()
-    }
-
-    render() {
-      const { props } = this.state
-
-      return (
-        <C {...this.props} {...props} dispatch={dispatch} />
-      )
-    }
+    return R
   }
 }

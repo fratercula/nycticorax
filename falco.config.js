@@ -33,4 +33,7 @@ module.exports = {
   env: NODE_ENV,
   mode: NODE_ENV === 'development' ? NODE_ENV : 'production',
   output,
+  targets: {
+    esmodules: true,
+  },
 }

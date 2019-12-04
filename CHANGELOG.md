@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.0
+
+- fix: async dispatch function
+- fix: static method lost
+- feat: not rewrite origin props
+- feat: remove `sync` flag
+
 ## 1.0.2
 
 - feat: only ignore `undefined` key

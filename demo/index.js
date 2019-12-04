@@ -16,15 +16,13 @@ createStore({
   b: [1, 2],
 })
 
-function asyncDispatch({ dispatch, getStore }) {
-  return new Promise((resolve) => {
-    const { name } = getStore()
-    dispatch({ name: 'lorem' })
-    setTimeout(() => {
-      dispatch({ name: 'ipsum' })
-      resolve(name)
-    }, 1000)
-  })
+async function asyncDispatch({ dispatch, getStore }) {
+  await new Promise((r) => setTimeout(r, 1000))
+  const { name } = getStore()
+  dispatch({ name: 'lorem' })
+  await new Promise((r) => setTimeout(r, 1000))
+  dispatch({ name: 'ipsum' })
+  return name
 }
 
 dispatch(asyncDispatch)

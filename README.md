@@ -176,7 +176,7 @@ set `dispatch` to `sync`
 
 ```js
 createStore({ a: 1 })
-dispatch({ a: 2 }, 'sync') // add `sync` flag
+dispatch({ a: 2 }, true)
 console.log(getStore('a')) // { a: 2 }
 ```
 
