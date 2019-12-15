@@ -114,24 +114,5 @@ export default class {
     this.timer = null
   }
 
-  getStore = (...keys) => {
-    if (!keys.length) {
-      return clone(this.store)
-    }
-
-    const values = {}
-
-    for (let i = 0; i < keys.length; i += 1) {
-      const key = keys[i]
-      if (this.strict) {
-        if (!(key in this.store)) {
-          warn(`Store key no exist: '${key}'`)
-          continue
-        }
-      }
-      values[key] = this.store[key]
-    }
-
-    return clone(values)
-  }
+  getStore = () => clone(this.store)
 }

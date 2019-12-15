@@ -88,17 +88,10 @@ createStore({ name: 'nycticorax' })
 
 ### getStore
 
-get current store
+get store data
 
 ```js
-// get all store value
 const store = getStore() // { name: 'nycticorax' }
-
-// specified key
-const { name } = getStore('name') // nycticorax
-
-// mutiple
-const { name, another } = getStore('name', 'another')
 ```
 
 ### dispatch

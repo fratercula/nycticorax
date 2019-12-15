@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1
+
+- feat: remove `getStore` params
+
 ## 1.1.0
 
 - fix: async dispatch function
