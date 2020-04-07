@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.2
+
+- feat: dispatch warn
+
 ## 1.1.1
 
 - feat: remove `getStore` params

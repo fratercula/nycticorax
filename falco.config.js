@@ -30,7 +30,7 @@ module.exports = {
   npm: {
     registry: 'https://registry.npm.taobao.org',
   },
-  env: NODE_ENV,
+  // env: NODE_ENV,
   mode: NODE_ENV === 'development' ? NODE_ENV : 'production',
   output,
   targets: {
