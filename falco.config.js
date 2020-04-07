@@ -7,6 +7,7 @@ if (NODE_ENV === 'docs') {
 }
 
 if (NODE_ENV === 'umd') {
+  output.filename = 'index.js'
   output.library = 'nycticorax'
   output.libraryTarget = 'umd'
 }
