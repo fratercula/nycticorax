@@ -84,17 +84,17 @@ export default class {
 
       if (this.strict) {
         if (!(key in this.store)) {
-          warn(`Dispatch key not exist: '${key}'`)
+          warn(`Key not exist: \`${key}\``)
           continue
         }
         if (!this.ignores.includes(key) && typeOf(this.store[key]) !== typeOf(next[key])) {
-          warn(`Dispatch key type mismatch: '${key}'`)
+          warn(`Key type error: \`${key}\``)
           continue
         }
       }
 
       if (eq(this.store[key], next[key])) {
-        warn(`Dispatch key width same value: '${key}'`)
+        warn(`Dispatch same value: \`${key}\``)
         continue
       }
 
@@ -107,7 +107,7 @@ export default class {
         listener(actives)
       })
     } else {
-      warn('Dispatch same keys and values, listeners will not be triggered', next)
+      warn('Dispatch same value or key error, nothing be triggered', next)
     }
 
     this.emits = {}

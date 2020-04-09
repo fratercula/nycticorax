@@ -1,4 +1,11 @@
-const ignoreStaticMethods = ['name', 'prototype', 'length', 'propTypes', 'defaultProps']
+const ignoreStaticMethods = [
+  'name',
+  'prototype',
+  'length',
+  'propTypes',
+  'defaultProps',
+  'getDerivedStateFromProps',
+]
 
 export default ({ getStore, subscribe, dispatch }) => {
   let React
