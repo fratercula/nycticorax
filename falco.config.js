@@ -20,12 +20,12 @@ module.exports = {
       commonjs2: 'react',
       commonjs: 'react',
       amd: 'react',
-      urls: 'https://cdn.staticfile.org/react/16.8.2/umd/react.production.min.js',
+      urls: 'https://cdn.jsdelivr.net/npm/react/umd/react.production.min.js',
     },
     {
       name: 'react-dom',
       root: 'ReactDOM',
-      urls: 'https://cdn.staticfile.org/react-dom/16.8.2/umd/react-dom.production.min.js',
+      urls: 'https://cdn.jsdelivr.net/npm/react-dom/umd/react-dom.production.min.js',
     },
   ],
   npm: {
