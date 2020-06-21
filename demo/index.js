@@ -4,6 +4,7 @@ import { createStore, dispatch } from '../src'
 import A from './component/a'
 import B from './component/b'
 import C from './component/c'
+import H from './component/hooks'
 import X from './ctx'
 import './index.less'
 
@@ -39,5 +40,6 @@ render((
     <B />
     <C />
     <X />
+    <H />
   </div>
 ), document.querySelector('#root'))

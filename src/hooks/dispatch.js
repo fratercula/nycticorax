@@ -1,3 +1,1 @@
-import { dispatch } from '..'
-
-export default () => dispatch
+export default ({ dispatch }) => () => dispatch
