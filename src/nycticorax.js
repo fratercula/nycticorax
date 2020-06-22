@@ -20,11 +20,11 @@ export default class {
 
   createStore = (store) => {
     if (typeOf(store) !== 'object') {
-      throw new Error('Store data must be object')
+      throw new Error('store must be an object')
     }
 
     if (!Object.keys(store).length) {
-      throw new Error('Store data should not be empty')
+      throw new Error('store should not empty')
     }
 
     this.store = store
@@ -34,7 +34,7 @@ export default class {
 
   subscribe = (listener) => {
     if (!typeOf(listener).includes('function')) {
-      throw new Error('Listener must be function')
+      throw new Error('listener must be a function')
     }
     this.listeners.push(listener)
 
@@ -71,7 +71,7 @@ export default class {
       return undefined
     }
 
-    throw new Error('Dispatch type error, must be function or object')
+    throw new Error('dispatch type error, function or object')
   }
 
   emit = () => {
@@ -84,17 +84,17 @@ export default class {
 
       if (this.strict) {
         if (!(key in this.store)) {
-          warn(`Key not exist: \`${key}\``)
+          warn(`key not exist: \`${key}\``)
           continue
         }
         if (!this.ignores.includes(key) && typeOf(this.store[key]) !== typeOf(next[key])) {
-          warn(`Key type error: \`${key}\``)
+          warn(`key type error: \`${key}\``)
           continue
         }
       }
 
       if (eq(this.store[key], next[key])) {
-        warn(`Dispatch same value: \`${key}\``)
+        warn(`dispatch same values: \`${key}\``)
         continue
       }
 
@@ -107,7 +107,7 @@ export default class {
         listener(actives)
       })
     } else {
-      warn('Dispatch same value or key error, nothing be triggered', next)
+      warn('dispatch same value or key error, nothing be triggered', next)
     }
 
     this.emits = {}

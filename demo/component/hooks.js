@@ -1,9 +1,8 @@
 import React from 'react'
-import { useDispatch, useStore } from '../../src'
+import { useStore, dispatch } from '../../src'
 
 export default function () {
   const { number } = useStore('number')
-  const dispatch = useDispatch()
 
   console.log('hooks')
 
