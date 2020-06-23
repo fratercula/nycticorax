@@ -6,17 +6,15 @@ import clone from './helper/clone'
 import warn from './helper/warn'
 
 export default class {
-  strict = false
-
-  store = {}
-
-  listeners = []
-
-  ignores = []
-
-  timer = null
-
-  emits = {}
+  constructor() {
+    this.strict = false
+    this.ignores = []
+    this.store = {}
+    this.listeners = []
+    this.timer = null
+    this.emits = {}
+    this.middlewares = []
+  }
 
   createStore = (store) => {
     if (typeOf(store) !== 'object') {
@@ -72,6 +70,13 @@ export default class {
     }
 
     throw new Error('dispatch type error, function or object')
+  }
+
+  use = (middleware) => {
+    if (!typeOf(middleware).includes('function')) {
+      throw new Error('middleware must be a function')
+    }
+    this.middlewares.push(middleware)
   }
 
   emit = () => {

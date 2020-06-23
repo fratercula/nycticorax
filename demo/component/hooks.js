@@ -4,8 +4,6 @@ import { useStore, dispatch } from '../../src'
 export default function () {
   const { number } = useStore('number')
 
-  console.log('hooks')
-
   return (
     <div>
       <h2>Hooks</h2>
