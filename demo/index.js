@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { createStore, dispatch } from '../src'
+import { createStore, dispatch, applyMiddleware } from '../src'
 import A from './component/a'
 import B from './component/b'
 import C from './component/c'
@@ -33,6 +33,19 @@ dispatch(asyncDispatch)
     dispatch({ a: { s: 1, b: 2 }, b: [1, 2] })
   })
 
+const a = async (next) => {
+  // console.log('a', keys)
+  console.warn('a')
+  await next()
+  console.warn('c')
+}
+const b = async (next) => {
+  await next()
+  // console.log('b', keys)
+  console.warn('b')
+}
+
+applyMiddleware(a, b)
 
 render((
   <div className="root">

@@ -72,14 +72,27 @@ export default class {
     throw new Error('dispatch type error, function or object')
   }
 
-  use = (middleware) => {
-    if (!typeOf(middleware).includes('function')) {
-      throw new Error('middleware must be a function')
-    }
-    this.middlewares.push(middleware)
+  applyMiddleware = (...middlewares) => {
+    this.middlewares = middlewares
   }
 
-  emit = () => {
+  compose = () => (async () => {
+    let next = async () => Promise.resolve()
+
+    function createNext(middleware, oldNext) {
+      return async () => {
+        await middleware(oldNext)
+      }
+    }
+
+    for (let i = this.middlewares.length - 1; i >= 0; i -= 1) {
+      next = createNext(this.middlewares[i], next)
+    }
+
+    await next()
+  })()
+
+  emit = async () => {
     const next = this.emits
     const keys = Object.keys(next)
     const actives = []
@@ -108,6 +121,7 @@ export default class {
     }
 
     if (actives.length) {
+      await this.compose()
       this.listeners.forEach((listener) => {
         listener(actives)
       })
