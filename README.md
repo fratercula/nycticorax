@@ -64,6 +64,27 @@ function X({ dispatch, name }) {
 export default connect('name')(X)
 ```
 
+hooks
+
+```js
+import React from 'react'
+import { createStore, useStore, dispatch } from 'nycticorax'
+
+createStore({ name: 1 })
+
+export default () {
+  const { name } = useStore('name')
+
+  return (
+    <div>
+      <h2>Component X </h2>
+      <p>name: {name}</p>
+      <button onClick={() => dispatch({ name: 2 })}>set name</button>
+    </div>
+  )
+}
+```
+
 ## API
 
 you can use `nycticorax` without `React`
@@ -217,6 +238,14 @@ class A extends Component {
 }
 
 export default connect('name', 'another')(A)
+```
+
+### useStore
+
+for `React` only
+
+```js
+const { name } = useStore('name')
 ```
 
 ## UMD use

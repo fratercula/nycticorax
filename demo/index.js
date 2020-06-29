@@ -4,6 +4,7 @@ import { createStore, dispatch } from '../src'
 import A from './component/a'
 import B from './component/b'
 import C from './component/c'
+import H from './component/hooks'
 import X from './ctx'
 import './index.less'
 
@@ -32,12 +33,12 @@ dispatch(asyncDispatch)
     dispatch({ a: { s: 1, b: 2 }, b: [1, 2] })
   })
 
-
 render((
   <div className="root">
     <A test="test" />
     <B />
     <C />
     <X />
+    <H />
   </div>
 ), document.querySelector('#root'))

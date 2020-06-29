@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.0
+
+- feat: hooks
+
 ## 1.1.2
 
 - feat: dispatch warn
