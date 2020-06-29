@@ -7,7 +7,6 @@ export const {
   createStore,
   getStore,
   subscribe,
-  applyMiddleware,
 } = new Nycticorax()
 
 export const connect = getConnect({ dispatch, getStore, subscribe })

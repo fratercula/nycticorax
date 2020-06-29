@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { createStore, dispatch, applyMiddleware } from '../src'
+import { createStore, dispatch } from '../src'
 import A from './component/a'
 import B from './component/b'
 import C from './component/c'
