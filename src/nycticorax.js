@@ -71,7 +71,7 @@ export default class {
     throw new Error('dispatch type error, function or object')
   }
 
-  emit = async () => {
+  emit = () => {
     const next = this.emits
     const keys = Object.keys(next)
     const actives = []
