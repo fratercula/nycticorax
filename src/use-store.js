@@ -1,3 +1,5 @@
+import warn from './helper/warn'
+
 export default ({ getStore, subscribe }) => {
   let React
   try {
@@ -12,13 +14,17 @@ export default ({ getStore, subscribe }) => {
       return undefined
     }
 
-    const [props, setProps] = React.useState(getStore(...keys))
+    if (!keys.length) {
+      warn('you should provide the store keys')
+    }
+
+    const [props, setProps] = React.useState(getStore())
 
     React.useLayoutEffect(() => {
       const unsubscribe = subscribe((triggerKeys) => {
         const sames = keys.filter(k => triggerKeys.includes(k))
         if (sames.length) {
-          setProps(getStore(...keys))
+          setProps(getStore())
         }
       })
 

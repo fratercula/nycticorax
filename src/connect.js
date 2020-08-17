@@ -1,3 +1,5 @@
+import warn from './helper/warn'
+
 const ignoreStaticMethods = [
   'name',
   'prototype',
@@ -19,14 +21,18 @@ export default ({ getStore, subscribe, dispatch }) => {
   return (...keys) => (C) => {
     class R extends React.Component {
       state = {
-        props: getStore(...keys),
+        props: getStore(),
       }
 
       componentDidMount() {
+        if (!keys.length) {
+          warn('you should provide the store keys')
+        }
+
         this.unsubscribe = subscribe((triggerKeys) => {
           const sames = keys.filter(k => triggerKeys.includes(k))
           if (sames.length) {
-            this.setState({ props: getStore(...keys) })
+            this.setState({ props: getStore() })
           }
         })
       }
