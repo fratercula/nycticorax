@@ -1,9 +1,5 @@
 # nycticorax
 
-[![Build Status](https://travis-ci.org/fratercula/nycticorax.svg?branch=master)](https://travis-ci.org/fratercula/nycticorax)
-[![codecov](https://codecov.io/gh/fratercula/nycticorax/branch/master/graph/badge.svg)](https://codecov.io/gh/fratercula/nycticorax)
-
-
 state container for JavaScript application, and React
 
 ## Install

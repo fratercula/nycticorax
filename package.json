@@ -1,20 +1,12 @@
 {
   "name": "nycticorax",
-  "version": "1.2.1",
+  "version": "2.0.0",
   "description": "State container for JavaScript application, and React",
   "main": "lib/index.js",
   "files": [
     "lib"
   ],
-  "scripts": {
-    "start": "NODE_ENV=development falco -c -m demo/index.js",
-    "docs": "rm -rf docs && NODE_ENV=docs falco -c -o docs -m demo/index.js",
-    "umd": "NODE_ENV=umd falco -c -o lib -m src/index.js",
-    "build": "npm run docs && npm run umd",
-    "test": "npm run test:lint && npm run test:unit",
-    "test:lint": "eslint .",
-    "test:unit": "jest"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fratercula/nycticorax.git"
@@ -27,7 +19,7 @@
   "author": "LoeiFy <LoeiFy@gmail.com>",
   "license": "MIT",
   "peerDependencies": {
-    "react": "*"
+    "react": "^16.8.0"
   },
   "bugs": {
     "url": "https://github.com/fratercula/nycticorax/issues"
@@ -47,17 +39,11 @@
   },
   "homepage": "https://github.com/fratercula/nycticorax#readme",
   "devDependencies": {
-    "@babel/core": "^7.3.4",
-    "@babel/plugin-proposal-class-properties": "^7.3.4",
-    "@babel/preset-env": "^7.3.4",
-    "babel-eslint": "^10.0.1",
-    "babel-jest": "^24.1.0",
-    "eslint": "^5.14.1",
-    "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-babel": "^5.3.0",
-    "eslint-plugin-import": "^2.16.0",
-    "eslint-plugin-jsx-a11y": "^6.2.1",
-    "eslint-plugin-react": "^7.12.4",
-    "jest": "^24.1.0"
+    "@types/react": "^17.0.2",
+    "react": "^17.0.1",
+    "typescript": "^4.2.3"
+  },
+  "dependencies": {
+    "fast-deep-equal": "^3.1.3"
   }
 }
