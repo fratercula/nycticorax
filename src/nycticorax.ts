@@ -1,6 +1,7 @@
 import eq from 'fast-deep-equal'
 
 type Listener<T> = (keys: Partial<keyof T>[]) => void
+type Dispatcher<T> = (nycticorax: Nycticorax<T>, ...args: unknown[]) => void
 
 class Nycticorax<T> {
   private state: T
@@ -36,8 +37,8 @@ class Nycticorax<T> {
     }
   }
 
-  public dispatch = <U extends unknown>(
-    next: U | Partial<T>,
+  public dispatch = (
+    next: Partial<T> | Dispatcher<T>,
     ...args: unknown[]
   ) => {
     const type = typeof next
@@ -97,12 +98,6 @@ export default Nycticorax
 
 
 
-type Dispatcher<T> = (
-  nycticorax: Nycticorax<T>,
-  ...args: unknown[]
-) => Promise<void>;
-
-
 type Store = { a: number, b: string }
 
 const n = new Nycticorax<Store>()
@@ -111,7 +106,7 @@ n.createStore({ a: 1, b: '1' })
 
 n.getStore()
 
-n.dispatch({ a: 1 }, false)
+n.dispatch({ a: 1, b: '1' }, false)
 
 const un = n.subscribe((keys) => {
   console.log(keys)
@@ -122,9 +117,9 @@ un()
 const a: Dispatcher<Store> = async ({ dispatch, getStore }, ...args) => {
   console.log(args[0] + '2')
   const { b } = getStore()
-  dispatch({ a: b + 1 })
+  dispatch({ b: b + '1' })
 }
 
 n.dispatch(a, 1, 2).then(() => {
-  n.dispatch({ b: '2' })
+  n.dispatch({ b: '2', a: 1 })
 })
