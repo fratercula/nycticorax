@@ -1,6 +1,5 @@
 import eq from 'fast-deep-equal'
 
-type UnSubscribe = () => void
 type Listener<T> = (keys: Partial<keyof T>[]) => void
 
 class Nycticorax<T> {
@@ -24,7 +23,7 @@ class Nycticorax<T> {
     return JSON.parse(JSON.stringify(this.state))
   }
 
-  public subscribe = (listener: Listener<T>): UnSubscribe => {
+  public subscribe = (listener: Listener<T>) => {
     this.listeners.push(listener)
 
     return () => {
@@ -37,21 +36,21 @@ class Nycticorax<T> {
     }
   }
 
-  public dispatch = (
-    next: Partial<T> | Function,
-    ...args: any
-  ): Function | never | void => {
+  public dispatch = <U extends unknown>(
+    next: U | Partial<T>,
+    ...args: unknown[]
+  ) => {
     const type = typeof next
 
     if (type === 'function') {
       return (next as Function)({
-        dispatch: (o: T) => this.dispatch(o, true),
+        dispatch: (o: Partial<T> ) => this.dispatch(o, true),
         getStore: this.getStore,
-      }, ...args)
+      })
     }
 
     if (type === 'object') {
-      this.emits = { ...this.emits, ...next }
+      this.emits = { ...this.emits, ...(next as Partial<T>) }
 
       if (args[0]) {
         this.emit()
@@ -66,7 +65,7 @@ class Nycticorax<T> {
     throw new Error('dispatch type error, function or object')
   }
 
-  private emit = (): void => {
+  private emit = () => {
     const next = this.emits
     const actives: Partial<keyof T>[] = []
     const keys = Object.keys(next) as Partial<keyof T>[]
@@ -98,8 +97,15 @@ export default Nycticorax
 
 
 
+type Dispatcher<T> = (
+  nycticorax: Nycticorax<T>,
+  ...args: unknown[]
+) => Promise<void>;
 
-const n = new Nycticorax<{ a: number, b: string }>()
+
+type Store = { a: number, b: string }
+
+const n = new Nycticorax<Store>()
 
 n.createStore({ a: 1, b: '1' })
 
@@ -113,12 +119,12 @@ const un = n.subscribe((keys) => {
 
 un()
 
-async function a({ dispatch, getStore }, ...args) {
-  console.log(args)
-  const { a } = getStore()
-  dispatch({ a: a + 1 })
+const a: Dispatcher<Store> = async ({ dispatch, getStore }, ...args) => {
+  console.log(args[0] + '2')
+  const { b } = getStore()
+  dispatch({ a: b + 1 })
 }
 
-n.dispatch(a, '1').then(() => {
+n.dispatch(a, 1, 2).then(() => {
   n.dispatch({ b: '2' })
 })
