@@ -15,7 +15,6 @@ function connect<T>(nycticorax: NycticoraxType<T>) {
     getStore,
     subscribe,
     dispatch,
-
   } = nycticorax
 
   return function(...keys: Partial<keyof T>[]) {
