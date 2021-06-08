@@ -1,7 +1,8 @@
 import eq from 'fast-deep-equal'
 
 type Listener<T> = (keys: Partial<keyof T>[]) => void
-type Dispatcher<T> = (nycticorax: Nycticorax<T>, ...args: unknown[]) => void
+export type Dispatcher<T> = (nycticorax: Nycticorax<T>, ...args: unknown[]) => void
+export type NycticoraxType<T> = Nycticorax<T>
 
 class Nycticorax<T> {
   private state: T

@@ -17,7 +17,8 @@
     "importHelpers": true,
     "sourceMap": true,
     "removeComments": true,
-    "stripInternal": true
+    "stripInternal": true,
+    "strictPropertyInitialization": false
   },
   "exclude": ["examples", "dist", "test"]
 }
