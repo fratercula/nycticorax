@@ -1,7 +1,7 @@
 import eq from 'fast-deep-equal'
 
 type Listener<T> = (keys: Partial<keyof T>[]) => void
-export type Dispatcher<T> = (nycticorax: Nycticorax<T>, ...args: unknown[]) => void
+export type DispatchType<T> = (nycticorax: Nycticorax<T>, ...args: unknown[]) => void
 export type NycticoraxType<T> = Nycticorax<T>
 
 class Nycticorax<T> {
@@ -39,7 +39,7 @@ class Nycticorax<T> {
   }
 
   public dispatch = (
-    next: Partial<T> | Dispatcher<T>,
+    next: Partial<T> | DispatchType<T>,
     ...args: unknown[]
   ) => {
     const type = typeof next
@@ -64,7 +64,7 @@ class Nycticorax<T> {
       return
     }
 
-    throw new Error('dispatch type error, function or object')
+    throw new Error('Dispatch type error, not a function or object')
   }
 
   private emit = () => {
@@ -115,7 +115,7 @@ const un = n.subscribe((keys) => {
 
 un()
 
-const a: Dispatcher<Store> = async ({ dispatch, getStore }, ...args) => {
+const a: DispatchType<Store> = async ({ dispatch, getStore }, ...args) => {
   console.log(args[0] + '2')
   const { b } = getStore()
   dispatch({ b: b + '1' })
