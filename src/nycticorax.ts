@@ -1,7 +1,7 @@
 import eq from 'fast-deep-equal'
 
 type Listener<T> = (keys: Partial<keyof T>[]) => void
-export type DispatchType<T> = (nycticorax: Nycticorax<T>, ...args: unknown[]) => void
+export type Dispatch<T> = (nycticorax: Nycticorax<T>, ...args: unknown[]) => void
 export type NycticoraxType<T> = Nycticorax<T>
 
 class Nycticorax<T> {
@@ -39,7 +39,7 @@ class Nycticorax<T> {
   }
 
   public dispatch = (
-    next: Partial<T> | DispatchType<T>,
+    next: Partial<T> | Dispatch<T>,
     ...args: unknown[]
   ) => {
     const type = typeof next
@@ -51,20 +51,14 @@ class Nycticorax<T> {
       })
     }
 
-    if (type === 'object') {
-      this.emits = { ...this.emits, ...(next as Partial<T>) }
+    this.emits = { ...this.emits, ...(next as Partial<T>) }
 
-      if (args[0]) {
-        this.emit()
-      } else {
-        clearTimeout(this.timer)
-        this.timer = setTimeout(this.emit)
-      }
-
-      return
+    if (args[0]) {
+      this.emit()
+    } else {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(this.emit)
     }
-
-    throw new Error('Dispatch type error, not a function or object')
   }
 
   private emit = () => {
@@ -96,31 +90,3 @@ class Nycticorax<T> {
 }
 
 export default Nycticorax
-
-
-
-type Store = { a: number, b: string }
-
-const n = new Nycticorax<Store>()
-
-n.createStore({ a: 1, b: '1' })
-
-n.getStore()
-
-n.dispatch({ a: 1, b: '1' }, false)
-
-const un = n.subscribe((keys) => {
-  console.log(keys)
-})
-
-un()
-
-const a: DispatchType<Store> = async ({ dispatch, getStore }, ...args) => {
-  console.log(args[0] + '2')
-  const { b } = getStore()
-  dispatch({ b: b + '1' })
-}
-
-n.dispatch(a, 1, 2).then(() => {
-  n.dispatch({ b: '2', a: 1 })
-})

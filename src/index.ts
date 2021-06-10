@@ -1,4 +1,4 @@
-import Nycticorax, { DispatchType } from './nycticorax'
+import Nycticorax, { Dispatch } from './nycticorax'
 import getConnect from './connect'
 import getHook from './hook'
 
@@ -8,4 +8,4 @@ class N<T> extends Nycticorax<T> {
 }
 
 export default N
-export type Dispatch<T> = DispatchType<T>
+export type { Dispatch }

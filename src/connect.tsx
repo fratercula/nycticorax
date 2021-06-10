@@ -22,8 +22,6 @@ function connect<T>(nycticorax: NycticoraxType<T>) {
       class R extends Component {
         private unsubscribe: () => void
 
-        public name: any
-
         state = {
           props: getStore()
         }
