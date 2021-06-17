@@ -4,7 +4,7 @@ import { NycticoraxType } from './nycticorax'
 function use<T>(nycticorax: NycticoraxType<T>) {
   const { getStore, subscribe } = nycticorax
 
-  return function(...keys: Partial<keyof T>[]) {
+  return function(...keys: [Partial<keyof T>, ...Partial<keyof T>[]]) {
     const [props, setProps] = useState(getStore())
 
     useLayoutEffect(() => {

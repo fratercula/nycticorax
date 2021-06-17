@@ -19,7 +19,7 @@
   "author": "LoeiFy <LoeiFy@gmail.com>",
   "license": "MIT",
   "peerDependencies": {
-    "react": "^16.8.0"
+    "react": "*"
   },
   "bugs": {
     "url": "https://github.com/fratercula/nycticorax/issues"
@@ -39,8 +39,9 @@
   },
   "homepage": "https://github.com/fratercula/nycticorax#readme",
   "devDependencies": {
-    "@types/react": "^17.0.2",
-    "react": "^17.0.1",
+    "@types/react": "^17.0.11",
+    "@types/react-dom": "^17.0.7",
+    "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "typescript": "^4.2.3"
   },
