@@ -5,13 +5,17 @@ import {
   getStore,
   dispatch,
   subscribe,
-  Dispatcher,
-  Connector,
+  Dispatch,
+  Connect,
   connect,
   useStore,
 } from './store/react'
 
 createStore({ age: 0, name: 'abc' })
+
+subscribe((keys) => {
+  console.log('subscribe', keys)
+})
 
 function Hook() {
   const { name, age } = useStore('name', 'age')
@@ -31,28 +35,36 @@ function Hook() {
   )
 }
 
-const setName: Dispatcher = async ({ dispatch, getStore }) => {
+const setName: Dispatch = async ({ dispatch, getStore }, text) => {
   await new Promise((r) => setTimeout(r, 1000))
+  const { name } = getStore()
+  dispatch({ name: name + text })
+}
+
+const setAge: Dispatch = ({ dispatch, getStore }) => {
   const { age } = getStore()
   dispatch({ age: age + 1 })
 }
 
-type TC = Connector & {
+type TC = Connect & {
   desc: string
 }
 
 class C0 extends Component<TC> {
-  a = () => {
-    this.props.dispatch({ name: 'a' })
-    this.props.dispatch(setName, 1)
+  setName = async () => {
+    await this.props.dispatch(setName, 'name')
+    console.log(getStore())
   }
 
   render() {
-    const { age, name, dispatch, desc } = this.props
+    const { age, name, desc } = this.props
 
     return (
       <>
-        {age}
+        <h2>type: {desc}</h2>
+        <p>age: {age}</p>
+        <p>name: {name}</p>
+        <button onClick={this.setName}>dispatch</button>
       </>
     )
   }
@@ -62,7 +74,14 @@ function F0(props: TC) {
   const { age, name, dispatch, desc } = props
   return (
     <>
-      {age}
+      <>
+        <h2>type: {desc}</h2>
+        <p>age: {age}</p>
+        <p>name: {name}</p>
+        <button onClick={() => {
+          dispatch(setAge)
+        }}>dispatch</button>
+      </>
     </>
   )
 }
@@ -73,7 +92,7 @@ const F = connect('age', 'name')(F0)
 render((
   <>
     <Hook />
-    <C desc="test" />
-    <F desc="test" />
+    <C desc="component" />
+    <F desc="function" />
   </>
 ), document.querySelector('#root'))

@@ -3,7 +3,7 @@ import {
   getStore,
   dispatch,
   subscribe,
-  Dispatcher,
+  Dispatch,
 } from './store/index'
 
 createStore({
@@ -30,7 +30,7 @@ dispatch({ time: 2 }, true)
 
 console.log('store3', getStore())
 
-const dispatcher0: Dispatcher = ({ getStore, dispatch }, ...args) => {
+const dispatcher0: Dispatch = ({ getStore, dispatch }, ...args) => {
   console.log('args0', args)
   const { time } = getStore()
   dispatch({ time: time + 1 })
@@ -38,7 +38,7 @@ const dispatcher0: Dispatcher = ({ getStore, dispatch }, ...args) => {
 
 dispatch(dispatcher0, 1, 2)
 
-const dispatcher1: Dispatcher = async ({ getStore, dispatch }, ...args) => {
+const dispatcher1: Dispatch = async ({ getStore, dispatch }, ...args) => {
   console.log('args1', args)
   await new Promise((r) => setTimeout(r, 1000))
   const { config } = getStore()

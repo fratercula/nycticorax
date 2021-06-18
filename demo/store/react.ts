@@ -1,4 +1,4 @@
-import Nycticorax, { Dispatch, Connect } from '../../src'
+import Nycticorax, { Dispatch as DP, Connect as CT } from '../../src'
 
 type Store = {
   name: string,
@@ -16,5 +16,5 @@ export const {
   useStore,
 } = nycticorax
 
-export type Dispatcher = Dispatch<Store>
-export type Connector = Connect<Store>
+export type Dispatch = DP<Store>
+export type Connect = CT<Store>

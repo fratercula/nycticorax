@@ -1,4 +1,4 @@
-import Nycticorax, { Dispatch } from '../../src/nycticorax'
+import Nycticorax, { Dispatch as DP } from '../../src/nycticorax'
 
 type Store = {
   config: {
@@ -17,4 +17,4 @@ export const {
   subscribe,
 } = nycticorax
 
-export type Dispatcher = Dispatch<Store>
+export type Dispatch = DP<Store>
