@@ -2,9 +2,9 @@
   "name": "nycticorax",
   "version": "2.0.0",
   "description": "State container for JavaScript application, and React",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "files": [
-    "lib"
+    "dist"
   ],
   "scripts": {},
   "repository": {
@@ -23,19 +23,6 @@
   },
   "bugs": {
     "url": "https://github.com/fratercula/nycticorax/issues"
-  },
-  "jest": {
-    "transform": {
-      "^.+\\.js$": "babel-jest"
-    },
-    "testMatch": [
-      "**/test/*.js"
-    ],
-    "collectCoverage": true,
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/helper/(clone|typeof|warn)"
-    ]
   },
   "homepage": "https://github.com/fratercula/nycticorax#readme",
   "devDependencies": {
