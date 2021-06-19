@@ -257,11 +257,7 @@ const { createStore, dispatch, ... } = new Nycticorax()
 ## Development
 
 ```bash
-# install `falco` global
-$ npm i @fratercula/falco -g
-
-# start
-$ npm start
+$ npm ci
 
 # build
 $ npm run build

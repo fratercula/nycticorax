@@ -4,12 +4,12 @@ import { NycticoraxType } from './nycticorax'
 function use<T>(nycticorax: NycticoraxType<T>) {
   const { getStore, subscribe } = nycticorax
 
-  return function(...keys: [Partial<keyof T>, ...Partial<keyof T>[]]) {
+  return function (...keys: [Partial<keyof T>, ...Partial<keyof T>[]]) {
     const [props, setProps] = useState(getStore())
 
     useLayoutEffect(() => {
       const unsubscribe = subscribe((triggerKeys) => {
-        const sames = keys.filter(k => triggerKeys.includes(k))
+        const sames = keys.filter((k) => triggerKeys.includes(k))
         if (sames.length) {
           setProps(getStore())
         }

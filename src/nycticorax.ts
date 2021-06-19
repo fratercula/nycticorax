@@ -6,8 +6,11 @@ export type NycticoraxType<T> = Nycticorax<T>
 
 class Nycticorax<T> {
   private state: T
+
   private listeners: Listener<T>[]
+
   private emits: T
+
   private timer: undefined | ReturnType<typeof setTimeout>
 
   constructor() {
@@ -21,9 +24,7 @@ class Nycticorax<T> {
     this.state = state
   }
 
-  public getStore = (): T => {
-    return JSON.parse(JSON.stringify(this.state))
-  }
+  public getStore = (): T => JSON.parse(JSON.stringify(this.state))
 
   public subscribe = (listener: Listener<T>) => {
     this.listeners.push(listener)
@@ -46,7 +47,7 @@ class Nycticorax<T> {
 
     if (type === 'function') {
       return (next as Function)({
-        dispatch: (o: Partial<T> ) => this.dispatch(o, true),
+        dispatch: (o: Partial<T>) => this.dispatch(o, true),
         getStore: this.getStore,
       })
     }
@@ -59,6 +60,8 @@ class Nycticorax<T> {
       clearTimeout(this.timer)
       this.timer = setTimeout(this.emit)
     }
+
+    throw new Error('Dispatch error')
   }
 
   private emit = () => {

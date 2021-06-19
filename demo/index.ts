@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   createStore,
   getStore,
@@ -30,22 +31,22 @@ dispatch({ time: 2 }, true)
 
 console.log('store3', getStore())
 
-const dispatcher0: Dispatch = ({ getStore, dispatch }, ...args) => {
+const dispatcher0: Dispatch = ({ getStore: gs, dispatch: dp }, ...args) => {
   console.log('args0', args)
-  const { time } = getStore()
-  dispatch({ time: time + 1 })
+  const { time } = gs()
+  dp({ time: time + 1 })
 }
 
 dispatch(dispatcher0, 1, 2)
 
-const dispatcher1: Dispatch = async ({ getStore, dispatch }, ...args) => {
+const dispatcher1: Dispatch = async ({ getStore: gs, dispatch: dp }, ...args) => {
   console.log('args1', args)
   await new Promise((r) => setTimeout(r, 1000))
-  const { config } = getStore()
+  const { config } = gs()
   if (typeof args[0] === 'boolean') {
-    config.on = args[0]
+    [config.on] = args
   }
-  dispatch({ config })
+  dp({ config })
 }
 
 dispatch(dispatcher1, false).then(() => {

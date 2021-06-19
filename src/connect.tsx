@@ -21,7 +21,7 @@ type Subtract<T extends T1, T1 extends object> = Pick<
 type CT<T> = ComponentType<T> & { [key: string]: any }
 
 export type Connect<T> = {
-  dispatch: (next: Partial<T> | Dispatch<T>, ...args: unknown[]) => void
+  dispatch: (next: Partial<T> | Dispatch<T>, ...args: unknown[]) => void,
 } & T
 
 function connect<T>(nycticorax: NycticoraxType<T>) {
@@ -31,18 +31,18 @@ function connect<T>(nycticorax: NycticoraxType<T>) {
     dispatch,
   } = nycticorax
 
-  return function(...keys: [Partial<keyof T>, ...Partial<keyof T>[]]) {
-    return function<P extends Connect<T>>(C: CT<P>) {
+  return function (...keys: [Partial<keyof T>, ...Partial<keyof T>[]]) {
+    return function<P extends Connect<T>> (C: CT<P>) {
       class R extends Component<Subtract<P, Connect<T>>> {
         private unsubscribe: () => void
 
         state = {
-          props: getStore()
+          props: getStore(),
         }
 
         componentDidMount() {
           this.unsubscribe = subscribe((triggerKeys) => {
-            const sames = keys.filter(k => triggerKeys.includes(k))
+            const sames = keys.filter((k) => triggerKeys.includes(k))
             if (sames.length) {
               this.setState({ props: getStore() })
             }

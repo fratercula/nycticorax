@@ -1,4 +1,6 @@
+/* eslint-disable no-console */
 import React, { Component } from 'react'
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { render } from 'react-dom'
 import {
   createStore,
@@ -25,6 +27,7 @@ function Hook() {
       <p>{name}</p>
       <p>{age}</p>
       <button
+        type="button"
         onClick={() => {
           dispatch({ age: 2 })
         }}
@@ -35,24 +38,23 @@ function Hook() {
   )
 }
 
-const setName: Dispatch = async ({ dispatch, getStore }, text) => {
+const setName: Dispatch = async ({ dispatch: dp, getStore: gs }, text) => {
   await new Promise((r) => setTimeout(r, 1000))
-  const { name } = getStore()
-  dispatch({ name: name + text })
+  const { name } = gs()
+  dp({ name: name + text })
 }
 
-const setAge: Dispatch = ({ dispatch, getStore }) => {
-  const { age } = getStore()
-  dispatch({ age: age + 1 })
+const setAge: Dispatch = ({ dispatch: dp, getStore: gs }) => {
+  const { age } = gs()
+  dp({ age: age + 1 })
 }
 
-type TC = Connect & {
-  desc: string
-}
+type TC = Connect & { desc: string }
 
 class C0 extends Component<TC> {
   setName = async () => {
-    await this.props.dispatch(setName, 'name')
+    const { dispatch: dp } = this.props
+    await dp(setName, 'name')
     console.log(getStore())
   }
 
@@ -61,26 +63,51 @@ class C0 extends Component<TC> {
 
     return (
       <>
-        <h2>type: {desc}</h2>
-        <p>age: {age}</p>
-        <p>name: {name}</p>
-        <button onClick={this.setName}>dispatch</button>
+        <h2>
+          type:
+          {desc}
+        </h2>
+        <p>
+          age:
+          {age}
+        </p>
+        <p>
+          name:
+          {name}
+        </p>
+        <button type="button" onClick={this.setName}>dispatch</button>
       </>
     )
   }
 }
 
 function F0(props: TC) {
-  const { age, name, dispatch, desc } = props
+  const {
+    age, name, dispatch: dp, desc,
+  } = props
   return (
     <>
       <>
-        <h2>type: {desc}</h2>
-        <p>age: {age}</p>
-        <p>name: {name}</p>
-        <button onClick={() => {
-          dispatch(setAge)
-        }}>dispatch</button>
+        <h2>
+          type:
+          {desc}
+        </h2>
+        <p>
+          age:
+          {age}
+        </p>
+        <p>
+          name:
+          {name}
+        </p>
+        <button
+          type="button"
+          onClick={() => {
+            dp(setAge)
+          }}
+        >
+          dispatch
+        </button>
       </>
     </>
   )

@@ -2,10 +2,10 @@ import Nycticorax, { Dispatch as DP } from '../../src/nycticorax'
 
 type Store = {
   config: {
-    type: string
-    on: boolean
+    type: string,
+    on: boolean,
   },
-  time: number
+  time: number,
 }
 
 const nycticorax = new Nycticorax<Store>()
