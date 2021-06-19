@@ -6,7 +6,9 @@
   "files": [
     "dist"
   ],
-  "scripts": {},
+  "scripts": {
+    "lint": "eslint ."
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fratercula/nycticorax.git"
