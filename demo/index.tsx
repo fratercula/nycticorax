@@ -1,4 +1,7 @@
 /* eslint-disable no-console */
+import React from 'react'
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { render } from 'react-dom'
 import {
   createStore,
   getStore,
@@ -6,6 +9,7 @@ import {
   subscribe,
   Dispatch,
 } from './store/index'
+import Com from './react'
 
 createStore({
   config: {
@@ -54,3 +58,7 @@ dispatch(dispatcher1, false).then(() => {
 })
 
 unsubscribe()
+
+render((
+  <Com />
+), document.querySelector('#root'))

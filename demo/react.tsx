@@ -1,7 +1,5 @@
 /* eslint-disable no-console */
 import React, { Component } from 'react'
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { render } from 'react-dom'
 import {
   createStore,
   getStore,
@@ -116,10 +114,12 @@ function F0(props: TC) {
 const C = connect('age', 'name')(C0)
 const F = connect('age', 'name')(F0)
 
-render((
-  <>
-    <Hook />
-    <C desc="component" />
-    <F desc="function" />
-  </>
-), document.querySelector('#root'))
+export default function () {
+  return (
+    <>
+      <Hook />
+      <C desc="component" />
+      <F desc="function" />
+    </>
+  )
+}

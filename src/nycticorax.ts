@@ -11,7 +11,7 @@ class Nycticorax<T> {
 
   private emits: T
 
-  private timer: undefined | ReturnType<typeof setTimeout>
+  private timer: number | undefined | unknown
 
   constructor() {
     this.state = {} as T
@@ -49,7 +49,7 @@ class Nycticorax<T> {
       return (next as Function)({
         dispatch: (o: Partial<T>) => this.dispatch(o, true),
         getStore: this.getStore,
-      })
+      }, ...args)
     }
 
     this.emits = { ...this.emits, ...(next as Partial<T>) }
@@ -57,11 +57,11 @@ class Nycticorax<T> {
     if (args[0]) {
       this.emit()
     } else {
-      clearTimeout(this.timer)
+      clearTimeout(this.timer as number)
       this.timer = setTimeout(this.emit)
     }
 
-    throw new Error('Dispatch error')
+    return undefined
   }
 
   private emit = () => {
