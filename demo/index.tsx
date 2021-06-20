@@ -1,7 +1,8 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-console */
 import React from 'react'
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { render } from 'react-dom'
+import VConsole from 'vconsole'
 import {
   createStore,
   getStore,
@@ -10,6 +11,9 @@ import {
   Dispatch,
 } from './store/index'
 import Com from './react'
+
+// eslint-disable-next-line no-new
+new VConsole()
 
 createStore({
   config: {

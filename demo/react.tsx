@@ -10,6 +10,7 @@ import {
   connect,
   useStore,
 } from './store/react'
+import classes from './index.less'
 
 createStore({ age: 0, name: 'abc' })
 
@@ -21,25 +22,31 @@ function Hook() {
   const { name, age } = useStore('name', 'age')
 
   return (
-    <div className="com">
-      <p>{name}</p>
-      <p>{age}</p>
+    <div className={classes.com}>
+      <h2>Hooks</h2>
+      <p>
+        <span>name:</span>
+        {name}
+      </p>
+      <p>
+        <span>age:</span>
+        {age}
+      </p>
       <button
         type="button"
         onClick={() => {
-          dispatch({ age: 2 })
+          dispatch({ age: age + 1 })
         }}
       >
-        dispatch
+        Dispatch
       </button>
     </div>
   )
 }
 
-const setName: Dispatch = async ({ dispatch: dp, getStore: gs }, text) => {
-  await new Promise((r) => setTimeout(r, 1000))
-  const { name } = gs()
-  dp({ name: name + text })
+const setName: Dispatch = async ({ dispatch: dp }, text) => {
+  await new Promise((r) => setTimeout(r, 2000))
+  dp({ name: text as string })
 }
 
 const setAge: Dispatch = ({ dispatch: dp, getStore: gs }) => {
@@ -50,31 +57,48 @@ const setAge: Dispatch = ({ dispatch: dp, getStore: gs }) => {
 type TC = Connect & { desc: string }
 
 class C0 extends Component<TC> {
+  state = {
+    loading: false,
+  }
+
   setName = async () => {
+    const { loading } = this.state
+    if (loading) {
+      return
+    }
+
+    this.setState({ loading: true })
     const { dispatch: dp } = this.props
-    await dp(setName, 'name')
+    await dp(setName, Math.random().toString(36).substring(7))
+    this.setState({ loading: false })
     console.log(getStore())
   }
 
   render() {
     const { age, name, desc } = this.props
+    const { loading } = this.state
+
+    const cs = loading ? classes.loading : ''
 
     return (
-      <>
-        <h2>
-          type:
-          {desc}
-        </h2>
+      <div className={classes.com}>
+        <h2>{desc}</h2>
         <p>
-          age:
-          {age}
-        </p>
-        <p>
-          name:
+          <span>name:</span>
           {name}
         </p>
-        <button type="button" onClick={this.setName}>dispatch</button>
-      </>
+        <p>
+          <span>age:</span>
+          {age}
+        </p>
+        <button
+          className={cs}
+          type="button"
+          onClick={this.setName}
+        >
+          Async Dispatch
+        </button>
+      </div>
     )
   }
 }
@@ -84,30 +108,25 @@ function F0(props: TC) {
     age, name, dispatch: dp, desc,
   } = props
   return (
-    <>
-      <>
-        <h2>
-          type:
-          {desc}
-        </h2>
-        <p>
-          age:
-          {age}
-        </p>
-        <p>
-          name:
-          {name}
-        </p>
-        <button
-          type="button"
-          onClick={() => {
-            dp(setAge)
-          }}
-        >
-          dispatch
-        </button>
-      </>
-    </>
+    <div className={classes.com}>
+      <h2>{desc}</h2>
+      <p>
+        <span>name:</span>
+        {name}
+      </p>
+      <p>
+        <span>age:</span>
+        {age}
+      </p>
+      <button
+        type="button"
+        onClick={() => {
+          dp(setAge)
+        }}
+      >
+        Dispatch
+      </button>
+    </div>
   )
 }
 
@@ -118,8 +137,8 @@ export default function () {
   return (
     <>
       <Hook />
-      <C desc="component" />
-      <F desc="function" />
+      <C desc="Class Component" />
+      <F desc="Function Component" />
     </>
   )
 }

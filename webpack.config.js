@@ -35,15 +35,18 @@ module.exports = {
             loader: 'css-loader',
             options: {
               sourceMap: true,
-              modules: true,
-              localIdentName: '[local]_[hash:base64:5]',
+              modules: {
+                localIdentName: '[local]_[hash:base64:5]',
+              },
             },
           },
           {
             loader: 'less-loader',
             options: {
               sourceMap: true,
-              javascriptEnabled: true,
+              lessOptions: {
+                javascriptEnabled: true,
+              },
             },
           },
         ],
