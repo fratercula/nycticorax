@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import React, { useState, useEffect, useRef } from 'react'
-import SyntaxHighlighter from 'react-syntax-highlighter'
+import { LightAsync as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { githubGist, a11yLight } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 import {
   createStore,

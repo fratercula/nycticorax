@@ -1,10 +1,15 @@
 const { resolve } = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 const { NODE_ENV = 'development' } = process.env
 
 module.exports = {
   entry: './demo/index.tsx',
+  output: {
+    path: resolve(__dirname, './docs'),
+    filename: '[name].[chunkhash:8].js',
+  },
   mode: NODE_ENV,
   devtool: 'source-map',
   target: 'web',
@@ -21,9 +26,23 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'demo/index.html',
     }),
+    // new BundleAnalyzerPlugin(),
   ],
   resolve: {
     extensions: ['.js', '.ts', '.tsx'],
+  },
+  optimization: NODE_ENV === 'development' ? undefined : {
+    splitChunks: {
+      minSize: 30,
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendor',
+          chunks: 'initial',
+          priority: -10,
+        },
+      },
+    },
   },
   module: {
     rules: [
@@ -58,7 +77,7 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: [
-              [require.resolve('@babel/preset-env'), {
+              ['@babel/preset-env', {
                 targets: { esmodules: true },
                 modules: false,
               }],
