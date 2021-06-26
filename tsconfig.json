@@ -1,8 +1,5 @@
 {
   "compilerOptions": {
-    "outDir": "dist/",
-    "target": "esnext",
-    "module": "esnext",
     "moduleResolution": "node",
     "jsx": "react",
     "strict": true,
@@ -20,5 +17,5 @@
     "stripInternal": true,
     "strictPropertyInitialization": false
   },
-  "exclude": ["dist"]
+  "exclude": ["dist", "docs"],
 }

@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json",
+  "outDir": "dist/esm/",
+  "target": "es5",
+  "module": "esnext",
+  "exclude": ["dist", "demo", "docs"]
+}
