@@ -5,12 +5,30 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { NODE_ENV = 'development' } = process.env
 
 module.exports = {
-  entry: './demo/index.tsx',
-  output: {
+  entry: NODE_ENV === 'umd' ? {
+    index: './src/index.ts',
+    nycticorax: './src/nycticorax.ts',
+  } : './demo/index.tsx',
+  output: NODE_ENV === 'umd' ? {
+    path: resolve(__dirname, './dist/umd'),
+    filename: '[name].js',
+    library: 'nycticorax',
+    libraryTarget: 'umd',
+  } : {
     path: resolve(__dirname, './docs'),
     filename: '[name].[chunkhash:8].js',
   },
-  mode: NODE_ENV,
+  externals: NODE_ENV === 'umd' ? [
+    {
+      name: 'react',
+      root: 'React',
+    },
+    {
+      name: 'react-dom',
+      root: 'ReactDOM',
+    },
+  ] : undefined,
+  mode: NODE_ENV === 'umd' ? 'production' : NODE_ENV,
   devtool: 'source-map',
   target: 'web',
   devServer: {

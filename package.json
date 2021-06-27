@@ -11,7 +11,8 @@
     "start": "webpack serve --progress",
     "build": "rm -rf docs && NODE_ENV=production webpack --progress",
     "esm": "tsc --p tsconfig-esm.json",
-    "cjs": "tsc --p tsconfig-cjs.json"
+    "cjs": "tsc --p tsconfig-cjs.json",
+    "umd": "NODE_ENV=umd webpack --progress"
   },
   "repository": {
     "type": "git",
