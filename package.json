@@ -3,16 +3,19 @@
   "version": "2.0.0",
   "description": "State container for JavaScript application, and React",
   "main": "dist/index.js",
+  "module": "dist/esm/index.js",
+  "unpkg": "dist/umd/index.js",
   "files": [
     "dist"
   ],
   "scripts": {
     "lint": "eslint .",
     "start": "webpack serve --progress",
-    "build": "rm -rf docs && NODE_ENV=production webpack --progress",
+    "docs": "rm -rf docs && NODE_ENV=production webpack --progress",
     "esm": "tsc --p tsconfig-esm.json",
     "cjs": "tsc --p tsconfig-cjs.json",
-    "umd": "NODE_ENV=umd webpack --progress"
+    "umd": "NODE_ENV=umd webpack --progress",
+    "build": "npm run docs && rm -rf dist && npm run esm && npm run cjs && npm run umd"
   },
   "repository": {
     "type": "git",

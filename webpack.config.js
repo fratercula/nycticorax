@@ -4,6 +4,22 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const { NODE_ENV = 'development' } = process.env
 
+const optimizationMap = {
+  production: {
+    splitChunks: {
+      minSize: 30,
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendor',
+          chunks: 'initial',
+          priority: -10,
+        },
+      },
+    },
+  },
+}
+
 module.exports = {
   entry: NODE_ENV === 'umd' ? {
     index: './src/index.ts',
@@ -18,17 +34,10 @@ module.exports = {
     path: resolve(__dirname, './docs'),
     filename: '[name].[chunkhash:8].js',
   },
-  externals: NODE_ENV === 'umd' ? [
-    {
-      name: 'react',
-      root: 'React',
-    },
-    {
-      name: 'react-dom',
-      root: 'ReactDOM',
-    },
-  ] : undefined,
-  mode: NODE_ENV === 'umd' ? 'production' : NODE_ENV,
+  externals: NODE_ENV === 'umd' ? {
+    react: 'React',
+  } : undefined,
+  mode: NODE_ENV === 'umd' ? 'development' : NODE_ENV,
   devtool: 'source-map',
   target: 'web',
   devServer: {
@@ -40,7 +49,7 @@ module.exports = {
     hot: true,
     inline: true,
   },
-  plugins: [
+  plugins: NODE_ENV === 'umd' ? undefined : [
     new HtmlWebpackPlugin({
       template: 'demo/index.html',
     }),
@@ -49,19 +58,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.ts', '.tsx'],
   },
-  optimization: NODE_ENV === 'development' ? undefined : {
-    splitChunks: {
-      minSize: 30,
-      cacheGroups: {
-        vendors: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendor',
-          chunks: 'initial',
-          priority: -10,
-        },
-      },
-    },
-  },
+  optimization: optimizationMap[NODE_ENV],
   module: {
     rules: [
       {
@@ -96,7 +93,7 @@ module.exports = {
           options: {
             presets: [
               ['@babel/preset-env', {
-                targets: { esmodules: true },
+                targets: { esmodules: NODE_ENV !== 'umd' },
                 modules: false,
               }],
             ],
