@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`nycticorax hook 1`] = `
+<div>
+  <div>
+    xyz
+  </div>
+  <div>
+    1
+  </div>
+</div>
+`;
