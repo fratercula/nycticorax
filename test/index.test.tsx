@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { act } from 'react-dom/test-utils'
 import { mount } from 'enzyme'
-import Nycticorax from '../src'
+import Nycticorax, { Connect as CT } from '../src'
 
 type Store = { name: string, age: number, other: boolean }
 
@@ -10,11 +10,11 @@ const nycticorax = new Nycticorax<Store>()
 const {
   createStore,
   dispatch,
-  // connect,
+  connect,
   useStore,
 } = nycticorax
 
-// type Connect = CT<Store>
+type Connect = CT<Store>
 
 createStore({ name: 'xyz', age: 1, other: false })
 
@@ -45,5 +45,44 @@ describe('nycticorax', () => {
     expect(name).toHaveLength(1)
 
     // expect(wrapper.render()).toMatchSnapshot()
+  })
+
+  it('connect', () => {
+    class C0 extends Component<Connect> {
+      static setAge = () => 'a'
+
+      setName = () => {
+        const { dispatch: dp } = this.props
+        dp({ name: 'jkl' }, true)
+        dp({ other: false }, true)
+      }
+
+      render() {
+        const { name } = this.props
+        return (
+          <>
+            <div className="name">{name}</div>
+            <button type="button" onClick={this.setName} className="button">x</button>
+          </>
+        )
+      }
+    }
+
+    const C = connect('name')(C0)
+    const wrapper = mount(<C />)
+
+    let name = wrapper.findWhere((node) => node.text() === 'abc' && node.hasClass('name'))
+    expect(name).toHaveLength(1)
+
+    act(() => {
+      wrapper.find('.button').simulate('click')
+    })
+
+    name = wrapper.findWhere((node) => node.text() === 'jkl' && node.hasClass('name'))
+    expect(name).toHaveLength(1)
+
+    expect(() => {
+      wrapper.unmount()
+    }).not.toThrow()
   })
 })

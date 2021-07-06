@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "lint": "eslint .",
-    "test": "jest index.test.tsx",
+    "test": "jest",
     "coverage": "jest --coverage",
     "start": "webpack serve --progress",
     "docs": "rm -rf docs && NODE_ENV=production webpack --progress",

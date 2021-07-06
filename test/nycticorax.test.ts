@@ -39,7 +39,7 @@ describe('nycticorax', () => {
     expect(getStore().b[0]).toBe('1')
 
     const dispatcher: Dispatch = async ({ getStore: gs, dispatch: dp }, ...args) => {
-      await new Promise((r) => setTimeout(r, 200))
+      await new Promise((r) => setTimeout(r, 100))
       const { a } = gs()
       if (typeof args[0] === 'number') {
         const next = a + args[0]
