@@ -9,9 +9,10 @@
     "dist"
   ],
   "scripts": {
-    "lint": "eslint .",
-    "test": "jest",
-    "coverage": "jest --coverage",
+    "lint": "eslint . --ext .ts,.tsx,.js",
+    "test:unit": "jest",
+    "test:coverage": "jest --coverage",
+    "test": "npm run lint && npm run test:coverage",
     "start": "webpack serve --progress",
     "docs": "rm -rf docs && NODE_ENV=production webpack --progress",
     "esm": "tsc --p tsconfig-esm.json",
