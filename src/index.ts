@@ -1,4 +1,4 @@
-import Nycticorax, { Dispatch } from './nycticorax'
+import Nycticorax, { Dispatch } from './core'
 import getConnect, { Connect } from './connect'
 import getHook from './hook'
 

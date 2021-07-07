@@ -1,4 +1,4 @@
-import Nycticorax, { Dispatch as DP } from '../src/nycticorax'
+import Nycticorax, { Dispatch as DP } from '../src/core'
 
 describe('nycticorax', () => {
   it('default', async () => {

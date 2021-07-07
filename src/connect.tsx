@@ -1,5 +1,5 @@
 import React, { Component, ComponentType } from 'react'
-import { NycticoraxType, Dispatch } from './nycticorax'
+import { NycticoraxType, Dispatch } from './core'
 
 const ignoreStaticMethods = [
   'name',

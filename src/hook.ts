@@ -1,5 +1,5 @@
 import { useState, useLayoutEffect } from 'react'
-import { NycticoraxType } from './nycticorax'
+import { NycticoraxType } from './core'
 
 function use<T>(nycticorax: NycticoraxType<T>) {
   const { getStore, subscribe } = nycticorax

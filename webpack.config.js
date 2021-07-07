@@ -23,7 +23,7 @@ const optimizationMap = {
 module.exports = {
   entry: NODE_ENV === 'umd' ? {
     index: './src/index.ts',
-    nycticorax: './src/nycticorax.ts',
+    core: './src/core.ts',
   } : './demo/index.tsx',
   output: NODE_ENV === 'umd' ? {
     path: resolve(__dirname, './dist/umd'),

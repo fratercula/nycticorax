@@ -117,7 +117,7 @@ without `React`
 
 ```ts
 // not `connect` and `useStore`
-import Nycticorax, { Dispatch as DP } from 'nycticorax/nycticorax'
+import Nycticorax, { Dispatch as DP } from 'nycticorax/core'
 
 type Store = { name: string }
 
