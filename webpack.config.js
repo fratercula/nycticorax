@@ -37,7 +37,7 @@ module.exports = {
   externals: NODE_ENV === 'umd' ? {
     react: 'React',
   } : undefined,
-  mode: NODE_ENV === 'umd' ? 'development' : NODE_ENV,
+  mode: NODE_ENV === 'umd' ? 'production' : NODE_ENV,
   devtool: 'source-map',
   target: 'web',
   devServer: {
