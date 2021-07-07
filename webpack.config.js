@@ -30,6 +30,7 @@ module.exports = {
     filename: '[name].js',
     library: 'nycticorax',
     libraryTarget: 'umd',
+    libraryExport: 'default',
   } : {
     path: resolve(__dirname, './docs'),
     filename: '[name].[chunkhash:8].js',
