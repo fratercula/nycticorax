@@ -28,7 +28,7 @@ module.exports = {
   output: NODE_ENV === 'umd' ? {
     path: resolve(__dirname, './dist/umd'),
     filename: '[name].js',
-    library: 'nycticorax',
+    library: 'Nycticorax',
     libraryTarget: 'umd',
     libraryExport: 'default',
   } : {
