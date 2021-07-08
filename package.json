@@ -1,19 +1,24 @@
 {
   "name": "nycticorax",
-  "version": "1.2.1",
+  "version": "2.0.2",
   "description": "State container for JavaScript application, and React",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
+  "module": "dist/esm/index.js",
+  "unpkg": "dist/umd/index.js",
   "files": [
-    "lib"
+    "dist"
   ],
   "scripts": {
-    "start": "NODE_ENV=development falco -c -m demo/index.js",
-    "docs": "rm -rf docs && NODE_ENV=docs falco -c -o docs -m demo/index.js",
-    "umd": "NODE_ENV=umd falco -c -o lib -m src/index.js",
-    "build": "npm run docs && npm run umd",
-    "test": "npm run test:lint && npm run test:unit",
-    "test:lint": "eslint .",
-    "test:unit": "jest"
+    "lint": "eslint . --ext .ts,.tsx,.js",
+    "test:unit": "jest",
+    "test:coverage": "jest --coverage",
+    "test": "npm run lint && npm run test:coverage",
+    "start": "webpack serve --progress",
+    "docs": "rm -rf docs && NODE_ENV=production webpack --progress",
+    "esm": "tsc --p tsconfig-esm.json",
+    "cjs": "tsc --p tsconfig-cjs.json",
+    "umd": "NODE_ENV=umd webpack --progress",
+    "build": "npm run docs && rm -rf dist && npm run esm && npm run cjs && npm run umd"
   },
   "repository": {
     "type": "git",
@@ -32,32 +37,50 @@
   "bugs": {
     "url": "https://github.com/fratercula/nycticorax/issues"
   },
-  "jest": {
-    "transform": {
-      "^.+\\.js$": "babel-jest"
-    },
-    "testMatch": [
-      "**/test/*.js"
-    ],
-    "collectCoverage": true,
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/helper/(clone|typeof|warn)"
-    ]
-  },
   "homepage": "https://github.com/fratercula/nycticorax#readme",
   "devDependencies": {
-    "@babel/core": "^7.3.4",
-    "@babel/plugin-proposal-class-properties": "^7.3.4",
-    "@babel/preset-env": "^7.3.4",
-    "babel-eslint": "^10.0.1",
-    "babel-jest": "^24.1.0",
-    "eslint": "^5.14.1",
-    "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-babel": "^5.3.0",
-    "eslint-plugin-import": "^2.16.0",
-    "eslint-plugin-jsx-a11y": "^6.2.1",
-    "eslint-plugin-react": "^7.12.4",
-    "jest": "^24.1.0"
+    "@babel/core": "^7.14.6",
+    "@babel/plugin-proposal-class-properties": "^7.14.5",
+    "@babel/preset-env": "^7.14.5",
+    "@babel/preset-react": "^7.14.5",
+    "@babel/preset-typescript": "^7.14.5",
+    "@types/enzyme": "^3.10.8",
+    "@types/jest": "^26.0.23",
+    "@types/react": "^17.0.11",
+    "@types/react-dom": "^17.0.7",
+    "@types/react-syntax-highlighter": "^13.5.1",
+    "@typescript-eslint/eslint-plugin": "^4.27.0",
+    "@typescript-eslint/parser": "^4.27.0",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.2",
+    "babel-loader": "^8.2.2",
+    "css-loader": "^5.2.6",
+    "enzyme": "^3.11.0",
+    "enzyme-to-json": "^3.6.2",
+    "eslint": "^7.28.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "html-webpack-plugin": "^5.3.1",
+    "jest": "^27.0.6",
+    "jsdom": "^16.6.0",
+    "jsdom-global": "^3.0.2",
+    "less": "^4.1.1",
+    "less-loader": "^10.0.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-syntax-highlighter": "^15.4.3",
+    "style-loader": "^2.0.0",
+    "ts-jest": "^27.0.3",
+    "typescript": "^4.2.3",
+    "webpack": "^5.39.1",
+    "webpack-bundle-analyzer": "^4.4.2",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "dependencies": {
+    "fast-deep-equal": "^3.1.3",
+    "tslib": "^2.3.0"
   }
 }

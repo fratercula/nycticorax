@@ -1,4 +1,4 @@
-demo/
 coverage/
-lib/
+dist/
 docs/
+node_modules/

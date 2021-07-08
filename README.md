@@ -1,10 +1,8 @@
 # nycticorax
 
-[![Build Status](https://travis-ci.org/fratercula/nycticorax.svg?branch=master)](https://travis-ci.org/fratercula/nycticorax)
-[![codecov](https://codecov.io/gh/fratercula/nycticorax/branch/master/graph/badge.svg)](https://codecov.io/gh/fratercula/nycticorax)
+State container for JavaScript application, and React
 
-
-state container for JavaScript application, and React
+https://fratercula.github.io/nycticorax/
 
 ## Install
 
@@ -14,21 +12,35 @@ $ npm i nycticorax
 
 ## Usage
 
-for `React`, it is simple use, **not** `Provider`, `reducer`, `action`, **only** `connect`
+For React, it is simple use, **not** `Provider`, `reducer`, `action`, **only** `connect`
 
-[demo](https://fratercula.github.io/nycticorax/) | [counter](https://jsfiddle.net/am0200/gba9sdLp/) | [counter(strict mode)](https://jsfiddle.net/am0200/0L87d29h/)
 
-```js
+```tsx
 import React, { Component } from 'react'
-import { connect } from 'nycticorax'
+import Nycticorax, { Connect as CT } from 'nycticorax'
 
-class A extends Component {
+type Store = { name: string, age: number }
+
+const nycticorax = new Nycticorax<Store>()
+
+type Connect = CT<Store>
+
+const {
+  createStore,
+  dispatch,
+  connect,
+  useStore,
+} = nycticorax
+
+createStore({ age: 0, name: 'abc' })
+
+class A0 extends Component<Connect> {
   onClick = () => {
-    this.props.dispatch({ 'name': 1 }) // update
+    this.props.dispatch({ 'name': 'xyz' })
   }
 
   render() {
-    const { name } = this.props // props
+    const { name } = this.props
     return (
       <div>
         <p>{name}</p>
@@ -38,80 +50,107 @@ class A extends Component {
   }
 }
 
-export default connect('name')(A) // connect
-```
+const A = connect('name')(A0)
 
-specified instance
-
-```js
-import React from 'react'
-import Nycticorax from 'nycticorax'
-
-const { createStore, connect } = new Nycticorax()
-
-createStore({ name: 1 })
-
-function X({ dispatch, name }) {
-  return (
-    <div>
-      <h2>Component X </h2>
-      <p>name: {name}</p>
-      <button onClick={() => dispatch({ name: 2 })}>set name</button>
-    </div>
-  )
-}
-
-export default connect('name')(X)
-```
-
-hooks
-
-```js
-import React from 'react'
-import { createStore, useStore, dispatch } from 'nycticorax'
-
-createStore({ name: 1 })
-
-export default () {
+// Hooks
+function B() {
   const { name } = useStore('name')
 
   return (
     <div>
-      <h2>Component X </h2>
-      <p>name: {name}</p>
-      <button onClick={() => dispatch({ name: 2 })}>set name</button>
+      <p>{name}</p>
+      <button onClick={() => dispatch({ name: 'jkl' })}>name</button>
     </div>
   )
 }
+
+export default () => (
+  <>
+    <A />
+    <B />
+  </>
+)
 ```
 
 ## API
 
-you can use `nycticorax` without `React`
+width typescript
 
-```js
-import {
-  dispatch,
+```ts
+import Nycticorax, { Dispatch as DP, Connect as CT } from 'nycticorax'
+
+type Store = { name: string }
+
+const nycticorax = new Nycticorax<Store>()
+
+const {
   createStore,
   getStore,
+  dispatch,
   subscribe,
   connect,
-} from 'nycticorax'
+  useStore,
+} = nycticorax
+
+type Dispatch = DP<Store>
+type Connect = CT<Store>
+```
+
+width javascript
+
+```js
+import Nycticorax from 'nycticorax'
+
+const nycticorax = new Nycticorax()
+
+const {
+  createStore,
+  getStore,
+  dispatch,
+  subscribe,
+  connect,
+  useStore,
+} = nycticorax
+```
+
+without `React`
+
+```ts
+// not `connect` and `useStore`
+import Nycticorax, { Dispatch as DP } from 'nycticorax/core'
+
+type Store = { name: string }
+
+const nycticorax = new Nycticorax<Store>()
+
+const {
+  createStore,
+  getStore,
+  dispatch,
+  subscribe,
+  connect,
+} = nycticorax
+
+type Dispatch = DP<Store>
 ```
 
 ### createStore
 
-create initial store
+create store
 
-```js
+```ts
+type createStore = (state: T) => void
+
 createStore({ name: 'nycticorax' })
 ```
 
 ### getStore
 
-get store data
+get store
 
-```js
+```ts
+type getStore = () => T
+
 const store = getStore() // { name: 'nycticorax' }
 ```
 
@@ -119,15 +158,17 @@ const store = getStore() // { name: 'nycticorax' }
 
 update store
 
-```js
-// update store key `name`, value is `lorem`
-dispatch({ name: 'lorem' })
+```ts
+type dispatch = (next: Partial<T> | Function, ...args: unknown[]) => any;
+
+// update store key `name`, value is `xyz`
+dispatch({ name: 'xyz' })
 
 // multiple key
-dispatch({ name: 'lorem', another: 'ipsum' })
+dispatch({ name: 'xyz', another: 1 })
 
-// async
-function asyncDispatch({ dispatch, getStore }, ...args) {
+// dispatch function
+const asyncDispatch: Dispatch = async ({ dispatch, getStore }, ...args) => {
   console.log(args)
   return new Promise((resolve) => {
     // get current store
@@ -149,7 +190,7 @@ dispatch(asyncDispatch, 'a', 'b').then(() => {
 }
 ```
 
-by default, `dispatch` will be `merged`
+by default, `dispatch` action will be `merged`
 
 ```js
 // this
@@ -160,7 +201,7 @@ dispatch({ b: 1 })
 dispatch({ a: 1, b: 1 })
 ```
 
-and `dispatch` is `async`, but except `async dispatch`
+`dispatch` is `async`, but except dispatch function
 
 ```js
 // async
@@ -196,9 +237,12 @@ console.log(getStore('a')) // { a: 2 }
 
 ### subscribe
 
-subscribe listeners for watching store change
+watching store change
 
-```js
+```ts
+type Listener<T> = (keys: Partial<keyof T>[]) => void;
+type subscribe = (listener: Listener<T>) => () => void;
+
 const unsubscribe = subscribe((keys) => {
   console.log(keys) // change keys
 })
@@ -209,17 +253,10 @@ unsubscribe() // unsubscribe
 
 for `React` only
 
-```js
-connect('name', 'another')(ReactComponent)
-```
+```tsx
+type connect = (keys: (keyof T)[]) => (React.ComponentType) => React.ComponentType
 
-example
-
-```js
-import React, { Component } from 'react'
-import { connect } from 'nycticorax'
-
-class A extends Component {
+class A extends Component<Connect> {
   onClick = () => {
     this.props.dispatch({ 'number': 1 })
   }
@@ -244,43 +281,20 @@ export default connect('name', 'another')(A)
 
 for `React` only
 
-```js
-const { name } = useStore('name')
-```
+```tsx
+type useStore = ((keyof T)[]) => T
 
-## UMD use
-
-```js
-// <script src="https://unpkg.com/nycticorax"></script>
-
-const { createStore, dispatch, ... } = window.nycticorax
-const Nycticorax = window.nycticorax.default // use default
-const { createStore, dispatch, ... } = new Nycticorax()
-```
-
-## Development
-
-```bash
-# install `falco` global
-$ npm i @fratercula/falco -g
-
-# start
-$ npm start
-
-# build
-$ npm run build
-
-# lint
-$ npm run test:lint
-
-# test
-$ npm run test:unit
+function B() {
+  const { name } = useStore('name')
+  return (
+    <>
+      <p>{name}</p>
+      <button onClick={() => dispatch({ name: 'jkl' })}>x</button>
+    </>
+  )
+}
 ```
 
 ## License
 
 MIT
-
-## Relevance
-
-Nycticorax
