@@ -1,5 +1,8 @@
 # nycticorax
 
+[![Build Status](https://github.com/fratercula/nycticorax/actions/workflows/ci.yml/badge.svg)](https://github.com/fratercula/nycticorax/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/fratercula/nycticorax/branch/master/graph/badge.svg)](https://codecov.io/gh/fratercula/nycticorax)
+
 State container for JavaScript application, and React
 
 https://fratercula.github.io/nycticorax/
