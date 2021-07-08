@@ -36,7 +36,13 @@ module.exports = {
     filename: '[name].[chunkhash:8].js',
   },
   externals: NODE_ENV === 'umd' ? {
-    react: 'React',
+    react: {
+      root: 'React',
+      commonjs2: 'react',
+      commonjs: 'react',
+      amd: 'react',
+      umd: 'react',
+    },
   } : undefined,
   mode: NODE_ENV === 'umd' ? 'production' : NODE_ENV,
   devtool: 'source-map',
