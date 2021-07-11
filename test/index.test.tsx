@@ -48,8 +48,9 @@ describe('nycticorax', () => {
   })
 
   it('connect', () => {
+    type S = () => string
     class C0 extends Component<Connect> {
-      static setAge = () => 'a'
+      public static setAge: S = () => 'a'
 
       setName = () => {
         const { dispatch: dp } = this.props
@@ -69,6 +70,8 @@ describe('nycticorax', () => {
     }
 
     const C = connect('name')(C0)
+    expect(C.setAge()).toBe('a')
+
     const wrapper = mount(<C />)
 
     let name = wrapper.findWhere((node) => node.text() === 'abc' && node.hasClass('name'))

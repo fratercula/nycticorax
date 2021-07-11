@@ -56,11 +56,15 @@ function connect<T>(nycticorax: NycticoraxType<T>) {
         render() {
           const { props } = this.state
 
+          // eslint-disable-next-line prefer-object-spread
+          const rest = Object.assign({ dispatch }, props, this.props as P)
+
           return (
             <C
-              {...props}
-              {...this.props as P}
-              dispatch={dispatch}
+              {...rest}
+              // dispatch={dispatch}
+              // {...props}
+              // {...this.props as P}
             />
           )
         }
@@ -75,7 +79,9 @@ function connect<T>(nycticorax: NycticoraxType<T>) {
           }
         })
 
-      return R as unknown as (new () => { [key in keyof R]: R[key] })
+      return R as unknown as (new () => { [key in keyof R]: R[key] }) & {
+        [key: string]: any,
+      }
     }
   }
 }
