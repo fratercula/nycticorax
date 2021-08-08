@@ -11,7 +11,7 @@ class Nycticorax<T> {
 
   private emits: T
 
-  private timer: number | undefined | unknown
+  private timer: ReturnType<typeof setTimeout> | number | undefined
 
   constructor() {
     this.state = {} as T

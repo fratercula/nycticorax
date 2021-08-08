@@ -1,4 +1,4 @@
-import Nycticorax, { Dispatch as DP, Connect as CT } from '../../src'
+import Nycticorax, { Dispatch as DP, ConnectProps as CT } from '../../src'
 
 type Store = { name: string, age: number }
 

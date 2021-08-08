@@ -1,6 +1,6 @@
 import Nycticorax, { Dispatch } from './core'
-import getConnect, { Connect } from './connect'
-import getHook from './hook'
+import getConnect, { ConnectProps } from './connect'
+import getHook from './hooks'
 
 class N<T> extends Nycticorax<T> {
   connect = getConnect(this)
@@ -10,4 +10,4 @@ class N<T> extends Nycticorax<T> {
 
 export default N
 export type { Dispatch }
-export type { Connect }
+export type { ConnectProps }

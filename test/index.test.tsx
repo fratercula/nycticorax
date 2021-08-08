@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { act } from 'react-dom/test-utils'
 import { mount } from 'enzyme'
-import Nycticorax, { Connect as CT } from '../src'
+import Nycticorax, { ConnectProps as CT } from '../src'
 
 type Store = { name: string, age: number, other: boolean }
 
