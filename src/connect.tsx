@@ -13,8 +13,8 @@ const ignoreStaticMethods = [
   'displayName',
 ]
 
-export type ConnectProps<T> = {
-  dispatch: (next: Partial<T> | Dispatch<T>, ...args: unknown[]) => void,
+export type Connect<T> = {
+  dispatch: (next: Partial<T> | Dispatch<T>, ...args: any[]) => unknown,
 } & T
 
 function connect<T>(nycticorax: NycticoraxType<T>) {
@@ -24,15 +24,15 @@ function connect<T>(nycticorax: NycticoraxType<T>) {
     dispatch,
   } = nycticorax
 
-  type Connect = ConnectProps<T>
+  type ConnectProps = Connect<T>
 
   return function (...keys: [Partial<keyof T>, ...Partial<keyof T>[]]) {
-    return function<P extends Connect> (C: ComponentType<P> & {
+    return function<P extends ConnectProps> (C: ComponentType<P> & {
       [key: string]: any,
-    }): ComponentType<Subtract<P, Connect>> & {
+    }): ComponentType<Subtract<P, ConnectProps>> & {
       [key: string]: any,
     } {
-      class R extends Component<Subtract<P, Connect>> {
+      class R extends Component<Subtract<P, ConnectProps>> {
         private unsubscribe: () => void
 
         state = {

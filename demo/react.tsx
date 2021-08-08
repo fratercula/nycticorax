@@ -44,9 +44,10 @@ function Hook() {
   )
 }
 
-const setName: Dispatch = async ({ dispatch: dp }, text) => {
+const setName: Dispatch = async ({ dispatch: dp, getStore: gs }, text) => {
   await new Promise((r) => setTimeout(r, 2000))
   dp({ name: text as string })
+  return gs().name
 }
 
 const setAge: Dispatch = ({ dispatch: dp, getStore: gs }) => {
@@ -69,6 +70,7 @@ class C0 extends Component<TC> {
 
     this.setState({ loading: true })
     const { dispatch: dp } = this.props
+    dp({ age: 1 })
     await dp(setName, Math.random().toString(36).substring(7))
     this.setState({ loading: false })
     console.log(getStore())

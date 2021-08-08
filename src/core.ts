@@ -1,7 +1,12 @@
 import eq from 'fast-deep-equal'
 
 type Listener<T> = (keys: Partial<keyof T>[]) => void
-export type Dispatch<T> = (nycticorax: Nycticorax<T>, ...args: unknown[]) => void
+
+export type Dispatch<T> = (nycticorax: {
+  getStore: () => T,
+  dispatch: (next: Partial<T>) => void,
+}, ...args: any[]) => unknown
+
 export type NycticoraxType<T> = Nycticorax<T>
 
 class Nycticorax<T> {
@@ -39,10 +44,7 @@ class Nycticorax<T> {
     }
   }
 
-  public dispatch = (
-    next: Partial<T> | Dispatch<T>,
-    ...args: unknown[]
-  ) => {
+  public dispatch = (next: Partial<T> | Dispatch<T>, ...args: any[]): unknown => {
     const type = typeof next
 
     if (type === 'function') {
