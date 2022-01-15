@@ -17,7 +17,7 @@ export type Connect<T> = {
   dispatch: (next: Partial<T> | Dispatch<T>, ...args: any[]) => unknown,
 } & T
 
-function connect<T>(nycticorax: NycticoraxType<T>) {
+function connect<T extends object>(nycticorax: NycticoraxType<T>) {
   const {
     getStore,
     subscribe,

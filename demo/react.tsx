@@ -12,10 +12,19 @@ import {
 } from './store/react'
 import classes from './index.less'
 
-createStore({ age: 0, name: 'abc' })
+const key = Symbol('key')
+
+createStore({ age: 0, name: 'abc', [key]: 'a' })
 
 subscribe((keys) => {
   console.log('subscribe', keys)
+  const s = getStore()
+
+  console.log(s[key])
+
+  if (s[key] === 'b') {
+    s[key] = 'aaaa'
+  }
 })
 
 function Hook() {
@@ -35,7 +44,7 @@ function Hook() {
       <button
         type="button"
         onClick={() => {
-          dispatch({ age: age + 1 })
+          dispatch({ age: age + 1, [key]: 'b' })
         }}
       >
         Dispatch

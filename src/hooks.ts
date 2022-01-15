@@ -1,7 +1,7 @@
 import { useState, useLayoutEffect } from 'react'
 import { NycticoraxType } from './core'
 
-function hooks<T>(nycticorax: NycticoraxType<T>) {
+function hooks<T extends object>(nycticorax: NycticoraxType<T>) {
   const { getStore, subscribe } = nycticorax
 
   return function (...keys: [Partial<keyof T>, ...Partial<keyof T>[]]) {

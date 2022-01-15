@@ -1,6 +1,6 @@
 import Nycticorax, { Dispatch as DP, Connect as CT } from '../../src'
 
-type Store = { name: string, age: number }
+type Store = { name: string, age: number, [key: symbol]: string }
 
 const nycticorax = new Nycticorax<Store>()
 

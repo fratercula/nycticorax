@@ -7,9 +7,9 @@ export type Dispatch<T> = (nycticorax: {
   dispatch: (next: Partial<T>) => void,
 }, ...args: any[]) => unknown
 
-export type NycticoraxType<T> = Nycticorax<T>
+export type NycticoraxType<T extends object> = Nycticorax<T>
 
-class Nycticorax<T> {
+class Nycticorax<T extends object> {
   private state: T
 
   private listeners: Listener<T>[]
@@ -29,7 +29,16 @@ class Nycticorax<T> {
     this.state = state
   }
 
-  public getStore = (): T => JSON.parse(JSON.stringify(this.state))
+  public getStore = (): T => {
+    const keys = Reflect.ownKeys(this.state) as Partial<keyof T>[]
+    const next = {} as T
+
+    keys.forEach((key) => {
+      next[key] = JSON.parse(JSON.stringify(this.state[key]))
+    })
+
+    return next
+  }
 
   public subscribe = (listener: Listener<T>) => {
     this.listeners.push(listener)
@@ -69,7 +78,7 @@ class Nycticorax<T> {
   private emit = () => {
     const next = this.emits
     const actives: Partial<keyof T>[] = []
-    const keys = Object.keys(next) as Partial<keyof T>[]
+    const keys = Reflect.ownKeys(next) as Partial<keyof T>[]
 
     for (let i = 0; i < keys.length; i += 1) {
       const key = keys[i]
