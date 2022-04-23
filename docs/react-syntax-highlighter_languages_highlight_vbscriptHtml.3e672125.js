@@ -1,2 +1,0 @@
-(self.webpackChunknycticorax=self.webpackChunknycticorax||[]).push([[8884],{3316:n=>{n.exports=function(n){return{name:"VBScript in HTML",subLanguage:"xml",contains:[{begin:"<%",end:"%>",subLanguage:"vbscript"}]}}}}]);
-//# sourceMappingURL=react-syntax-highlighter_languages_highlight_vbscriptHtml.3e672125.js.map

@@ -59,7 +59,7 @@ const setName: Dispatch = async ({ dispatch: dp, getStore: gs }, text) => {
   return gs().name
 }
 
-const setAge: Dispatch = ({ dispatch: dp, getStore: gs }) => {
+const setAge: Dispatch = async ({ dispatch: dp, getStore: gs }) => {
   const { age } = gs()
   dp({ age: age + 1 })
 }
