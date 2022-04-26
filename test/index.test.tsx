@@ -9,9 +9,9 @@ const nycticorax = new Nycticorax<Store>()
 
 const {
   createStore,
-  dispatch,
   connect,
   useStore,
+  emit,
 } = nycticorax
 
 type Connect = CT<Store>
@@ -37,8 +37,8 @@ describe('nycticorax', () => {
     expect(age).toHaveLength(1)
 
     act(() => {
-      dispatch({ name: 'abc' }, true)
-      dispatch({ other: true }, true)
+      emit({ name: 'abc' }, true)
+      emit({ other: true }, true)
     })
 
     name = wrapper.findWhere((node) => node.text() === 'abc' && node.hasClass('name'))
@@ -53,7 +53,7 @@ describe('nycticorax', () => {
       public static setAge: S = () => 'a'
 
       setName = () => {
-        const { dispatch: dp } = this.props
+        const { emit: dp } = this.props
         dp({ name: 'jkl' }, true)
         dp({ other: false }, true)
       }

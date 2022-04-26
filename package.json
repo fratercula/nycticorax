@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "lint": "eslint . --ext .ts,.tsx,.js",
+    "lint": "tsc --noemit && eslint . --ext .ts,.tsx,.js",
     "test:unit": "jest",
     "test:coverage": "jest --coverage",
     "test": "npm run lint && npm run test:coverage",

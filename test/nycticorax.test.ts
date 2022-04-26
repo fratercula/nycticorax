@@ -10,23 +10,24 @@ describe('nycticorax', () => {
       getStore,
       dispatch,
       subscribe,
+      emit,
     } = new Nycticorax<Store>()
 
     createStore({ a: 1, b: ['1'] })
 
     expect(getStore().a).toBe(1)
 
-    dispatch({ a: 2 }, true)
+    emit({ a: 2 }, true)
     expect(getStore().a).toBe(2)
 
     const unSubscribe = subscribe((keys) => {
       expect(keys.join()).toBe('a')
     })
-    dispatch({ a: 3 }, true)
+    emit({ a: 3 }, true)
     unSubscribe()
     unSubscribe()
 
-    dispatch({ a: 4 })
+    emit({ a: 4 })
     expect(getStore().a).toBe(3)
 
     setTimeout(() => {
@@ -35,23 +36,23 @@ describe('nycticorax', () => {
 
     await new Promise((r) => setTimeout(r, 100))
 
-    dispatch({ b: ['1'] }, true)
+    emit({ b: ['1'] }, true)
     expect(getStore().b[0]).toBe('1')
 
-    const dispatcher: Dispatch = async ({ getStore: gs, dispatch: dp }, ...args) => {
+    const dispatcher: Dispatch = async ({ getStore: gs, emit: dp }, params) => {
       await new Promise((r) => setTimeout(r, 100))
       const { a } = gs()
-      if (typeof args[0] === 'number') {
-        const next = a + args[0]
+      if (typeof params?.n === 'number') {
+        const next = a + params.n
         dp({ a: next })
       }
     }
 
-    await dispatch(dispatcher, 1)
+    await dispatch(dispatcher, { n: 1 })
     expect(getStore().a).toBe(5)
 
     // @ts-ignore
-    dispatch({ c: 0 })
+    emit({ c: 0 })
     // @ts-ignore
     expect(getStore().c).toBe(undefined)
 

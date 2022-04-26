@@ -1,5 +1,5 @@
 import React, { Component, ComponentType } from 'react'
-import { NycticoraxType, Dispatch } from './core'
+import { NycticoraxType, Dispatch, Emit } from './core'
 import { Subtract } from './types'
 
 const ignoreStaticMethods = [
@@ -14,7 +14,8 @@ const ignoreStaticMethods = [
 ]
 
 export type Connect<T> = {
-  dispatch: (next: Partial<T> | Dispatch<T>, ...args: any[]) => unknown,
+  emit: Emit<T>,
+  dispatch: (next: Dispatch<T>, params?: Record<string, any>) => Promise<unknown>,
 } & T
 
 function connect<T extends object>(nycticorax: NycticoraxType<T>) {
@@ -22,16 +23,15 @@ function connect<T extends object>(nycticorax: NycticoraxType<T>) {
     getStore,
     subscribe,
     dispatch,
+    emit,
   } = nycticorax
 
   type ConnectProps = Connect<T>
 
   return function (...keys: [Partial<keyof T>, ...Partial<keyof T>[]]) {
-    return function<P extends ConnectProps> (C: ComponentType<P> & {
-      [key: string]: any,
-    }): ComponentType<Subtract<P, ConnectProps>> & {
-      [key: string]: any,
-    } {
+    return function<P extends ConnectProps> (
+      C: ComponentType<P> & Record<string, any>,
+    ): ComponentType<Subtract<P, ConnectProps>> & Record<string, any> {
       class R extends Component<Subtract<P, ConnectProps>> {
         private unsubscribe: () => void
 
@@ -55,7 +55,7 @@ function connect<T extends object>(nycticorax: NycticoraxType<T>) {
         render() {
           const { props } = this.state
           // eslint-disable-next-line prefer-object-spread
-          const rest = Object.assign({ dispatch }, props, this.props as P)
+          const rest = Object.assign({ dispatch, emit }, props, this.props as P)
 
           return (
             <C {...rest} />

@@ -39,7 +39,7 @@ createStore({ age: 0, name: 'abc' })
 
 class A0 extends Component<Connect> {
   onClick = () => {
-    this.props.dispatch({ 'name': 'xyz' })
+    this.props.emit({ 'name': 'xyz' })
   }
 
   render() {
@@ -62,7 +62,7 @@ function B() {
   return (
     <div>
       <p>{name}</p>
-      <button onClick={() => dispatch({ name: 'jkl' })}>name</button>
+      <button onClick={() => emit({ name: 'jkl' })}>name</button>
     </div>
   )
 }
@@ -93,6 +93,7 @@ const {
   subscribe,
   connect,
   useStore,
+  emit,
 } = nycticorax
 
 type Dispatch = DP<Store>
@@ -113,6 +114,7 @@ const {
   subscribe,
   connect,
   useStore,
+  emit,
 } = nycticorax
 ```
 
@@ -131,7 +133,7 @@ const {
   getStore,
   dispatch,
   subscribe,
-  connect,
+  emit,
 } = nycticorax
 
 type Dispatch = DP<Store>
@@ -157,70 +159,80 @@ type getStore = () => T
 const store = getStore() // { name: 'nycticorax' }
 ```
 
-### dispatch
+### emit
 
 update store
 
 ```ts
-type dispatch = (next: Partial<T> | Function, ...args: unknown[]) => any;
+type emit = (next: Partial<T>, params: Record<string, any>) => void;
 
 // update store key `name`, value is `xyz`
-dispatch({ name: 'xyz' })
+emit({ name: 'xyz' })
 
 // multiple key
-dispatch({ name: 'xyz', another: 1 })
+emit({ name: 'xyz', another: 1 })
+```
 
-// dispatch function
-const asyncDispatch: Dispatch = async ({ dispatch, getStore }, ...args) => {
-  console.log(args)
+by default, `emit` action will be `merged`
+
+```js
+emit({ a: 1, b: 2 })
+emit({ b: 1 })
+
+// will be merged as
+emit({ a: 1, b: 1 })
+```
+
+set `emit` to `sync`
+
+```js
+createStore({ a: 1 })
+emit({ a: 2 }, true)
+console.log(getStore('a')) // { a: 2 }
+```
+
+### dispatch
+
+```ts
+const asyncDispatch: Dispatch = async ({ emit, getStore }, params) => {
+  console.log(params)
   return new Promise((resolve) => {
     // get current store
     const { name } = getStore()
 
     // update name
-    dispatch({ name: 'a' })
+    emit({ name: 'a' })
 
     setTimeout(() => {
-      dispatch({ name: 'b' })
+      emit({ name: 'b' })
 
       // resolve
       resolve(name)
     }, 1000)
   })
 }
-dispatch(asyncDispatch, 'a', 'b').then(() => {
-  dispatch({ name: 'c' })
+dispatch(asyncDispatch, { a: 'b' }).then((name) => {
+  console.log(name)
 }
 ```
 
-by default, `dispatch` action will be `merged`
-
-```js
-// this
-dispatch({ a: 1, b: 2 })
-dispatch({ b: 1 })
-
-// will be merged as
-dispatch({ a: 1, b: 1 })
-```
-
-`dispatch` is `async`, but except dispatch function
+sync `emit`
 
 ```js
 // async
 createStore({ a: 1 })
-dispatch({ a: 2 })
+emit({ a: 2 })
 console.log(getStore('a')) // { a: 1 }
 setTimeout(() => console.log(getStore('a'))) // { a: 2 }
 
-function asyncDispatch({ dispatch, getStore }) {
+function asyncDispatch({ emit, getStore }) {
   return new Promise((resolve) => {
     // update name
-    dispatch({ name: 'a' }) // sync dispatch
+    emit({ name: 'a' }) // sync dispatch
     console.log(getStore('name')) // a
 
     setTimeout(() => {
-      dispatch({ name: 'b' }) // sync dispatch
+      emit({ name: 'b' }) // sync dispatch
       console.log(getStore('name')) // b
 
       // resolve
@@ -228,14 +240,6 @@ function asyncDispatch({ dispatch, getStore }) {
     }, 1000)
   })
 }
-```
-
-set `dispatch` to `sync`
-
-```js
-createStore({ a: 1 })
-dispatch({ a: 2 }, true)
-console.log(getStore('a')) // { a: 2 }
 ```
 
 ### subscribe
@@ -261,7 +265,7 @@ type connect = (keys: (keyof T)[]) => (React.ComponentType) => React.ComponentTy
 
 class A extends Component<Connect> {
   onClick = () => {
-    this.props.dispatch({ 'number': 1 })
+    this.props.emit({ 'number': 1 })
   }
 
   render() {
@@ -292,7 +296,7 @@ function B() {
   return (
     <>
       <p>{name}</p>
-      <button onClick={() => dispatch({ name: 'jkl' })}>x</button>
+      <button onClick={() => emit({ name: 'jkl' })}>x</button>
     </>
   )
 }

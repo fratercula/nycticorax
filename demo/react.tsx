@@ -3,27 +3,26 @@ import React, { Component } from 'react'
 import {
   createStore,
   getStore,
-  dispatch,
   subscribe,
   Dispatch,
   Connect,
   connect,
   useStore,
+  emit,
+  symbolKey,
 } from './store/react'
 import classes from './index.less'
 
-const key = Symbol('key')
-
-createStore({ age: 0, name: 'abc', [key]: 'a' })
+createStore({ age: 0, name: 'abc', [symbolKey]: 'a' })
 
 subscribe((keys) => {
   console.log('subscribe', keys)
   const s = getStore()
 
-  console.log(s[key])
+  console.log(s[symbolKey])
 
-  if (s[key] === 'b') {
-    s[key] = 'aaaa'
+  if (s[symbolKey] === 'b') {
+    s[symbolKey] = 'aaaa'
   }
 })
 
@@ -44,7 +43,7 @@ function Hook() {
       <button
         type="button"
         onClick={() => {
-          dispatch({ age: age + 1, [key]: 'b' })
+          emit({ age: age + 1, [symbolKey]: 'b' })
         }}
       >
         Dispatch
@@ -53,13 +52,13 @@ function Hook() {
   )
 }
 
-const setName: Dispatch = async ({ dispatch: dp, getStore: gs }, text) => {
+const setName: Dispatch = async ({ emit: dp, getStore: gs }, params) => {
   await new Promise((r) => setTimeout(r, 2000))
-  dp({ name: text as string })
+  dp({ name: params?.text as string })
   return gs().name
 }
 
-const setAge: Dispatch = async ({ dispatch: dp, getStore: gs }) => {
+const setAge: Dispatch = async ({ emit: dp, getStore: gs }) => {
   const { age } = gs()
   dp({ age: age + 1 })
 }
@@ -78,9 +77,11 @@ class C0 extends Component<TC> {
     }
 
     this.setState({ loading: true })
-    const { dispatch: dp } = this.props
-    dp({ age: 1 })
-    await dp(setName, Math.random().toString(36).substring(7))
+    const { emit: em, dispatch: dp } = this.props
+    em({ age: 1 })
+    await dp(setName, {
+      text: Math.random().toString(36).substring(7),
+    })
     this.setState({ loading: false })
     console.log(getStore())
   }

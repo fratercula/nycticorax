@@ -1,6 +1,8 @@
 import Nycticorax, { Dispatch as DP, Connect as CT } from '../../src'
 
-type Store = { name: string, age: number, [key: symbol]: string }
+export const symbolKey = Symbol('key')
+
+type Store = { name: string, age: number, [symbolKey]: string }
 
 const nycticorax = new Nycticorax<Store>()
 
@@ -11,6 +13,7 @@ export const {
   subscribe,
   connect,
   useStore,
+  emit,
 } = nycticorax
 
 export type Dispatch = DP<Store>

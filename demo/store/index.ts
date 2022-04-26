@@ -15,6 +15,7 @@ export const {
   getStore,
   dispatch,
   subscribe,
+  emit,
 } = nycticorax
 
 export type Dispatch = DP<Store>
