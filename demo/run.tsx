@@ -4,6 +4,7 @@ import {
   createStore,
   getStore,
   dispatch,
+  emit,
   subscribe,
   Dispatch,
 } from './store/index'
@@ -24,30 +25,30 @@ export default () => {
 
     console.log('store0', getStore())
 
-    dispatch({ time: 1 })
-    dispatch({ config: { on: true, type: 'component' } })
+    emit({ time: 1 })
+    emit({ config: { on: true, type: 'component' } })
 
     console.log('store1', getStore())
     setTimeout(() => console.log('store2', getStore()))
 
-    dispatch({ time: 2 }, true)
+    emit({ time: 2 }, true)
 
     console.log('store3', getStore())
 
-    const dispatcher0: Dispatch = async ({ getStore: gs, dispatch: dp }, ...args) => {
-      console.log('args0', args)
+    const dispatcher0: Dispatch = async ({ getStore: gs, emit: dp }, params) => {
+      console.log('params0', params)
       const { time } = gs()
       dp({ time: time + 1 })
     }
 
-    dispatch(dispatcher0, 1, 2)
+    dispatch(dispatcher0, { a: 1 })
 
-    const dispatcher1: Dispatch = async ({ getStore: gs, dispatch: dp }, ...args) => {
-      console.log('args1', args)
+    const dispatcher1: Dispatch = async ({ getStore: gs, emit: dp }, params) => {
+      console.log('params1', params)
       await new Promise((r) => setTimeout(r, 1000))
       const { config } = gs()
-      if (typeof args[0] === 'boolean') {
-        [config.on] = args
+      if (typeof params?.type === 'boolean') {
+        config.on = params.type
       }
       dp({ config })
     }
@@ -58,11 +59,11 @@ export default () => {
       return 1
     }
 
-    dispatch(dispatcher1, false)
+    dispatch(dispatcher1, { type: false })
 
     dispatch(dispatcher2).then(() => {
       console.log('2')
-      dispatch({ time: 1000 })
+      emit({ time: 1000 })
     })
 
     unsubscribe()

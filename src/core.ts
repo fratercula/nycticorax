@@ -5,10 +5,12 @@ type Listener<T> = (keys: Partial<keyof T>[]) => void
 export type Dispatch<T> = (
   nycticorax: {
     getStore: () => T,
-    dispatch: (next: Partial<T>) => void,
+    emit: (next: Partial<T>) => void,
   },
-  ...args: any[]
+  params?: Record<string, any>,
 ) => Promise<unknown>
+
+export type Emit<T> = (next: Partial<T>, sync?: boolean) => void
 
 export type NycticoraxType<T extends object> = Nycticorax<T>
 
@@ -56,32 +58,25 @@ class Nycticorax<T extends object> {
     }
   }
 
-  public dispatch = (
-    next: Partial<T> | Dispatch<T>,
-    ...args: any[]
-  ) => {
-    const type = typeof next
-
-    if (type === 'function') {
-      return (next as Function)({
-        dispatch: (o: Partial<T>) => this.dispatch(o, true),
-        getStore: this.getStore,
-      }, ...args)
-    }
-
-    this.emits = { ...this.emits, ...(next as Partial<T>) }
-
-    if (args[0]) {
-      this.emit()
+  public emit: Emit<T> = (next, sync) => {
+    this.emits = { ...this.emits, ...next }
+    if (sync) {
+      this.trigger()
     } else {
       clearTimeout(this.timer as number)
-      this.timer = setTimeout(this.emit)
+      this.timer = setTimeout(this.trigger)
     }
-
-    return undefined
   }
 
-  private emit = () => {
+  public dispatch = (
+    next: Dispatch<T>,
+    params?: Record<string, any>,
+  ) => next({
+    getStore: this.getStore,
+    emit: (o: Partial<T>) => this.emit(o, true),
+  }, params)
+
+  private trigger = () => {
     const next = this.emits
     const actives: Partial<keyof T>[] = []
     const keys = Reflect.ownKeys(next) as Partial<keyof T>[]
