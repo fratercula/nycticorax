@@ -8,7 +8,7 @@ export type Dispatch<T> = (
     emit: (next: Partial<T>) => void,
   },
   params?: any,
-) => Promise<unknown>
+) => Promise<any>
 
 export type Dispatcher<T> = (next: Dispatch<T>, params?: any) => Promise<any>
 
