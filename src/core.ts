@@ -7,10 +7,12 @@ export type Dispatch<T> = (
     getStore: () => T,
     emit: (next: Partial<T>) => void,
   },
-  params?: Record<string, any>,
+  params?: any,
 ) => Promise<unknown>
 
-export type Emit<T> = (next: Partial<T>, sync?: boolean) => void
+export type Dispatcher<T> = (next: Dispatch<T>, params?: any) => Promise<any>
+
+export type Emiter<T> = (next: Partial<T>, sync?: boolean) => void
 
 export type NycticoraxType<T extends object> = Nycticorax<T>
 
@@ -58,7 +60,7 @@ class Nycticorax<T extends object> {
     }
   }
 
-  public emit: Emit<T> = (next, sync) => {
+  public emit: Emiter<T> = (next, sync) => {
     this.emits = { ...this.emits, ...next }
     if (sync) {
       this.trigger()
@@ -68,10 +70,7 @@ class Nycticorax<T extends object> {
     }
   }
 
-  public dispatch = (
-    next: Dispatch<T>,
-    params?: Record<string, any>,
-  ) => next({
+  public dispatch: Dispatcher<T> = (next, params) => next({
     getStore: this.getStore,
     emit: (o: Partial<T>) => this.emit(o, true),
   }, params)

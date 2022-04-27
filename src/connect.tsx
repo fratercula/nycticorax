@@ -1,5 +1,5 @@
 import React, { Component, ComponentType } from 'react'
-import { NycticoraxType, Dispatch, Emit } from './core'
+import { NycticoraxType, Emiter, Dispatcher } from './core'
 import { Subtract } from './types'
 
 const ignoreStaticMethods = [
@@ -13,10 +13,7 @@ const ignoreStaticMethods = [
   'displayName',
 ]
 
-export type Connect<T> = {
-  emit: Emit<T>,
-  dispatch: (next: Dispatch<T>, params?: Record<string, any>) => Promise<unknown>,
-} & T
+export type Connect<T> = { emit: Emiter<T>, dispatch: Dispatcher<T> } & T
 
 function connect<T extends object>(nycticorax: NycticoraxType<T>) {
   const {
