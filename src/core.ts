@@ -41,7 +41,10 @@ class Nycticorax<T extends object> {
     const next = {} as T
 
     keys.forEach((key) => {
-      next[key] = JSON.parse(JSON.stringify(this.state[key]))
+      const value = this.state[key]
+      if (value !== undefined) {
+        next[key] = JSON.parse(JSON.stringify(value))
+      }
     })
 
     return next
@@ -82,9 +85,9 @@ class Nycticorax<T extends object> {
 
     for (let i = 0; i < keys.length; i += 1) {
       const key = keys[i]
-      if (!(key in this.state)) {
-        continue
-      }
+      // if (!(key in this.state)) {
+      //   continue
+      // }
 
       if (eq(this.state[key], next[key])) {
         continue

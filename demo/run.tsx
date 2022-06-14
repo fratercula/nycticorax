@@ -17,6 +17,7 @@ export default () => {
         on: false,
       },
       time: 11,
+      test: undefined,
     })
 
     const unsubscribe = subscribe((keys) => {
@@ -31,7 +32,7 @@ export default () => {
     console.log('store1', getStore())
     setTimeout(() => console.log('store2', getStore()))
 
-    emit({ time: 2 }, true)
+    emit({ time: 2, test: '1111' }, true)
 
     console.log('store3', getStore())
 

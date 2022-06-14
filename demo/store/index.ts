@@ -6,6 +6,7 @@ type Store = {
     on: boolean,
   },
   time: number,
+  test?: string,
 }
 
 const nycticorax = new Nycticorax<Store>()
