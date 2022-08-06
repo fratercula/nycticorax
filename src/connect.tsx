@@ -32,17 +32,18 @@ function connect<T extends object>(nycticorax: NycticoraxType<T>) {
       class R extends Component<Subtract<P, ConnectProps>> {
         private unsubscribe: () => void
 
-        state = {
-          props: getStore(),
-        }
-
-        componentDidMount() {
+        constructor(props: any) {
+          super(props)
           this.unsubscribe = subscribe((triggerKeys) => {
             const sames = keys.filter((k) => triggerKeys.includes(k))
             if (sames.length) {
               this.setState({ props: getStore() })
             }
           })
+        }
+
+        state = {
+          props: getStore(),
         }
 
         componentWillUnmount() {
