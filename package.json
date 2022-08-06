@@ -1,6 +1,6 @@
 {
   "name": "nycticorax",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "State container for JavaScript application, and React",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
