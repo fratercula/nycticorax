@@ -1,6 +1,7 @@
 import eq from 'fast-deep-equal'
 
-type Listener<T> = (keys: Partial<keyof T>[]) => void
+type ListenFn = (newValue: unknown, oldValue: unknown) => void
+type Listener<T> = Partial<Record<keyof T, ListenFn>>
 
 export type Dispatch<T> = (
   nycticorax: {
@@ -19,20 +20,22 @@ export type NycticoraxType<T extends object> = Nycticorax<T>
 class Nycticorax<T extends object> {
   private state: T
 
-  private listeners: Listener<T>[]
+  private listeners: Record<keyof T, ListenFn[]>
 
   private emits: T
 
-  private timer: ReturnType<typeof setTimeout> | number | undefined
+  private timer: NodeJS.Timeout | undefined
 
   constructor() {
     this.state = {} as T
-    this.listeners = []
+    this.listeners = {} as Record<keyof T, ListenFn[]>
     this.emits = {} as T
     this.timer = undefined
   }
 
   public createStore= (state: T): void => {
+    this.listeners = Object.keys(state)
+      .reduce((p, c) => ({ ...p, [c]: [] }), {} as Record<keyof T, ListenFn[]>)
     this.state = state
   }
 
@@ -50,16 +53,23 @@ class Nycticorax<T extends object> {
     return next
   }
 
-  public subscribe = (listener: Listener<T>) => {
-    this.listeners.push(listener)
+  public subscribe = (listeners: Listener<T>) => {
+    const record = {} as Listener<T>
+    const stateKeys = Object.keys(this.state)
+
+    Object.keys(listeners).forEach((key) => {
+      const current = key as keyof T
+      if (stateKeys.includes(key)) {
+        this.listeners[current].push(listeners[current] as ListenFn)
+        record[current] = listeners[current]
+      }
+    })
 
     return () => {
-      const listeners = this.listeners.slice()
-      const index = listeners.indexOf(listener)
-      if (index > -1) {
-        listeners.splice(index, 1)
+      // eslint-disable-next-line no-restricted-syntax, guard-for-in
+      for (const key in record) {
+        this.listeners[key] = this.listeners[key].filter((item) => item !== record[key])
       }
-      this.listeners = listeners
     }
   }
 
@@ -68,7 +78,7 @@ class Nycticorax<T extends object> {
     if (sync) {
       this.trigger()
     } else {
-      clearTimeout(this.timer as number)
+      clearTimeout(this.timer as NodeJS.Timeout)
       this.timer = setTimeout(this.trigger)
     }
   }
@@ -80,26 +90,26 @@ class Nycticorax<T extends object> {
 
   private trigger = () => {
     const next = this.emits
-    const actives: Partial<keyof T>[] = []
+    const actives: { key: keyof T, newValue: unknown, oldValue: unknown }[] = []
     const keys = Reflect.ownKeys(next) as Partial<keyof T>[]
 
     for (let i = 0; i < keys.length; i += 1) {
       const key = keys[i]
-      // if (!(key in this.state)) {
-      //   continue
-      // }
 
       if (eq(this.state[key], next[key])) {
         continue
       }
 
+      const newValue = next[key]
+      const oldValue = this.state[key]
+
       this.state[key] = next[key]
-      actives.push(key)
+      actives.push({ key, newValue, oldValue })
     }
 
-    if (actives.length) {
-      this.listeners.forEach((listener) => listener(actives))
-    }
+    actives.forEach((item) => {
+      this.listeners[item.key].forEach((fn) => fn(item.newValue, item.oldValue))
+    })
 
     this.emits = {} as T
     this.timer = undefined
