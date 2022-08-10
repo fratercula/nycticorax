@@ -1,5 +1,7 @@
 import React, { Component, ComponentType } from 'react'
-import { NycticoraxType, Emiter, Dispatcher } from './core'
+import {
+  NycticoraxType, Emiter, Dispatcher, Listener,
+} from './core'
 import { Subtract } from './types'
 
 const ignoreStaticMethods = [
@@ -25,7 +27,7 @@ function connect<T extends object>(nycticorax: NycticoraxType<T>) {
 
   type ConnectProps = Connect<T>
 
-  return function (...keys: [Partial<keyof T>, ...Partial<keyof T>[]]) {
+  return function (...keys: (keyof T)[]) {
     return function<P extends ConnectProps> (
       C: ComponentType<P> & Record<string, any>,
     ): ComponentType<Subtract<P, ConnectProps>> & Record<string, any> {
@@ -34,12 +36,14 @@ function connect<T extends object>(nycticorax: NycticoraxType<T>) {
 
         constructor(props: any) {
           super(props)
-          this.unsubscribe = subscribe((triggerKeys) => {
-            const sames = keys.filter((k) => triggerKeys.includes(k))
-            if (sames.length) {
-              this.setState({ props: getStore() })
-            }
-          })
+          this.unsubscribe = subscribe(
+            keys.reduce((p, c) => ({
+              ...p,
+              [c]: () => {
+                this.setState({ props: getStore() })
+              },
+            }), {} as Listener<T>),
+          )
         }
 
         state = {

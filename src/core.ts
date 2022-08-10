@@ -1,7 +1,7 @@
 import eq from 'fast-deep-equal'
 
 type ListenFn = (newValue: unknown, oldValue: unknown) => void
-type Listener<T> = Partial<Record<keyof T, ListenFn>>
+export type Listener<T> = Partial<Record<keyof T, ListenFn>>
 
 export type Dispatch<T> = (
   nycticorax: {
@@ -34,7 +34,7 @@ class Nycticorax<T extends object> {
   }
 
   public createStore= (state: T): void => {
-    this.listeners = Object.keys(state)
+    this.listeners = Reflect.ownKeys(state)
       .reduce((p, c) => ({ ...p, [c]: [] }), {} as Record<keyof T, ListenFn[]>)
     this.state = state
   }
@@ -55,9 +55,9 @@ class Nycticorax<T extends object> {
 
   public subscribe = (listeners: Listener<T>) => {
     const record = {} as Listener<T>
-    const stateKeys = Object.keys(this.state)
+    const stateKeys = Reflect.ownKeys(this.state)
 
-    Object.keys(listeners).forEach((key) => {
+    Reflect.ownKeys(listeners).forEach((key) => {
       const current = key as keyof T
       if (stateKeys.includes(key)) {
         this.listeners[current].push(listeners[current] as ListenFn)
@@ -66,10 +66,10 @@ class Nycticorax<T extends object> {
     })
 
     return () => {
-      // eslint-disable-next-line no-restricted-syntax, guard-for-in
-      for (const key in record) {
-        this.listeners[key] = this.listeners[key].filter((item) => item !== record[key])
-      }
+      Reflect.ownKeys(record).forEach((key) => {
+        const current = key as keyof T
+        this.listeners[current] = this.listeners[current].filter((item) => item !== record[current])
+      })
     }
   }
 

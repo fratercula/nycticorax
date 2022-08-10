@@ -15,15 +15,13 @@ import classes from './index.less'
 
 createStore({ age: 0, name: 'abc', [symbolKey]: 'a' })
 
-subscribe((keys) => {
-  console.log('subscribe', keys)
-  const s = getStore()
-
-  console.log(s[symbolKey])
-
-  if (s[symbolKey] === 'b') {
-    s[symbolKey] = 'aaaa'
-  }
+subscribe({
+  age(n, o) {
+    console.log(n, o, 'age')
+  },
+  [symbolKey]: (n, o) => {
+    console.log(n, o, 'symbolKey')
+  },
 })
 
 function Hook() {

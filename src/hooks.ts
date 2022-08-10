@@ -1,5 +1,5 @@
 import { useState, useLayoutEffect } from 'react'
-import { NycticoraxType } from './core'
+import { NycticoraxType, Listener } from './core'
 
 function hooks<T extends object>(nycticorax: NycticoraxType<T>) {
   const { getStore, subscribe } = nycticorax
@@ -8,12 +8,14 @@ function hooks<T extends object>(nycticorax: NycticoraxType<T>) {
     const [props, setProps] = useState(getStore())
 
     useLayoutEffect(() => {
-      const unsubscribe = subscribe((triggerKeys) => {
-        const sames = keys.filter((k) => triggerKeys.includes(k))
-        if (sames.length) {
-          setProps(getStore())
-        }
-      })
+      const unsubscribe = subscribe(
+        keys.reduce((p, c) => ({
+          ...p,
+          [c]: () => {
+            setProps(getStore())
+          },
+        }), {} as Listener<T>),
+      )
 
       return unsubscribe
     })
