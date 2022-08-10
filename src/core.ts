@@ -17,7 +17,7 @@ export type Emiter<T> = (next: Partial<T>, sync?: boolean) => void
 
 export type NycticoraxType<T extends object> = Nycticorax<T>
 
-class Nycticorax<T extends object> {
+export default class Nycticorax<T extends object> {
   private state: T
 
   private listeners: Record<keyof T, ListenFn[]>
@@ -39,19 +39,7 @@ class Nycticorax<T extends object> {
     this.state = state
   }
 
-  public getStore = (): T => {
-    const keys = Reflect.ownKeys(this.state) as Partial<keyof T>[]
-    const next = {} as T
-
-    keys.forEach((key) => {
-      const value = this.state[key]
-      if (value !== undefined) {
-        next[key] = JSON.parse(JSON.stringify(value))
-      }
-    })
-
-    return next
-  }
+  public getStore = () => ({ ...this.state })
 
   public subscribe = (listeners: Listener<T>) => {
     const record = {} as Listener<T>
@@ -115,5 +103,3 @@ class Nycticorax<T extends object> {
     this.timer = undefined
   }
 }
-
-export default Nycticorax
