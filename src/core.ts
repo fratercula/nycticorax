@@ -96,7 +96,9 @@ export default class Nycticorax<T extends object> {
     }
 
     actives.forEach((item) => {
-      this.listeners[item.key].forEach((fn) => fn(item.newValue, item.oldValue))
+      if (this.listeners[item.key]) {
+        this.listeners[item.key].forEach((fn) => fn(item.newValue, item.oldValue))
+      }
     })
 
     this.emits = {} as T
