@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-console */
 import React, { Component } from 'react'
 import {
@@ -25,23 +26,27 @@ subscribe({
 })
 
 function Hook() {
-  const { name, age } = useStore('name', 'age')
+  const store = useStore('name', 'age', symbolKey)
 
   return (
     <div className={classes.com}>
       <h2>Hooks</h2>
       <p>
         <span>name:</span>
-        {name}
+        {store.name}
       </p>
       <p>
         <span>age:</span>
-        {age}
+        {store.age}
+      </p>
+      <p>
+        <span>symbol:</span>
+        {store[symbolKey]}
       </p>
       <button
         type="button"
         onClick={() => {
-          emit({ age: age + 1, [symbolKey]: 'b' })
+          emit({ age: store.age + 1, [symbolKey]: `${Math.random()}`.slice(15) })
         }}
       >
         Dispatch
@@ -87,6 +92,7 @@ class C0 extends Component<TC> {
   render() {
     const { age, name, desc } = this.props
     const { loading } = this.state
+    const store = getStore()
 
     const cs = loading ? classes.loading : ''
 
@@ -100,6 +106,10 @@ class C0 extends Component<TC> {
         <p>
           <span>age:</span>
           {age}
+        </p>
+        <p>
+          <span>symbol:</span>
+          {store[symbolKey]}
         </p>
         <button
           className={cs}
@@ -117,6 +127,8 @@ function F0(props: TC) {
   const {
     age, name, dispatch: dp, desc,
   } = props
+  // https://github.com/facebook/react/issues/7552
+  const store = getStore()
   return (
     <div className={classes.com}>
       <h2>{desc}</h2>
@@ -127,6 +139,10 @@ function F0(props: TC) {
       <p>
         <span>age:</span>
         {age}
+      </p>
+      <p>
+        <span>symbol:</span>
+        {store[symbolKey]}
       </p>
       <button
         type="button"
@@ -141,7 +157,7 @@ function F0(props: TC) {
 }
 
 const C = connect('age', 'name')(C0)
-const F = connect('age', 'name')(F0)
+const F = connect('age', 'name', symbolKey)(F0)
 
 export default function () {
   return (
