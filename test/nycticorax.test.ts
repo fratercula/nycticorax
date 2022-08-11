@@ -21,8 +21,11 @@ describe('nycticorax', () => {
     expect(getStore().a).toBe(2)
     expect(getStore().x).toBe(1)
 
-    const unSubscribe = subscribe((keys) => {
-      expect(keys.join()).toBe('a')
+    const unSubscribe = subscribe({
+      a(n, o) {
+        expect(n).toBe(3)
+        expect(o).toBe(2)
+      },
     })
     emit({ a: 3 }, true)
     unSubscribe()

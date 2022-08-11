@@ -20,8 +20,10 @@ export default () => {
       test: undefined,
     })
 
-    const unsubscribe = subscribe((keys) => {
-      console.log('subscribe', keys)
+    const unsubscribe = subscribe({
+      time(n, o) {
+        console.log(n, o, 'subscribe')
+      },
     })
 
     console.log('store0', getStore())
