@@ -1,4 +1,5 @@
 import eq from 'fast-deep-equal'
+import clone from 'lodash.clonedeep'
 
 type ListenFn = (newValue: unknown, oldValue: unknown) => void
 export type Listener<T> = Partial<Record<keyof T, ListenFn>>
@@ -39,7 +40,7 @@ export default class Nycticorax<T extends object> {
     this.state = state
   }
 
-  public getStore = () => ({ ...this.state })
+  public getStore = () => clone(this.state)
 
   public subscribe = (listeners: Listener<T>) => {
     const record = {} as Listener<T>
