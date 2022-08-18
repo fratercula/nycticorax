@@ -109,7 +109,9 @@ export default class Nycticorax<T extends object> {
 
     actives.forEach((item) => {
       changeValue[item.key] = [item.newValue, item.oldValue]
-      this.listeners[item.key].forEach((fn) => fn(item.newValue, item.oldValue))
+      if (this.listeners[item.key]) {
+        this.listeners[item.key].forEach((fn) => fn(item.newValue, item.oldValue))
+      }
     })
 
     if (actives.length) {
