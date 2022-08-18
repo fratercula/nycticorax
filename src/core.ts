@@ -2,6 +2,8 @@ import eq from 'fast-deep-equal'
 import clone from 'lodash.clonedeep'
 
 type ListenFn = (newValue: unknown, oldValue: unknown) => void
+type ChangeValue<T> = Record<keyof T, [newValue: unknown, oldValue: unknown]>
+type OnChange<T> = (value: ChangeValue<T>) => void
 export type Listener<T> = Partial<Record<keyof T, ListenFn>>
 
 export type Dispatch<T> = (
@@ -27,11 +29,14 @@ export default class Nycticorax<T extends object> {
 
   private timer: NodeJS.Timeout | undefined
 
+  private onStateChange: OnChange<T>
+
   constructor() {
     this.state = {} as T
     this.listeners = {} as Record<keyof T, ListenFn[]>
     this.emits = {} as T
     this.timer = undefined
+    this.onStateChange = () => null
   }
 
   public createStore= (state: T): void => {
@@ -44,14 +49,14 @@ export default class Nycticorax<T extends object> {
 
   public subscribe = (listeners: Listener<T>) => {
     const record = {} as Listener<T>
-    const stateKeys = Reflect.ownKeys(this.state)
 
     Reflect.ownKeys(listeners).forEach((key) => {
       const current = key as keyof T
-      if (stateKeys.includes(key)) {
-        this.listeners[current].push(listeners[current] as ListenFn)
-        record[current] = listeners[current]
+      if (!this.listeners[current]) {
+        this.listeners[current] = []
       }
+      this.listeners[current].push(listeners[current] as ListenFn)
+      record[current] = listeners[current]
     })
 
     return () => {
@@ -60,6 +65,10 @@ export default class Nycticorax<T extends object> {
         this.listeners[current] = this.listeners[current].filter((item) => item !== record[current])
       })
     }
+  }
+
+  public set onChange(callback: OnChange<T>) {
+    this.onStateChange = callback
   }
 
   public emit: Emiter<T> = (next, sync) => {
@@ -96,11 +105,16 @@ export default class Nycticorax<T extends object> {
       actives.push({ key, newValue, oldValue })
     }
 
+    const changeValue = {} as ChangeValue<T>
+
     actives.forEach((item) => {
-      if (this.listeners[item.key]) {
-        this.listeners[item.key].forEach((fn) => fn(item.newValue, item.oldValue))
-      }
+      changeValue[item.key] = [item.newValue, item.oldValue]
+      this.listeners[item.key].forEach((fn) => fn(item.newValue, item.oldValue))
     })
+
+    if (actives.length) {
+      this.onStateChange(changeValue)
+    }
 
     this.emits = {} as T
     this.timer = undefined

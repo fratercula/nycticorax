@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { useEffect } from 'react'
-import {
+import nycticorax, {
   createStore,
   getStore,
   dispatch,
@@ -17,14 +17,21 @@ export default () => {
         on: false,
       },
       time: 11,
-      test: undefined,
+      // test: undefined,
     })
 
     const unsubscribe = subscribe({
       time(n, o) {
         console.log(n, o, 'subscribe')
       },
+      test(n, o) {
+        console.log(n, o, 'subscribe test')
+      },
     })
+
+    nycticorax.onChange = (v) => {
+      console.log(v, 'onChange')
+    }
 
     console.log('store0', getStore())
 
@@ -35,6 +42,7 @@ export default () => {
     setTimeout(() => console.log('store2', getStore()))
 
     emit({ time: 2, test: '1111' }, true)
+    emit({ test: '2222' }, true)
 
     console.log('store3', getStore())
 

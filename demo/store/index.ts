@@ -19,4 +19,6 @@ export const {
   emit,
 } = nycticorax
 
+export default nycticorax
+
 export type Dispatch = DP<Store>
