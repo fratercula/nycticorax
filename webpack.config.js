@@ -56,11 +56,12 @@ module.exports = {
     hot: true,
     inline: true,
   },
-  plugins: NODE_ENV === 'umd' ? undefined : [
+  plugins: NODE_ENV === 'umd' ? [
+    // new BundleAnalyzerPlugin(),
+  ] : [
     new HtmlWebpackPlugin({
       template: 'demo/index.html',
     }),
-    // new BundleAnalyzerPlugin(),
   ],
   resolve: {
     extensions: ['.js', '.ts', '.tsx'],

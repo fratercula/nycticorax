@@ -39,7 +39,7 @@ export default class Nycticorax<T extends object> {
     this.onStateChange = () => null
   }
 
-  public createStore= (state: T): void => {
+  public createStore = (state: T): void => {
     this.listeners = Reflect.ownKeys(state)
       .reduce((p, c) => ({ ...p, [c]: [] }), {} as Record<keyof T, ListenFn[]>)
     this.state = state
