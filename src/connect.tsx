@@ -1,7 +1,6 @@
 import React, { Component, ComponentType } from 'react'
-import {
-  NycticoraxType, Emiter, Dispatcher, Listener,
-} from './core'
+import { KeyWithListener } from './core'
+import type Nycticorax from './core'
 
 type AnyObject = Record<string, any>
 type SetDifference<A, B> = A extends B ? never : A
@@ -22,9 +21,9 @@ const ignoreStaticMethods = [
   'displayName',
 ]
 
-export type Connect<T> = { emit: Emiter<T>, dispatch: Dispatcher<T> } & T
+export type Connect<T extends object> = Pick<Nycticorax<T>, 'dispatch' | 'emit'> & T
 
-function connect<T extends object>(nycticorax: NycticoraxType<T>) {
+function connect<T extends object>(nycticorax: Nycticorax<T>) {
   const {
     getStore,
     subscribe,
@@ -47,7 +46,7 @@ function connect<T extends object>(nycticorax: NycticoraxType<T>) {
               [c]: () => {
                 this.setState({ props: getStore() })
               },
-            }), {} as Listener<T>),
+            }), {} as KeyWithListener<T>),
           )
         }
 

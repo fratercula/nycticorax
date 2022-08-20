@@ -1,10 +1,11 @@
 import eq from 'fast-deep-equal'
 import clone from 'lodash.clonedeep'
 
-type ListenFn = (newValue: unknown, oldValue: unknown) => void
+type Listener = (newValue: unknown, oldValue: unknown) => void
 type ChangeValue<T> = Record<keyof T, [newValue: unknown, oldValue: unknown]>
 type OnChange<T> = (value: ChangeValue<T>) => void
-export type Listener<T> = Partial<Record<keyof T, ListenFn>>
+export type KeyWithListener<T> = Partial<Record<keyof T, Listener>>
+export type KeyWithListeners<T> = Partial<Record<keyof T, Listener[]>>
 
 export type Dispatch<T> = (
   nycticorax: {
@@ -14,18 +15,12 @@ export type Dispatch<T> = (
   params?: any,
 ) => Promise<any>
 
-export type Dispatcher<T> = (next: Dispatch<T>, params?: any) => Promise<any>
-
-export type Emiter<T> = (next: Partial<T>, sync?: boolean) => void
-
-export type NycticoraxType<T extends object> = Nycticorax<T>
-
 export default class Nycticorax<T extends object> {
   private state: T
 
-  private listeners: Record<keyof T, ListenFn[]>
+  private listeners: KeyWithListeners<T>
 
-  private emits: T
+  private emits: Partial<T>
 
   private timer: NodeJS.Timeout | undefined
 
@@ -33,36 +28,36 @@ export default class Nycticorax<T extends object> {
 
   constructor() {
     this.state = {} as T
-    this.listeners = {} as Record<keyof T, ListenFn[]>
-    this.emits = {} as T
+    this.listeners = {}
+    this.emits = {}
     this.timer = undefined
     this.onStateChange = () => null
   }
 
   public createStore = (state: T): void => {
     this.listeners = Reflect.ownKeys(state)
-      .reduce((p, c) => ({ ...p, [c]: [] }), {} as Record<keyof T, ListenFn[]>)
+      .reduce((p, c) => ({ ...p, [c]: [] }), {} as KeyWithListeners<T>)
     this.state = state
   }
 
   public getStore = () => clone(this.state)
 
-  public subscribe = (listeners: Listener<T>) => {
-    const record = {} as Listener<T>
+  public subscribe = (listener: KeyWithListener<T>) => {
+    const record = {} as KeyWithListener<T>
 
-    Reflect.ownKeys(listeners).forEach((key) => {
+    Reflect.ownKeys(listener).forEach((key) => {
       const current = key as keyof T
       if (!this.listeners[current]) {
         this.listeners[current] = []
       }
-      this.listeners[current].push(listeners[current] as ListenFn)
-      record[current] = listeners[current]
+      this.listeners[current]!.push(listener[current] as Listener)
+      record[current] = listener[current]
     })
 
     return () => {
       Reflect.ownKeys(record).forEach((key) => {
         const current = key as keyof T
-        this.listeners[current] = this.listeners[current].filter((item) => item !== record[current])
+        this.listeners[current] = this.listeners[current]!.filter((t) => t !== record[current])
       })
     }
   }
@@ -71,7 +66,7 @@ export default class Nycticorax<T extends object> {
     this.onStateChange = callback
   }
 
-  public emit: Emiter<T> = (next, sync) => {
+  public emit = (next: Partial<T>, sync?: boolean) => {
     this.emits = { ...this.emits, ...next }
     if (sync) {
       this.trigger()
@@ -81,7 +76,7 @@ export default class Nycticorax<T extends object> {
     }
   }
 
-  public dispatch: Dispatcher<T> = (next, params) => next({
+  public dispatch = (next: Dispatch<T>, params?: any) => next({
     getStore: this.getStore,
     emit: (o: Partial<T>) => this.emit(o, true),
   }, params)
@@ -101,7 +96,7 @@ export default class Nycticorax<T extends object> {
       const newValue = next[key]
       const oldValue = this.state[key]
 
-      this.state[key] = next[key]
+      this.state[key] = next[key] as T[keyof T]
       actives.push({ key, newValue, oldValue })
     }
 
@@ -110,7 +105,7 @@ export default class Nycticorax<T extends object> {
     actives.forEach((item) => {
       changeValue[item.key] = [item.newValue, item.oldValue]
       if (this.listeners[item.key]) {
-        this.listeners[item.key].forEach((fn) => fn(item.newValue, item.oldValue))
+        this.listeners[item.key]!.forEach((fn) => fn(item.newValue, item.oldValue))
       }
     })
 

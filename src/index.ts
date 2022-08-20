@@ -1,13 +1,13 @@
-import Nycticorax, { Dispatch } from './core'
+import Core, { Dispatch } from './core'
 import getConnect, { Connect } from './connect'
 import getHook from './hooks'
 
-class N<T extends object> extends Nycticorax<T> {
+class Nycticorax<T extends object> extends Core<T> {
   connect = getConnect(this)
 
   useStore = getHook(this)
 }
 
-export default N
+export default Nycticorax
 export type { Dispatch }
 export type { Connect }

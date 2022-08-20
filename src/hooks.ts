@@ -1,7 +1,8 @@
 import { useState, useLayoutEffect } from 'react'
-import { NycticoraxType, Listener } from './core'
+import { KeyWithListener } from './core'
+import type Nycticorax from './core'
 
-function hooks<T extends object>(nycticorax: NycticoraxType<T>) {
+function hooks<T extends object>(nycticorax: Nycticorax<T>) {
   const { getStore, subscribe } = nycticorax
 
   return function (...keys: (keyof T)[]) {
@@ -14,7 +15,7 @@ function hooks<T extends object>(nycticorax: NycticoraxType<T>) {
           [c]: () => {
             setProps(getStore())
           },
-        }), {} as Listener<T>),
+        }), {} as KeyWithListener<T>),
       )
 
       return unsubscribe
