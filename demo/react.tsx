@@ -6,15 +6,20 @@ import {
   getStore,
   subscribe,
   Dispatch,
-  Connect,
+  Store,
   connect,
   useStore,
   emit,
   symbolKey,
+  dispatch,
 } from './store/react'
 import classes from './index.less'
 
-createStore({ age: 0, name: 'abc', [symbolKey]: 'a' })
+createStore({
+  age: 0,
+  name: 'abc',
+  [symbolKey]: 'a',
+})
 
 subscribe({
   age(n, o) {
@@ -66,7 +71,7 @@ const setAge: Dispatch = async ({ emit: dp, getStore: gs }) => {
   dp({ age: age + 1 })
 }
 
-type TC = Connect & { desc: string }
+type TC = Store & { desc: string }
 
 class C0 extends Component<TC> {
   state = {
@@ -80,9 +85,8 @@ class C0 extends Component<TC> {
     }
 
     this.setState({ loading: true })
-    const { emit: em, dispatch: dp } = this.props
-    em({ age: 1 })
-    await dp(setName, {
+    emit({ age: 1 })
+    await dispatch(setName, {
       text: Math.random().toString(36).substring(7),
     })
     this.setState({ loading: false })
@@ -90,6 +94,8 @@ class C0 extends Component<TC> {
   }
 
   render() {
+    // https://github.com/facebook/react/issues/7552
+    console.log('symbol undefined', this.props[symbolKey])
     const { age, name, desc } = this.props
     const { loading } = this.state
     const store = getStore()
@@ -125,7 +131,7 @@ class C0 extends Component<TC> {
 
 function F0(props: TC) {
   const {
-    age, name, dispatch: dp, desc,
+    age, name, desc,
   } = props
   // https://github.com/facebook/react/issues/7552
   const store = getStore()
@@ -147,7 +153,7 @@ function F0(props: TC) {
       <button
         type="button"
         onClick={() => {
-          dp(setAge)
+          dispatch(setAge)
         }}
       >
         Dispatch

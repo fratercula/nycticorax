@@ -21,21 +21,14 @@ const ignoreStaticMethods = [
   'displayName',
 ]
 
-export type Connect<T extends object> = Pick<Nycticorax<T>, 'dispatch' | 'emit'> & T
-
 function connect<T extends object>(nycticorax: Nycticorax<T>) {
-  const {
-    getStore,
-    subscribe,
-    dispatch,
-    emit,
-  } = nycticorax
+  const { getStore, subscribe } = nycticorax
 
   return function (...keys: (keyof T)[]) {
-    return function<P extends Connect<T>> (
+    return function<P extends T> (
       C: ComponentType<P> & AnyObject,
-    ): ComponentType<Subtract<P, Connect<T>>> & AnyObject {
-      class R extends Component<Subtract<P, Connect<T>>> {
+    ): ComponentType<Subtract<P, T>> & AnyObject {
+      class R extends Component<Subtract<P, T>> {
         private unsubscribe: () => void
 
         constructor(props: any) {
@@ -60,8 +53,7 @@ function connect<T extends object>(nycticorax: Nycticorax<T>) {
 
         render() {
           const { props } = this.state
-          // eslint-disable-next-line prefer-object-spread
-          const rest = Object.assign({ dispatch, emit }, props, this.props as P)
+          const rest = { ...props, ...this.props as P }
 
           return (
             <C {...rest} />

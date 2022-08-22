@@ -141,7 +141,7 @@ type Dispatch = DP<Store>
 
 ### createStore
 
-create store
+create store, support symbol
 
 ```ts
 type createStore = (state: T) => void
@@ -258,7 +258,7 @@ unsubscribe() // unsubscribe
 
 ### connect
 
-for `React` only
+for `React` only，class component 可以检测 symbol 的变动，但不能直接获取到，需要通过 getStore
 
 ```tsx
 type connect = (keys: (keyof T)[]) => (React.ComponentType) => React.ComponentType

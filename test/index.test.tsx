@@ -1,7 +1,8 @@
+/* eslint-disable react/no-unused-prop-types */
 import React, { Component } from 'react'
 import { act } from 'react-dom/test-utils'
 import { mount } from 'enzyme'
-import Nycticorax, { Connect as CT } from '../src'
+import Nycticorax from '../src'
 
 type Store = { name: string, age: number, other: boolean }
 
@@ -13,8 +14,6 @@ const {
   useStore,
   emit,
 } = nycticorax
-
-type Connect = CT<Store>
 
 createStore({ name: 'xyz', age: 1, other: false })
 
@@ -49,13 +48,12 @@ describe('nycticorax', () => {
 
   it('connect', () => {
     type S = () => string
-    class C0 extends Component<Connect> {
+    class C0 extends Component<Store> {
       public static setAge: S = () => 'a'
 
       setName = () => {
-        const { emit: dp } = this.props
-        dp({ name: 'jkl' }, true)
-        dp({ other: false }, true)
+        emit({ name: 'jkl' }, true)
+        emit({ other: false }, true)
       }
 
       render() {

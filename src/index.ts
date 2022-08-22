@@ -1,5 +1,5 @@
 import Core, { Dispatch } from './core'
-import getConnect, { Connect } from './connect'
+import getConnect from './connect'
 import getHook from './hooks'
 
 class Nycticorax<T extends object> extends Core<T> {
@@ -10,4 +10,3 @@ class Nycticorax<T extends object> extends Core<T> {
 
 export default Nycticorax
 export type { Dispatch }
-export type { Connect }
