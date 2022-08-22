@@ -13,7 +13,6 @@ import {
   symbolKey,
   dispatch,
 } from './store/react'
-import classes from './index.less'
 
 createStore({
   age: 0,
@@ -34,7 +33,7 @@ function Hook() {
   const store = useStore('name', 'age', symbolKey)
 
   return (
-    <div className={classes.com}>
+    <div className="com">
       <h2>Hooks</h2>
       <p>
         <span>name:</span>
@@ -100,10 +99,10 @@ class C0 extends Component<TC> {
     const { loading } = this.state
     const store = getStore()
 
-    const cs = loading ? classes.loading : ''
+    const cs = loading ? 'loading' : ''
 
     return (
-      <div className={classes.com}>
+      <div className="com">
         <h2>{desc}</h2>
         <p>
           <span>name:</span>
@@ -136,7 +135,7 @@ function F0(props: TC) {
   // https://github.com/facebook/react/issues/7552
   const store = getStore()
   return (
-    <div className={classes.com}>
+    <div className="com">
       <h2>{desc}</h2>
       <p>
         <span>name:</span>

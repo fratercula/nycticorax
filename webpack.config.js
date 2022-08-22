@@ -1,6 +1,5 @@
 const { resolve } = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 const { NODE_ENV = 'development' } = process.env
 
@@ -56,9 +55,7 @@ module.exports = {
     hot: true,
     inline: true,
   },
-  plugins: NODE_ENV === 'umd' ? [
-    // new BundleAnalyzerPlugin(),
-  ] : [
+  plugins: NODE_ENV === 'umd' ? [] : [
     new HtmlWebpackPlugin({
       template: 'demo/index.html',
     }),
@@ -69,30 +66,6 @@ module.exports = {
   optimization: optimizationMap[NODE_ENV],
   module: {
     rules: [
-      {
-        test: /\.less$/,
-        use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true,
-              modules: {
-                localIdentName: '[local]_[hash:base64:5]',
-              },
-            },
-          },
-          {
-            loader: 'less-loader',
-            options: {
-              sourceMap: true,
-              lessOptions: {
-                javascriptEnabled: true,
-              },
-            },
-          },
-        ],
-      },
       {
         test: /\.(ts|tsx)$/,
         exclude: /node_modules/,

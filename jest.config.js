@@ -7,5 +7,5 @@ module.exports = {
   },
   setupFiles: ['./test/setup.js'],
   testEnvironment: 'jsdom',
-  snapshotSerializers: ['enzyme-to-json/serializer'],
+  snapshotSerializers: [],
 }
