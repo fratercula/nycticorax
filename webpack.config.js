@@ -1,69 +1,29 @@
-const { resolve } = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const { NODE_ENV = 'development' } = process.env
 
-const optimizationMap = {
-  production: {
-    splitChunks: {
-      minSize: 30,
-      cacheGroups: {
-        vendors: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendor',
-          chunks: 'initial',
-          priority: -10,
-        },
-      },
-    },
-  },
-}
-
 module.exports = {
-  entry: NODE_ENV === 'umd' ? {
-    index: './src/index.ts',
-    core: './src/core.ts',
-  } : './demo/index.tsx',
-  output: NODE_ENV === 'umd' ? {
-    path: resolve(__dirname, './dist/umd'),
-    filename: '[name].js',
-    library: 'Nycticorax',
-    libraryTarget: 'umd',
-    libraryExport: 'default',
-  } : {
-    path: resolve(__dirname, './docs'),
-    filename: '[name].[chunkhash:8].js',
-  },
-  externals: NODE_ENV === 'umd' ? {
-    react: {
-      root: 'React',
-      commonjs2: 'react',
-      commonjs: 'react',
-      amd: 'react',
-      umd: 'react',
-    },
-  } : undefined,
-  mode: NODE_ENV === 'umd' ? 'production' : NODE_ENV,
+  entry: './demo/index.tsx',
+  mode: NODE_ENV,
   devtool: 'source-map',
+  stats: 'minimal',
   target: 'web',
   devServer: {
-    disableHostCheck: true,
-    contentBase: resolve(__dirname, './demo'),
+    allowedHosts: 'all',
     port: 1234,
     host: '0.0.0.0',
-    stats: 'minimal',
-    hot: true,
-    inline: true,
+    static: {
+      directory: './demo',
+    },
   },
-  plugins: NODE_ENV === 'umd' ? [] : [
-    new HtmlWebpackPlugin({
-      template: 'demo/index.html',
-    }),
-  ],
   resolve: {
     extensions: ['.js', '.ts', '.tsx'],
   },
-  optimization: optimizationMap[NODE_ENV],
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './demo/index.html',
+    }),
+  ],
   module: {
     rules: [
       {
@@ -71,14 +31,6 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          options: {
-            presets: [
-              ['@babel/preset-env', {
-                targets: { esmodules: NODE_ENV !== 'umd' },
-                modules: false,
-              }],
-            ],
-          },
         },
       },
     ],
