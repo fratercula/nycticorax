@@ -3,22 +3,21 @@
   "version": "4.0.1",
   "description": "State container for JavaScript application, and React",
   "main": "dist/index.js",
-  "module": "dist/esm/index.js",
-  "unpkg": "dist/umd/index.js",
+  "unpkg": "dist/index.js",
   "files": [
-    "dist"
+    "dist",
+    "types"
   ],
+  "types": "./types",
   "scripts": {
-    "lint": "tsc --noemit && eslint . --ext .ts,.tsx,.js",
+    "lint": "tsc --noemit",
     "test:unit": "jest",
     "test:coverage": "jest --coverage",
     "test": "npm run lint && npm run test:coverage",
     "start": "webpack serve --progress",
     "build": "NODE_ENV=production webpack --progress",
-    "docs": "rm -rf docs && NODE_ENV=production webpack --progress",
-    "esm": "tsc --p tsconfig-esm.json",
-    "cjs": "tsc --p tsconfig-cjs.json",
-    "build0": "npm run docs && rm -rf dist && npm run esm && npm run cjs && npm run umd"
+    "build:types": "tsc --emitDeclarationOnly",
+    "docs": "rm -rf docs && NODE_ENV=production webpack --progress"
   },
   "repository": {
     "type": "git",
@@ -60,7 +59,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "ts-jest": "^27.1.5",
-    "typescript": "^4.4.4",
+    "typescript": "^4.7.4",
     "webpack": "^5.74.0",
     "webpack-bundle-analyzer": "^4.6.1",
     "webpack-cli": "^4.10.0",
