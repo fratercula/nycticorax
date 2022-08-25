@@ -10,7 +10,7 @@
   ],
   "types": "./types",
   "scripts": {
-    "lint": "tsc --noemit",
+    "lint": "tsc --noemit && cd demo && tsc --noemit",
     "test:unit": "jest",
     "test:coverage": "jest --coverage",
     "test": "npm run lint && npm run test:coverage",
