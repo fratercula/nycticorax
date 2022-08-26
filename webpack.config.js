@@ -4,6 +4,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 const { NODE_ENV = 'development' } = process.env
 const isProd = NODE_ENV === 'production'
+const isDoc = NODE_ENV === 'docs'
 
 let entry = path.resolve(__dirname, './demo/index.tsx')
 let output = undefined
@@ -37,10 +38,18 @@ if (isProd) {
   }
 }
 
+if (isDoc) {
+  entry = path.resolve(__dirname, './demo/index.tsx')
+  output = {
+    path: path.resolve(__dirname, './docs'),
+    filename: '[name].[chunkhash:8].js',
+  }
+}
+
 module.exports = {
   entry,
 
-  mode: isProd ? 'production' : 'development',
+  mode: isProd || isDoc ? 'production' : 'development',
 
   output,
 

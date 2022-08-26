@@ -10,14 +10,14 @@
   ],
   "types": "./types",
   "scripts": {
-    "lint": "tsc --noemit && cd demo && tsc --noemit",
+    "lint": "tsc --noemit && cd demo && tsc --noemit && cd ../test && tsc --noemit",
     "test:unit": "jest",
     "test:coverage": "jest --coverage",
     "test": "npm run lint && npm run test:coverage",
     "start": "webpack serve --progress",
     "build": "NODE_ENV=production webpack --progress",
     "build:types": "tsc --emitDeclarationOnly",
-    "docs": "rm -rf docs && NODE_ENV=production webpack --progress"
+    "docs": "rm -rf docs && NODE_ENV=docs webpack --progress"
   },
   "repository": {
     "type": "git",
