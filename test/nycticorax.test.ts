@@ -2,7 +2,7 @@ import Nycticorax, { Dispatch as DP } from '../src/core'
 
 describe('nycticorax', () => {
   it('default', async () => {
-    type Store = { a: number, b: string[], x?: number, y?: string }
+    type Store = { a: number, b: string[], x?: number, y?: string, nil: null | number }
     type Dispatch = DP<Store>
 
     const nycticorax = new Nycticorax<Store>()
@@ -15,7 +15,7 @@ describe('nycticorax', () => {
       emit,
     } = nycticorax
 
-    createStore({ a: 1, b: ['1'], y: undefined })
+    createStore({ a: 1, b: ['1'], y: undefined, nil: null })
 
     expect(getStore().a).toBe(1)
 

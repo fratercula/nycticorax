@@ -1,5 +1,4 @@
 import eq from 'fast-deep-equal'
-import clone from 'lodash.clonedeep'
 
 type Listener = (newValue: unknown, oldValue: unknown) => void
 type ChangeValue<T> = Record<keyof T, [newValue: unknown, oldValue: unknown]>
@@ -14,6 +13,21 @@ export type Dispatch<T> = (
   },
   params?: any,
 ) => Promise<any>
+
+
+const clone = (target: any) => {
+  if (target === null) {
+    return target
+  }
+  if (typeof target !== 'object') {
+    return target
+  }
+  const next = new target.constructor()
+  Reflect.ownKeys(target).forEach((key) => {
+    next[key] = clone(target[key])
+  })
+  return next
+}
 
 export default class Nycticorax<T extends object> {
   private state: T
@@ -40,7 +54,7 @@ export default class Nycticorax<T extends object> {
     this.state = state
   }
 
-  public getStore = () => clone(this.state)
+  public getStore = () => clone(this.state) as T
 
   public subscribe = (listener: KeyWithListener<T>) => {
     const record = {} as KeyWithListener<T>
