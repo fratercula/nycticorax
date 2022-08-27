@@ -1,6 +1,6 @@
 {
   "name": "nycticorax",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "description": "State container for JavaScript application, and React",
   "main": "dist/index.js",
   "unpkg": "dist/index.js",
