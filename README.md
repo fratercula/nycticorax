@@ -31,13 +31,14 @@ const {
   dispatch,
   connect,
   useStore,
+  emit,
 } = nycticorax
 
 createStore({ age: 0, name: 'abc' })
 
 class A0 extends Component<Store> {
   onClick = () => {
-    this.props.emit({ 'name': 'xyz' })
+    emit({ 'name': 'xyz' })
   }
 
   render() {
