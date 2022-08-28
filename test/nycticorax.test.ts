@@ -2,8 +2,10 @@ import Nycticorax, { Dispatch as DP } from '../src/core'
 
 describe('nycticorax', () => {
   it('default', async () => {
-    type Store = { a: number, b: string[], x?: number, y?: string }
+    type Store = { a: number, b: string[], x?: number, y?: string, nil: null | number }
     type Dispatch = DP<Store>
+
+    const nycticorax = new Nycticorax<Store>()
 
     const {
       createStore,
@@ -11,9 +13,9 @@ describe('nycticorax', () => {
       dispatch,
       subscribe,
       emit,
-    } = new Nycticorax<Store>()
+    } = nycticorax
 
-    createStore({ a: 1, b: ['1'], y: undefined })
+    createStore({ a: 1, b: ['1'], y: undefined, nil: null })
 
     expect(getStore().a).toBe(1)
 
@@ -21,13 +23,26 @@ describe('nycticorax', () => {
     expect(getStore().a).toBe(2)
     expect(getStore().x).toBe(1)
 
+    let change = [] as any
+    nycticorax.onChange = (v) => {
+      change = v.a
+    }
+    emit({ a: 3 }, true)
+    expect(change.join()).toBe('3,2')
+    emit({ a: 3 }, true)
+    expect(change.join()).toBe('3,2')
+
     const unSubscribe = subscribe({
       a(n, o) {
         expect(n).toBe(3)
         expect(o).toBe(2)
       },
+      x(n, o) {
+        expect(n).toBe(1)
+        expect(o).toBe(undefined)
+      },
     })
-    emit({ a: 3 }, true)
+    emit({ a: 3, x: 1 }, true)
     unSubscribe()
     unSubscribe()
 

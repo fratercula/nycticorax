@@ -1,110 +1,88 @@
-const { resolve } = require('path')
+const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 const { NODE_ENV = 'development' } = process.env
+const isProd = NODE_ENV === 'production'
+const isDoc = NODE_ENV === 'docs'
 
-const optimizationMap = {
-  production: {
-    splitChunks: {
-      minSize: 30,
-      cacheGroups: {
-        vendors: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendor',
-          chunks: 'initial',
-          priority: -10,
-        },
-      },
-    },
-  },
-}
+let entry = path.resolve(__dirname, './demo/index.tsx')
+let output = undefined
+let externals = undefined
+let plugins = [
+  new HtmlWebpackPlugin({
+    template: path.resolve(__dirname, './demo/index.html'),
+  }),
+]
 
-module.exports = {
-  entry: NODE_ENV === 'umd' ? {
-    index: './src/index.ts',
-    core: './src/core.ts',
-  } : './demo/index.tsx',
-  output: NODE_ENV === 'umd' ? {
-    path: resolve(__dirname, './dist/umd'),
+if (isProd) {
+  output = {
+    path: path.resolve(__dirname, './dist'),
     filename: '[name].js',
     library: 'Nycticorax',
     libraryTarget: 'umd',
     libraryExport: 'default',
-  } : {
-    path: resolve(__dirname, './docs'),
-    filename: '[name].[chunkhash:8].js',
-  },
-  externals: NODE_ENV === 'umd' ? {
+  }
+  externals = {
     react: {
       root: 'React',
       commonjs2: 'react',
       commonjs: 'react',
-      amd: 'react',
       umd: 'react',
     },
-  } : undefined,
-  mode: NODE_ENV === 'umd' ? 'production' : NODE_ENV,
+  }
+  plugins = [new BundleAnalyzerPlugin()]
+  entry = {
+    index: path.resolve(__dirname, './src/index.ts'),
+    core: path.resolve(__dirname, './src/core.ts'),
+  }
+}
+
+if (isDoc) {
+  entry = path.resolve(__dirname, './demo/index.tsx')
+  output = {
+    path: path.resolve(__dirname, './docs'),
+    filename: '[name].[chunkhash:8].js',
+  }
+}
+
+module.exports = {
+  entry,
+
+  mode: isProd || isDoc ? 'production' : 'development',
+
+  output,
+
   devtool: 'source-map',
+
+  stats: 'minimal',
+
   target: 'web',
+
   devServer: {
-    disableHostCheck: true,
-    contentBase: resolve(__dirname, './demo'),
+    allowedHosts: 'all',
     port: 1234,
     host: '0.0.0.0',
-    stats: 'minimal',
-    hot: true,
-    inline: true,
+    static: {
+      directory: './demo',
+    },
   },
-  plugins: NODE_ENV === 'umd' ? undefined : [
-    new HtmlWebpackPlugin({
-      template: 'demo/index.html',
-    }),
-    // new BundleAnalyzerPlugin(),
-  ],
+
   resolve: {
     extensions: ['.js', '.ts', '.tsx'],
   },
-  optimization: optimizationMap[NODE_ENV],
+
+  plugins,
+
+  externals,
+
   module: {
     rules: [
-      {
-        test: /\.less$/,
-        use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true,
-              modules: {
-                localIdentName: '[local]_[hash:base64:5]',
-              },
-            },
-          },
-          {
-            loader: 'less-loader',
-            options: {
-              sourceMap: true,
-              lessOptions: {
-                javascriptEnabled: true,
-              },
-            },
-          },
-        ],
-      },
       {
         test: /\.(ts|tsx)$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          options: {
-            presets: [
-              ['@babel/preset-env', {
-                targets: { esmodules: NODE_ENV !== 'umd' },
-                modules: false,
-              }],
-            ],
-          },
         },
       },
     ],

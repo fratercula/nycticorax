@@ -1,7 +1,6 @@
 import React, { Component, ComponentType } from 'react'
-import {
-  NycticoraxType, Emiter, Dispatcher, Listener,
-} from './core'
+import { KeyWithListener } from './core'
+import type Nycticorax from './core'
 
 type AnyObject = Record<string, any>
 type SetDifference<A, B> = A extends B ? never : A
@@ -22,21 +21,14 @@ const ignoreStaticMethods = [
   'displayName',
 ]
 
-export type Connect<T> = { emit: Emiter<T>, dispatch: Dispatcher<T> } & T
-
-function connect<T extends object>(nycticorax: NycticoraxType<T>) {
-  const {
-    getStore,
-    subscribe,
-    dispatch,
-    emit,
-  } = nycticorax
+function connect<T extends object>(nycticorax: Nycticorax<T>) {
+  const { getStore, subscribe } = nycticorax
 
   return function (...keys: (keyof T)[]) {
-    return function<P extends Connect<T>> (
+    return function<P extends T> (
       C: ComponentType<P> & AnyObject,
-    ): ComponentType<Subtract<P, Connect<T>>> & AnyObject {
-      class R extends Component<Subtract<P, Connect<T>>> {
+    ): ComponentType<Subtract<P, T>> & AnyObject {
+      class R extends Component<Subtract<P, T>> {
         private unsubscribe: () => void
 
         constructor(props: any) {
@@ -47,7 +39,7 @@ function connect<T extends object>(nycticorax: NycticoraxType<T>) {
               [c]: () => {
                 this.setState({ props: getStore() })
               },
-            }), {} as Listener<T>),
+            }), {} as KeyWithListener<T>),
           )
         }
 
@@ -61,8 +53,7 @@ function connect<T extends object>(nycticorax: NycticoraxType<T>) {
 
         render() {
           const { props } = this.state
-          // eslint-disable-next-line prefer-object-spread
-          const rest = Object.assign({ dispatch, emit }, props, this.props as P)
+          const rest = { ...props, ...this.props as P }
 
           return (
             <C {...rest} />

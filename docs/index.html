@@ -1,1 +1,68 @@
-<!doctype html><html><head><meta charset="UTF-8"/><title>nycticorax</title><script defer="defer" src="vendor.93cc303e.js"></script><script defer="defer" src="main.aa98e24d.js"></script></head><body><div id="root"></div></body></html>
+<!doctype html><html><head><meta charset="UTF-8"/><title>nycticorax</title><style>.container {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+}
+.co {
+	display: flex;
+	padding: 20px;
+}
+.com {
+  border: 1px solid #eee;
+	padding: 20px;
+	flex: 1;
+	border-radius: 2px;
+}
+.com:nth-child(2) {
+	margin: 0 20px;
+}
+.com h2 {
+  font-size: 24px;
+	margin: 0;
+	font-weight: 400;
+  color: #333;
+	margin-bottom: 30px;
+}
+.com p {
+  font-size: 16px;
+	color: #555;
+	margin: 10px 0;
+}
+.com span {
+  color: #888;
+	margin-right: 5px;
+}
+.com button {
+  margin-top: 20px;
+	font-size: 14px;
+	color: #fff;
+  background: #0170fe;
+	padding: 4px 10px;
+	border-radius: 3px;
+	border: 1px solid #0170fe;
+	cursor: pointer;
+	position: relative;
+}
+.com button.loading {
+  padding-left: 24px;
+}
+.com button.loading::before {
+  content: '';
+	position: absolute;
+	left: 4px;
+	top: 4px;
+	border: 2px solid #f3f3f3;
+  border-top: 2px solid #3498db;
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  animation: spin 2s linear infinite;
+}
+body {
+	margin: 0;
+	font-family: Georgia, 'Times New Roman', Times, serif;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}</style><script defer="defer" src="main.02ee8c41.js"></script></head><body><div id="root"></div></body></html>

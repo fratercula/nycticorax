@@ -1,24 +1,23 @@
 {
   "name": "nycticorax",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "description": "State container for JavaScript application, and React",
   "main": "dist/index.js",
-  "module": "dist/esm/index.js",
-  "unpkg": "dist/umd/index.js",
+  "unpkg": "dist/index.js",
   "files": [
-    "dist"
+    "dist",
+    "types"
   ],
+  "types": "./types",
   "scripts": {
-    "lint": "tsc --noemit && eslint . --ext .ts,.tsx,.js",
+    "lint": "tsc --noemit && cd demo && tsc --noemit && cd ../test && tsc --noemit",
     "test:unit": "jest",
     "test:coverage": "jest --coverage",
     "test": "npm run lint && npm run test:coverage",
     "start": "webpack serve --progress",
-    "docs": "rm -rf docs && NODE_ENV=production webpack --progress",
-    "esm": "tsc --p tsconfig-esm.json",
-    "cjs": "tsc --p tsconfig-cjs.json",
-    "umd": "NODE_ENV=umd webpack --progress",
-    "build": "npm run docs && rm -rf dist && npm run esm && npm run cjs && npm run umd"
+    "build": "npm run build:types && NODE_ENV=production webpack --progress",
+    "build:types": "tsc --emitDeclarationOnly",
+    "docs": "rm -rf docs && NODE_ENV=docs webpack --progress"
   },
   "repository": {
     "type": "git",
@@ -32,56 +31,40 @@
   "author": "LoeiFy <LoeiFy@gmail.com>",
   "license": "MIT",
   "peerDependencies": {
-    "react": "*"
+    "react": ">=16.8.0"
   },
   "bugs": {
     "url": "https://github.com/fratercula/nycticorax/issues"
   },
   "homepage": "https://github.com/fratercula/nycticorax#readme",
   "devDependencies": {
-    "@babel/core": "^7.18.10",
+    "@babel/core": "^7.18.13",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-transform-runtime": "^7.18.10",
     "@babel/preset-env": "^7.18.10",
     "@babel/preset-react": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
+    "@babel/runtime": "^7.18.9",
     "@types/enzyme": "^3.10.12",
-    "@types/jest": "^26.0.24",
-    "@types/lodash.clonedeep": "^4.5.7",
+    "@types/jest": "^28.1.8",
     "@types/react": "^17.0.48",
     "@types/react-dom": "^17.0.17",
-    "@types/react-syntax-highlighter": "^13.5.2",
-    "@typescript-eslint/eslint-plugin": "^4.33.0",
-    "@typescript-eslint/parser": "^4.33.0",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.7",
     "babel-loader": "^8.2.5",
-    "css-loader": "^5.2.7",
+    "core-js": "^3.25.0",
     "enzyme": "^3.11.0",
-    "enzyme-to-json": "^3.6.2",
-    "eslint": "^7.32.0",
-    "eslint-config-airbnb": "^18.2.1",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jsx-a11y": "^6.6.1",
-    "eslint-plugin-react": "^7.30.1",
-    "eslint-plugin-react-hooks": "^4.6.0",
+    "fast-deep-equal": "^3.1.3",
     "html-webpack-plugin": "^5.5.0",
-    "jest": "^27.5.1",
-    "jsdom": "^16.7.0",
-    "jsdom-global": "^3.0.2",
-    "less": "^4.1.3",
-    "less-loader": "^10.2.0",
+    "jest": "^28.1.3",
+    "jest-environment-jsdom": "^28.1.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "style-loader": "^2.0.0",
-    "ts-jest": "^27.1.5",
-    "typescript": "^4.4.4",
+    "ts-jest": "^28.0.8",
+    "typescript": "^4.7.4",
     "webpack": "^5.74.0",
-    "webpack-bundle-analyzer": "^4.5.0",
+    "webpack-bundle-analyzer": "^4.6.1",
     "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^3.11.3"
+    "webpack-dev-server": "^4.10.0"
   },
-  "dependencies": {
-    "fast-deep-equal": "^3.1.3",
-    "lodash.clonedeep": "^4.5.0",
-    "tslib": "^2.4.0"
-  }
+  "dependencies": {}
 }

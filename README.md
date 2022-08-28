@@ -15,31 +15,30 @@ $ npm i nycticorax
 
 ## Usage
 
-For React, it is simple use, **not** `Provider`, `reducer`, `action`, **only** `connect`
+For React, it is simple use, **not** `Provider`, `reducer`, `action`, **only** `connect`. `useStore` for Hooks
 
 
 ```tsx
 import React, { Component } from 'react'
-import Nycticorax, { Connect as CT } from 'nycticorax'
+import Nycticorax from 'nycticorax'
 
 type Store = { name: string, age: number }
 
 const nycticorax = new Nycticorax<Store>()
-
-type Connect = CT<Store>
 
 const {
   createStore,
   dispatch,
   connect,
   useStore,
+  emit,
 } = nycticorax
 
 createStore({ age: 0, name: 'abc' })
 
-class A0 extends Component<Connect> {
+class A0 extends Component<Store> {
   onClick = () => {
-    this.props.emit({ 'name': 'xyz' })
+    emit({ 'name': 'xyz' })
   }
 
   render() {
@@ -80,7 +79,7 @@ export default () => (
 width typescript
 
 ```ts
-import Nycticorax, { Dispatch as DP, Connect as CT } from 'nycticorax'
+import Nycticorax, { Dispatch as DP } from 'nycticorax'
 
 type Store = { name: string }
 
@@ -97,7 +96,6 @@ const {
 } = nycticorax
 
 type Dispatch = DP<Store>
-type Connect = CT<Store>
 ```
 
 width javascript
@@ -146,7 +144,7 @@ create store
 ```ts
 type createStore = (state: T) => void
 
-createStore({ name: 'nycticorax' })
+createStore({ name: 'nycticorax', [Symbol('key')]: 'symbol' })
 ```
 
 ### getStore
@@ -244,44 +242,63 @@ function asyncDispatch({ emit, getStore }) {
 
 ### subscribe
 
-watching store change
+watch key change
 
 ```ts
-type Listener<T> = (keys: Partial<keyof T>[]) => void;
-type subscribe = (listener: Listener<T>) => () => void;
+type Listener = (newValue: unknown, oldValue: unknown) => void;
+type KeyWithListener<T> = Partial<Record<keyof T, Listener>>;
+type subscribe: (listener: KeyWithListener<T>) => () => void;
 
-const unsubscribe = subscribe((keys) => {
-  console.log(keys) // change keys
+const unsubscribe = subscribe({
+  time(newValue, oldValue) {
+    console.log(newValue, oldValue)
+  },
 })
 unsubscribe() // unsubscribe
+```
+
+### onChange
+
+watch store change
+
+```ts
+type ChangeValue<T> = Record<keyof T, [newValue: unknown, oldValue: unknown]>;
+type OnChange<T> = (value: ChangeValue<T>) => void;
+
+const nycticorax = new Nycticorax<Store>()
+
+nycticorax.onChange = (v) => {
+  console.log(v, 'onChange')
+}
 ```
 
 ### connect
 
 for `React` only
 
+> class component cannot props `symbol` key, use `getStore` get symbol key`s value
+> https://github.com/facebook/react/issues/7552
+
 ```tsx
 type connect = (keys: (keyof T)[]) => (React.ComponentType) => React.ComponentType
 
-class A extends Component<Connect> {
-  onClick = () => {
-    this.props.emit({ 'number': 1 })
-  }
+const symbolKey = Symbol('key')
 
+class A extends Component<Store> {
   render() {
     const { name, another } = this.props
+    const store = getStore()
     return (
       <div>
         <h2>Component A</h2>
         <p>name: {name}</p>
-        <p>Click to change value: Number</p>
-        <button onClick={this.onClick}>set Number 1</button>
+        <p>{store[symbolKey]}</p>
       </div>
     )
   }
 }
 
-export default connect('name', 'another')(A)
+export default connect('name', symbolKey)(A)
 ```
 
 ### useStore

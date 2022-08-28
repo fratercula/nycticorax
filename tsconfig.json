@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
+    "declarationDir": "./types",
+    "target": "ESNext",
+    "module": "ESNext",
     "moduleResolution": "node",
+    "lib": ["dom", "es2017"],
     "jsx": "react",
     "strict": true,
     "declaration": true,
@@ -11,11 +15,11 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "esModuleInterop": true,
-    "importHelpers": true,
     "sourceMap": true,
     "removeComments": true,
     "stripInternal": true,
     "strictPropertyInitialization": false
   },
+  "include": ["src/*"],
   "exclude": ["dist", "docs"],
 }
