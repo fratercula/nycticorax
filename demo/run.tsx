@@ -46,13 +46,13 @@ export default () => {
 
     console.log('store3', getStore())
 
-    const dispatcher0: Dispatch = async ({ getStore: gs, emit: dp }, params) => {
-      console.log('params0', params)
+    const dispatcher0: Dispatch = async ({ getStore: gs, emit: dp }, params, next) => {
+      console.log('params0', params, next)
       const { time } = gs()
       dp({ time: time + 1 })
     }
 
-    dispatch(dispatcher0, { a: 1 })
+    dispatch(dispatcher0, { a: 1 }, 1111)
 
     const dispatcher1: Dispatch = async ({ getStore: gs, emit: dp }, params) => {
       console.log('params1', params)

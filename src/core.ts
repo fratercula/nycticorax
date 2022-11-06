@@ -11,9 +11,8 @@ export type Dispatch<T> = (
     getStore: () => T,
     emit: (next: Partial<T>) => void,
   },
-  params?: any,
+  ...params: any
 ) => Promise<any>
-
 
 const clone = (target: any) => {
   if (target === null) {
@@ -90,10 +89,10 @@ export default class Nycticorax<T extends object> {
     }
   }
 
-  public dispatch = (next: Dispatch<T>, params?: any) => next({
+  public dispatch = (next: Dispatch<T>, ...params: any) => next({
     getStore: this.getStore,
     emit: (o: Partial<T>) => this.emit(o, true),
-  }, params)
+  }, ...params)
 
   private trigger = () => {
     const next = this.emits

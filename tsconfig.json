@@ -18,6 +18,7 @@
     "sourceMap": true,
     "removeComments": true,
     "stripInternal": true,
+    "skipLibCheck": true,
     "strictPropertyInitialization": false
   },
   "include": ["src/*"],
