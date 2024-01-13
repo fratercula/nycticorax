@@ -13,7 +13,10 @@ function hooks<T extends object>(nycticorax: Nycticorax<T>) {
         keys.reduce((p, c) => ({
           ...p,
           [c]: () => {
-            setProps(getStore())
+            setProps((prev) => ({
+              ...prev,
+              [c]: getStore()[c],
+            }))
           },
         }), {} as KeyWithListener<T>),
       )

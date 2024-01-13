@@ -53,7 +53,7 @@ export default class Nycticorax<T extends object> {
     this.state = state
   }
 
-  public getStore = () => clone(this.state) as T
+  public getStore = () => this.state
 
   public subscribe = (listener: KeyWithListener<T>) => {
     const record = {} as KeyWithListener<T>
@@ -109,7 +109,7 @@ export default class Nycticorax<T extends object> {
       const newValue = next[key]
       const oldValue = this.state[key]
 
-      this.state[key] = next[key] as T[keyof T]
+      this.state[key] = clone(next[key]) as T[keyof T]
       actives.push({ key, newValue, oldValue })
     }
 
