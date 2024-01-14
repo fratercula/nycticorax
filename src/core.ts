@@ -14,6 +14,7 @@ export type Dispatch<T> = (
   ...params: any
 ) => Promise<any>
 
+/* istanbul ignore next */
 const clone = (target: any) => {
   if (target === null) {
     return target
