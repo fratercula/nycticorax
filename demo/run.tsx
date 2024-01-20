@@ -7,6 +7,7 @@ import nycticorax, {
   emit,
   subscribe,
   Dispatch,
+  syb,
 } from './store/index'
 
 export default () => {
@@ -16,9 +17,19 @@ export default () => {
         type: 'page',
         on: false,
       },
+      [syb]: '',
+      array: [],
       time: 11,
       // test: undefined,
     })
+
+    const s = getStore()
+    const test = getStore('test')
+    const arr = getStore('array')
+    const sy = getStore(syb)
+    console.log(s, test, arr, sy, 'types')
+    const theArray = getStore('array')
+    theArray.push(1, 2)
 
     const unsubscribe = subscribe({
       time(n, o) {
@@ -27,7 +38,15 @@ export default () => {
       test(n, o) {
         console.log(n, o, 'subscribe test')
       },
+      array(n, o) {
+        console.log(n, o, 'array')
+      },
+      [syb](n, o) {
+        console.log(n, o, 'syb')
+      },
     })
+
+    emit({ [syb]: 'syb' }, true)
 
     nycticorax.onChange = (v) => {
       console.log(v, 'onChange')
@@ -37,6 +56,7 @@ export default () => {
 
     emit({ time: 1 })
     emit({ config: { on: true, type: 'component' } })
+    emit({ array: theArray })
 
     console.log('store1', getStore())
     setTimeout(() => console.log('store2', getStore()))

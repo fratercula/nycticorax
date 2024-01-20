@@ -1,11 +1,15 @@
 import Nycticorax, { Dispatch as DP } from '../../src/core'
 
+export const syb = Symbol('syb')
+
 type Store = {
   config: {
     type: string,
     on: boolean,
   },
   time: number,
+  array: number[],
+  [syb]: string,
   test?: string,
 }
 
