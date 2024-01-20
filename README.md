@@ -152,9 +152,10 @@ createStore({ name: 'nycticorax', [Symbol('key')]: 'symbol' })
 get store
 
 ```ts
-type getStore = () => T
+type getStore<T> = (key? keyof T) => T | T[keyof T]
 
 const store = getStore() // { name: 'nycticorax' }
+const name = getStore('name')
 ```
 
 ### emit
