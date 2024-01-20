@@ -6,28 +6,36 @@ type OnChange<T> = (value: ChangeValue<T>) => void
 export type KeyWithListener<T> = Partial<Record<keyof T, Listener>>
 export type KeyWithListeners<T> = Partial<Record<keyof T, Listener[]>>
 
-export type Dispatch<T> = (
+/* istanbul ignore next */
+function clone(data: any, clones = new WeakMap()) {
+  if (typeof data !== 'object' || data === null) {
+    return data
+  }
+  if (clones.has(data)) {
+    return clones.get(data)
+  }
+  const res: any = Array.isArray(data) ? [] : {}
+  clones.set(data, res)
+  const keys = Reflect.ownKeys(data)
+  for (const key of keys) {
+    res[key] = clone(data[key], clones)
+  }
+  return res
+}
+
+function getStore<T extends object>(store: T) {
+  return function getStore<K extends keyof T | undefined = undefined>(key?: K) {
+    return (key ? clone(store[key!]) : store) as K extends keyof T ? T[K] : T
+  }
+}
+
+export type Dispatch<T extends object> = (
   nycticorax: {
-    getStore: () => T,
+    getStore: ReturnType<typeof getStore<T>>,
     emit: (next: Partial<T>) => void,
   },
   ...params: any
 ) => Promise<any>
-
-/* istanbul ignore next */
-const clone = (target: any) => {
-  if (target === null) {
-    return target
-  }
-  if (typeof target !== 'object') {
-    return target
-  }
-  const next = new target.constructor()
-  Reflect.ownKeys(target).forEach((key) => {
-    next[key] = clone(target[key])
-  })
-  return next
-}
 
 export default class Nycticorax<T extends object> {
   private state: T
@@ -40,21 +48,24 @@ export default class Nycticorax<T extends object> {
 
   private onStateChange: OnChange<T>
 
+  public getStore: ReturnType<typeof getStore<T>>
+
   constructor() {
     this.state = {} as T
     this.listeners = {}
     this.emits = {}
     this.timer = undefined
     this.onStateChange = () => null
+    this.getStore = getStore(this.state)
   }
 
   public createStore = (state: T): void => {
-    this.listeners = Reflect.ownKeys(state)
-      .reduce((p, c) => ({ ...p, [c]: [] }), {} as KeyWithListeners<T>)
-    this.state = state
+    this.listeners = Reflect.ownKeys(state).reduce((p, c) => {
+      const k = c as keyof T
+      this.state[k] = state[k]
+      return { ...p, [c]: [] }
+    }, {} as KeyWithListeners<T>)
   }
-
-  public getStore = () => this.state
 
   public subscribe = (listener: KeyWithListener<T>) => {
     const record = {} as KeyWithListener<T>

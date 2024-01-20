@@ -69,6 +69,7 @@ describe('nycticorax', () => {
 
     await dispatch(dispatcher, { n: 1 })
     expect(getStore().a).toBe(5)
+    expect(getStore('a')).toBe(5)
 
     // @ts-ignore
     emit({ c: 0 }, true)
