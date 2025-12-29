@@ -163,7 +163,7 @@ const name = getStore('name')
 update store
 
 ```ts
-type emit = (next: Partial<T>, params: Record<string, any>) => void;
+type emit = (next: Partial<T>, sync?: boolean) => void;
 
 // update store key `name`, value is `xyz`
 emit({ name: 'xyz' })
@@ -246,8 +246,8 @@ function asyncDispatch({ emit, getStore }) {
 watch key change
 
 ```ts
-type Listener = (newValue: unknown, oldValue: unknown) => void;
-type KeyWithListener<T> = Partial<Record<keyof T, Listener>>;
+type Listener<T> = (newValue: T, oldValue: T) => void;
+type KeyWithListener<T> = Partial<Record<keyof T, Listener<T>>>;
 type subscribe: (listener: KeyWithListener<T>) => () => void;
 
 const unsubscribe = subscribe({
@@ -263,7 +263,7 @@ unsubscribe() // unsubscribe
 watch store change
 
 ```ts
-type ChangeValue<T> = Record<keyof T, [newValue: unknown, oldValue: unknown]>;
+type ChangeValue<T> = Record<keyof T, [newValue: T[keyof T], oldValue: T[keyof T]]>;
 type OnChange<T> = (value: ChangeValue<T>) => void;
 
 const nycticorax = new Nycticorax<Store>()

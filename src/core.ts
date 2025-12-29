@@ -1,10 +1,16 @@
 import eq from 'fast-deep-equal'
 
-type Listener = (newValue: unknown, oldValue: unknown) => void
-type ChangeValue<T> = Record<keyof T, [newValue: unknown, oldValue: unknown]>
+type Listener<T> = (newValue: T, oldValue: T) => void
+type ChangeValue<T> = Partial<{
+  [K in keyof T]: [newValue: T[K], oldValue: T[K]]
+}>
 type OnChange<T> = (value: ChangeValue<T>) => void
-export type KeyWithListener<T> = Partial<Record<keyof T, Listener>>
-export type KeyWithListeners<T> = Partial<Record<keyof T, Listener[]>>
+export type KeyWithListener<T> = Partial<{
+  [K in keyof T]: Listener<T[K]>
+}>
+export type KeyWithListeners<T> = Partial<{
+  [K in keyof T]: Listener<T[K]>[]
+}>
 
 /* istanbul ignore next */
 function clone(data: any, clones = new WeakMap()) {
@@ -75,7 +81,7 @@ export default class Nycticorax<T extends object> {
       if (!this.listeners[current]) {
         this.listeners[current] = []
       }
-      this.listeners[current]!.push(listener[current] as Listener)
+      this.listeners[current]!.push(listener[current] as Listener<T[typeof current]>)
       record[current] = listener[current]
     })
 
@@ -108,7 +114,7 @@ export default class Nycticorax<T extends object> {
 
   private trigger = () => {
     const next = this.emits
-    const actives: { key: keyof T, newValue: unknown, oldValue: unknown }[] = []
+    const actives: { key: keyof T, newValue: T[keyof T], oldValue: T[keyof T] }[] = []
     const keys = Reflect.ownKeys(next) as Partial<keyof T>[]
 
     for (let i = 0; i < keys.length; i += 1) {
@@ -118,7 +124,7 @@ export default class Nycticorax<T extends object> {
         continue
       }
 
-      const newValue = next[key]
+      const newValue = next[key] as T[keyof T]
       const oldValue = this.state[key]
 
       this.state[key] = clone(next[key]) as T[keyof T]

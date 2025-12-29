@@ -14,11 +14,9 @@ const ignoreStaticMethods = [
   'name',
   'prototype',
   'length',
-  'propTypes',
-  'defaultProps',
+  // These are static lifecycle methods that should not be copied
   'getDerivedStateFromProps',
-  'contextTypes',
-  'displayName',
+  'getDerivedStateFromError',
 ]
 
 function connect<T extends object>(nycticorax: Nycticorax<T>) {
@@ -61,14 +59,17 @@ function connect<T extends object>(nycticorax: Nycticorax<T>) {
         }
       }
 
-      Object
-        .getOwnPropertyNames(C)
-        .forEach((method) => {
-          const key = method as keyof typeof R
-          if (!ignoreStaticMethods.includes(method)) {
-            R[key] = C[key]
+      // Copy static properties while preserving property descriptors
+      // Use Reflect.ownKeys to get all keys including symbols
+      Reflect.ownKeys(C).forEach((key) => {
+        const method = String(key)
+        if (!ignoreStaticMethods.includes(method)) {
+          const descriptor = Object.getOwnPropertyDescriptor(C, key)
+          if (descriptor) {
+            Object.defineProperty(R, key, descriptor)
           }
-        })
+        }
+      })
 
       return R
     }
