@@ -2,20 +2,33 @@
   "name": "nycticorax",
   "version": "4.2.0",
   "description": "State container for JavaScript application, and React",
-  "main": "dist/index.js",
-  "unpkg": "dist/index.js",
+  "main": "./dist/index.js",
+  "module": "./dist/esm/index.js",
+  "unpkg": "./dist/index.js",
+  "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/index.js",
+      "types": "./types/index.d.ts"
+    },
+    "./core": {
+      "import": "./dist/esm/core.js",
+      "require": "./dist/core.js",
+      "types": "./types/core.d.ts"
+    }
+  },
   "files": [
     "dist",
     "types"
   ],
-  "types": "./types",
   "scripts": {
     "lint": "tsc --noemit && cd demo && tsc --noemit && cd ../test && tsc --noemit",
     "test:unit": "jest",
     "test:coverage": "jest --coverage",
     "test": "npm run lint && npm run test:coverage",
     "start": "webpack serve --progress",
-    "build": "npm run build:types && NODE_ENV=production webpack --progress",
+    "build": "npm run build:types && NODE_ENV=production webpack --progress && echo '{\"type\":\"module\"}' > dist/esm/package.json",
     "build:types": "tsc --emitDeclarationOnly",
     "docs": "rm -rf docs && NODE_ENV=docs webpack --progress"
   },
